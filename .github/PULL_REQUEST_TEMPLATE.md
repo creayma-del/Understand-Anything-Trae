@@ -18,9 +18,9 @@ Swift repo and verified the dashboard shows non-empty edges" is better. -->
 
 ## Versioning
 
-<!-- If this PR ships a user-visible behavior change, bump the version in ALL
-five manifests per CLAUDE.md. If it's docs/tests/internal-only, leave them
+<!-- If this PR ships a user-visible behavior change, bump the version in all
+relevant package.json files. If it's docs/tests/internal-only, leave them
 alone and the maintainer will bump on merge. -->
 
-- [ ] Version bumped in all five manifests, OR
+- [ ] Version bumped in all relevant manifests, OR
 - [ ] N/A — internal/docs-only change

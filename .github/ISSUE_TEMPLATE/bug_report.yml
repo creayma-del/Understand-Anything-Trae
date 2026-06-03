@@ -34,7 +34,7 @@ body:
     id: version
     attributes:
       label: Plugin version
-      description: Run `/understand --version` or check `~/.claude/plugins/cache/understand-anything/understand-anything/`.
+      description: Check the version in `understand-anything-trae-plugin/package.json`.
       placeholder: "e.g. 2.7.4"
     validations:
       required: true
@@ -45,12 +45,8 @@ body:
       label: Platform / client
       multiple: true
       options:
-        - Claude Code (CLI)
-        - Claude Code (VS Code extension)
-        - Claude Code (JetBrains)
-        - Cursor
-        - GitHub Copilot CLI
-        - opencode
+        - Trae
+        - Trae CN
         - Other (please describe in "What happened?")
     validations:
       required: true
@@ -80,6 +76,6 @@ body:
     attributes:
       label: Relevant logs
       description: |
-        Any console output, the contents of `.understand-anything/intermediate/`
+        Any console output, the contents of `.understand-anything-trae/intermediate/`
         if it still exists, or screenshots of the dashboard error.
       render: shell
