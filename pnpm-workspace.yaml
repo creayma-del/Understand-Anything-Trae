@@ -1,0 +1,3 @@
+packages:
+  - 'understand-anything-trae-plugin/packages/*'
+  - 'understand-anything-trae-plugin'
