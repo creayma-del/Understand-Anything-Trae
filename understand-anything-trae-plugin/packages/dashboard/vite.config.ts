@@ -80,7 +80,6 @@ function detectLanguage(filePath: string): string {
     json: "json",
     md: "markdown",
     mjs: "javascript",
-    py: "python",
     sh: "bash",
     ts: "typescript",
     tsx: "tsx",

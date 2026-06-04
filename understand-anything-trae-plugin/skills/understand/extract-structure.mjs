@@ -253,7 +253,7 @@ export function buildResult(file, totalLines, nonEmptyLines, analysis, callGraph
   // Import count from batchImportData (pre-resolved by project scanner).
   // Empty arrays are truthy, so explicitly check length so we fall back to the
   // parser's own import list when the scanner could not resolve any imports
-  // (e.g. Python absolute imports the scanner doesn't follow).
+  // (e.g. languages the scanner doesn't support).
   //
   // The fallback counts only relative-style imports (those starting with `.`)
   // so the metric stays *internal-import* in semantics rather than mixing in

@@ -35,7 +35,7 @@ Create the input file with the batch data. **IMPORTANT:** Use the batch index in
 Each entry in `batchFiles` MUST be an object with these four fields, copied verbatim from the dispatch prompt's batch list:
 
 - `path` (string) — project-relative file path
-- `language` (string) — language id from the project scanner (e.g. `"python"`, `"typescript"`); never null
+- `language` (string) — language id from the project scanner (e.g. `"typescript"`, `"vue-sfc"`); never null
 - `sizeLines` (integer) — line count
 - `fileCategory` (string) — `code`, `config`, `docs`, `infra`, `data`, `script`, or `markup`
 
@@ -129,7 +129,7 @@ Read `$PROJECT_ROOT/.understand-anything-trae/tmp/ua-file-extract-results-<batch
 
 When any of these arrays is present and non-empty, you MUST iterate it and emit nodes for the significant entries (don't just create the parent file node and call it done). The corresponding `metrics.serviceCount` / `metrics.endpointCount` / `metrics.resourceCount` / `metrics.stepCount` / `metrics.definitionCount` fields tell you how many were extracted at a glance.
 
-**Supported file categories:** The bundled script handles all file categories — `code` (10 languages with tree-sitter: TypeScript, JavaScript, Python, Go, Rust, Java, Ruby, PHP, C/C++, C#), `config`, `docs`, `infra`, `data`, `script`, and `markup`. For languages without tree-sitter support (Swift, Kotlin, shell scripts of fileCategory `script`), the script outputs basic metrics with empty structural data — you MUST then read the source and supplement at least the function definitions, so these files don't end up as bare `file` nodes:
+**Supported file categories:** The bundled script handles all file categories — `code` (9 languages with tree-sitter: TypeScript, JavaScript, Go, Rust, Java, Ruby, PHP, C/C++, C#), `config`, `docs`, `infra`, `data`, `script`, and `markup`. For languages without tree-sitter support (Swift, Kotlin, shell scripts of fileCategory `script`), the script outputs basic metrics with empty structural data — you MUST then read the source and supplement at least the function definitions, so these files don't end up as bare `file` nodes:
 
 - **Bash / shell** (`.sh`, `.bash`): match top-level `NAME() { ... }` and `function NAME { ... }`
 - **Swift / Kotlin**: match top-level `func NAME(` / `fun NAME(`
@@ -206,12 +206,10 @@ For non-code files:
 
 Indicators from script data:
 - Many re-exports + few functions = `barrel`
-- Filename contains `.test.` or `.spec.` or `test_*.py` or `*_test.go` or `*Test.java` or `*_spec.rb` or `*Test.php` or `*Tests.cs` = `test`
+- Filename contains `.test.` or `.spec.` or `*_test.go` or `*Test.java` or `*_spec.rb` or `*Test.php` or `*Tests.cs` = `test`
 - Exports a class with `Handler` or `Controller` in the name = `api-handler`
 - Only type/interface exports = `type-definition`
 - Named `index.ts` or `index.js` at a directory root with re-exports = `entry-point` (JavaScript/TypeScript barrel)
-- Named `__init__.py` at a package root with imports or re-exports = `entry-point` (Python package barrel)
-- Named `manage.py` = `entry-point` (Django management script)
 - Named `main.go` in `cmd/` directory = `entry-point` (Go binary)
 - Named `main.rs` or `lib.rs` in `src/` = `entry-point` (Rust crate root)
 - Named `Application.java` or `Main.java` = `entry-point` (Java application)
@@ -450,7 +448,6 @@ Use these hints for common edge patterns:
 | Component/hook calls a custom hook (`useX`) | `depends_on` from consumer to hook file |
 | Context provider wraps components | `exports` from provider to context definition |
 | Component calls `useContext` or custom context hook | `depends_on` from consumer to context definition |
-| Python file uses `from x import y` where x is a project file | `imports` edge (same rule as JS/TS) |
 | Go file `import`s an internal package path | `imports` edge to the resolved file |
 | Dockerfile COPY from code directory | `deploys` from Dockerfile to code entry point |
 | CI config runs test commands | `triggers` from CI config to test files |

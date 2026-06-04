@@ -91,11 +91,6 @@ class IsTestPathTests(unittest.TestCase):
         self.assertTrue(mbg.is_test_path("test/foo/X.test.ts"))
         self.assertTrue(mbg.is_test_path("spec/foo/X.spec.ts"))
 
-    def test_python_test_files(self) -> None:
-        self.assertTrue(mbg.is_test_path("tests/test_bar.py"))
-        self.assertTrue(mbg.is_test_path("bar_test.py"))
-        self.assertTrue(mbg.is_test_path("test_bar.py"))
-
     def test_production_files_rejected(self) -> None:
         for path in [
             "src/foo.ts",
@@ -103,7 +98,6 @@ class IsTestPathTests(unittest.TestCase):
             "src/index.tsx",
             "README.md",
             "docs/guide.md",
-            "main.py",
             "src/foo/bar.js",
         ]:
             with self.subTest(path=path):
@@ -147,17 +141,6 @@ class ProductionCandidatesTests(unittest.TestCase):
         self.assertIn("src/foo/X.ts", cands)
         self.assertIn("foo/X.ts", cands)
 
-    def test_python_test_prefix(self) -> None:
-        cands = mbg.production_candidates("tests/test_bar.py")
-        self.assertIn("tests/bar.py", cands)
-        # Also try mirrored layout
-        self.assertIn("bar.py", cands)
-        self.assertIn("src/bar.py", cands)
-
-    def test_python_test_suffix(self) -> None:
-        cands = mbg.production_candidates("foo/bar_test.py")
-        self.assertIn("foo/bar.py", cands)
-
     def test_js_ts_test_subdir_walkout(self) -> None:
         # Some JS/TS projects use `<dir>/test/` or `<dir>/spec/` instead of
         # the more idiomatic `__tests__/`. Walk out of either.
@@ -165,15 +148,6 @@ class ProductionCandidatesTests(unittest.TestCase):
         self.assertIn("src/foo/X.ts", cands_test)
         cands_spec = mbg.production_candidates("src/foo/spec/X.spec.ts")
         self.assertIn("src/foo/X.ts", cands_spec)
-
-    def test_python_in_package_tests_walkout(self) -> None:
-        # `mypkg/tests/test_bar.py` (Django-app style) should pair with
-        # `mypkg/bar.py` — walk out of the in-package tests/ dir.
-        cands = mbg.production_candidates("mypkg/tests/test_bar.py")
-        self.assertIn("mypkg/bar.py", cands)
-        # Also nested:
-        cands_nested = mbg.production_candidates("a/b/test/test_bar.py")
-        self.assertIn("a/b/bar.py", cands_nested)
 
     def test_priority_underscore_tests_sibling_before_walkup(self) -> None:
         # When a test sits in `src/__tests__/`, the sibling-de-infix path

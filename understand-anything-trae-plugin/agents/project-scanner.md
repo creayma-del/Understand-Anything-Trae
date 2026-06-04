@@ -31,7 +31,7 @@ Read the top-level project files to gather narrative metadata. Do NOT walk the f
 Read whichever of these exist at the project root:
 - `README.md` (or `README.rst`, `README`) — capture the first ~10 lines for narrative grounding
 - `package.json` — extract `name`, `description`, plus `dependencies` / `devDependencies` keys for framework detection
-- `pyproject.toml`, `setup.py`, `setup.cfg`, `Pipfile`, `requirements.txt` — Python framework signals
+- `pyproject.toml`, `Pipfile`, `requirements.txt` — Python project signals (manifest only; language analysis not supported)
 - `build.gradle.kts` — Kotlin/JVM project signals
 
 From these, synthesize:
@@ -39,7 +39,7 @@ From these, synthesize:
 - **`name`** -- in priority order: `package.json` `name`, `pyproject.toml` `[project].name` or `[tool.poetry].name`, else the directory name of the project root.
 - **`rawDescription`** -- the `description` field from `package.json` (or its equivalent in the matching manifest), or `""` if none.
 - **`readmeHead`** -- the first ~10 lines of `README.md` (or equivalent), or `""` if no README exists.
-- **`frameworks`** -- match dependency names against known frameworks: `react`, `vue`, `svelte`, `@angular/core`, `express`, `fastify`, `koa`, `next`, `nuxt`, `vite`, `vitest`, `jest`, `mocha`, `tailwindcss`, `prisma`, `typeorm`, `sequelize`, `mongoose`, `redux`, `zustand`, `mobx`; Python: `django`, `djangorestframework`, `fastapi`, `flask`, `sqlalchemy`, `alembic`, `celery`, `pydantic`, `uvicorn`, `gunicorn`, `aiohttp`, `tornado`, `starlette`, `pytest`, `hypothesis`, `channels`. Also infer infrastructure tools from manifest presence: add `Docker` if `Dockerfile` exists in the file list, `GitHub Actions` if `.github/workflows/*.yml`, `GitLab CI` if `.gitlab-ci.yml`.
+- **`frameworks`** -- match dependency names against known frameworks: `react`, `vue`, `svelte`, `@angular/core`, `express`, `fastify`, `koa`, `next`, `nuxt`, `vite`, `vitest`, `jest`, `mocha`, `tailwindcss`, `prisma`, `typeorm`, `sequelize`, `mongoose`, `redux`, `zustand`, `mobx`. Also infer infrastructure tools from manifest presence: add `Docker` if `Dockerfile` exists in the file list, `GitHub Actions` if `.github/workflows/*.yml`, `GitLab CI` if `.gitlab-ci.yml`.
 - **`languages`** -- the deduplicated, alphabetically-sorted top-level language set you observe across the manifests + the bundled script's per-file language tally (you will read this from Step B's output).
 
 If the manifest is missing or malformed, leave the corresponding field empty rather than guessing.
@@ -153,7 +153,7 @@ Read the output JSON and merge the `importMap` field directly into your final sc
 
 **Capture stderr** when you run the bundled script. Any line starting with `Warning:` should be appended to phase warnings — the SKILL.md orchestrator captures these for the final report. The script also writes a one-line summary `extract-import-map: filesScanned=… filesWithImports=… totalEdges=…` on completion; you can ignore that line or surface it as informational.
 
-**Languages supported.** The bundled script natively handles import resolution for: TypeScript, JavaScript (including CJS `require()`), Python (relative + absolute + `__init__.py`). Languages outside this set get empty arrays — there is no LLM-based fallback.
+**Languages supported.** The bundled script natively handles import resolution for: TypeScript, JavaScript (including CJS `require()`). Languages outside this set get empty arrays — there is no LLM-based fallback.
 
 ---
 
@@ -215,7 +215,7 @@ Then assemble the final output JSON:
 - ALWAYS validate that `totalFiles` matches the actual length of the `files` array.
 - Trust Step B for file enumeration + language detection + category assignment + line counts + complexity. Trust Step C for `importMap`. Your only synthesis is the `description` field (plus the Step A narrative fields: `name`, `frameworks`, `languages`).
 - Do NOT re-implement file enumeration, language detection, or category assignment in your discovery script. Use the bundled `scan-project.mjs`. If the table doesn't cover your project type, file an issue rather than ad-hoc handling.
-- Do NOT attempt to re-implement import resolution. The bundled `extract-import-map.mjs` handles all 3 supported code languages (TS, JS, Python) deterministically via tree-sitter + per-language resolvers.
+- Do NOT attempt to re-implement import resolution. The bundled `extract-import-map.mjs` handles both supported code languages (TS, JS) deterministically via tree-sitter + per-language resolvers.
 - Every file MUST have a `fileCategory` field with one of: `code`, `config`, `docs`, `infra`, `data`, `script`, `markup` — `scan-project.mjs` guarantees this; just don't strip it.
 
 ## Writing Results

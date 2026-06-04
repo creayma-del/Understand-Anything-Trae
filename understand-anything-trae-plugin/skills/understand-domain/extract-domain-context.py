@@ -32,7 +32,6 @@ MAX_OUTPUT_BYTES = 512 * 1024  # 512 KB — keeps output within agent context li
 # File extensions we care about for domain analysis
 SOURCE_EXTENSIONS = {
     ".ts", ".tsx", ".js", ".jsx", ".mjs", ".cjs",
-    ".py", ".pyi",
     ".go",
     ".rs",
     ".java", ".kt", ".scala",
@@ -52,14 +51,13 @@ SKIP_DIRS = {
     "node_modules", ".git", ".svn", ".hg", "__pycache__", ".tox",
     "venv", ".venv", "env", ".env", "dist", "build", "out", ".next",
     ".nuxt", "target", "vendor", ".idea", ".vscode", "coverage",
-    ".understand-anything-trae", ".pytest_cache", ".mypy_cache",
+    ".understand-anything-trae",
     "Pods", "DerivedData", ".gradle", "bin", "obj",
 }
 
 # Files that reveal project metadata
 METADATA_FILES = [
     "package.json", "Cargo.toml", "go.mod", "pyproject.toml",
-    "setup.py", "setup.cfg",
     "Gemfile", "composer.json", "mix.exs", "Makefile",
     "README.md", "README.rst", "README.txt", "README",
 ]
@@ -72,8 +70,8 @@ ENTRY_POINT_PATTERNS: list[tuple[str, str, re.Pattern[str]]] = [
         r"""(?:app|router|server)\s*\.\s*(?:get|post|put|patch|delete|all|use)\s*\(\s*['"](/[^'"]*?)['"]""",
         re.IGNORECASE,
     )),
-    ("http", "Decorator route (Flask/FastAPI/NestJS)", re.compile(
-        r"""@(?:app\.)?(?:route|get|post|put|patch|delete|api_view|RequestMapping|GetMapping|PostMapping)\s*\(\s*['"](/[^'"]*?)['"]""",
+    ("http", "Decorator route (NestJS)", re.compile(
+        r"""@(?:RequestMapping|GetMapping|PostMapping)\s*\(\s*['"](/[^'"]*?)['"]""",
         re.IGNORECASE,
     )),
     ("http", "Next.js/Remix route handler", re.compile(
@@ -198,7 +196,7 @@ def detect_entry_points(root: Path, file_paths: list[str]) -> list[dict[str, Any
     entry_points: list[dict[str, Any]] = []
 
     # Skip test files and the extraction script itself
-    test_patterns = re.compile(r"(?:\.test\.|\.spec\.|__tests__|_test\.py|test_\w+\.py|extract-domain-context\.py)")
+    test_patterns = re.compile(r"(?:\.test\.|\.spec\.|__tests__|extract-domain-context\.py)")
 
     for rel_path in file_paths:
         if len(entry_points) >= MAX_ENTRY_POINTS:
@@ -278,7 +276,7 @@ def extract_file_signatures(root: Path, file_paths: list[str]) -> list[dict[str,
             r"export\s+(?:default\s+)?(?:async\s+)?(?:function|class|const|let|var|interface|type|enum)\s+(\w+)",
             truncated,
         )
-        # Extract exports (Python)
+        # Extract exports
         if not exports:
             exports = re.findall(r"^(?:def|class)\s+(\w+)", truncated, re.MULTILINE)
 

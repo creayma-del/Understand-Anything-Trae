@@ -21,8 +21,8 @@ type TreeSitterLanguage = import("web-tree-sitter").Language;
  *
  * Accepts LanguageConfig objects to determine which languages to support
  * and how to load their WASM grammars. Provides deep structural analysis
- * (functions, classes, imports, exports, call graphs) for TypeScript,
- * JavaScript, and Python.
+ * (functions, classes, imports, exports, call graphs) for TypeScript
+ * and JavaScript.
  *
  * Languages without tree-sitter configs are gracefully skipped (the LLM
  * agent handles analysis for those).

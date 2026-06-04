@@ -95,9 +95,7 @@ _MIRROR_PRODUCTION_ROOTS: tuple[str, ...] = ("src", "app", "lib", "")
 # with any suffix listed for its extension. JS/TS family is handled separately
 # because its `.test`/`.spec` infix sits on the *stem* of a double-extension
 # basename (e.g. `foo.test.ts` has ext `.ts`, stem `foo.test`).
-_TEST_NAME_PATTERNS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
-    ".py": (("test_",), ("_test",)),
-}
+_TEST_NAME_PATTERNS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {}
 
 
 # Mirrors packages/core/src/schema.ts so the dashboard validator has nothing
@@ -372,30 +370,6 @@ def production_candidates(test_path: str) -> list[str]:
                     _add_unique(candidates, _join(new_dir, f"{base_stem}{ext}"))
                     for c in _js_ts_sibling_candidates(new_dir, base_stem):
                         _add_unique(candidates, c)
-
-    # ── Python ────────────────────────────────────────────────────────
-    elif ext == ".py" and (stem.startswith("test_") or stem.endswith("_test")):
-        if stem.startswith("test_"):
-            base_stem = stem[len("test_"):]
-        else:
-            base_stem = stem[: -len("_test")]
-
-        # Sibling
-        _add_unique(candidates, _join(dir_path, f"{base_stem}.py"))
-
-        # Walk out of an in-package tests/ or test/ directory:
-        # `mypkg/tests/test_bar.py` → `mypkg/bar.py`. Common in Django apps
-        # and any project that colocates tests with the package they cover.
-        if dir_segs and dir_segs[-1] in ("tests", "test"):
-            parent_dir = "/".join(dir_segs[:-1])
-            _add_unique(candidates, _join(parent_dir, f"{base_stem}.py"))
-
-        # Mirrored: tests/foo/test_bar.py → src/foo/bar.py (and variants)
-        if dir_segs and dir_segs[0] in ("tests", "test"):
-            tail_path = "/".join(dir_segs[1:])
-            for root in _MIRROR_PRODUCTION_ROOTS:
-                new_dir = "/".join(p for p in (root, tail_path) if p)
-                _add_unique(candidates, _join(new_dir, f"{base_stem}.py"))
 
     return candidates
 

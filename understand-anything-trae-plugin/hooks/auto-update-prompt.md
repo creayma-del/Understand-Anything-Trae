@@ -29,7 +29,7 @@ Incrementally update the knowledge graph using deterministic structural fingerpr
    ```
    If no files changed: update `meta.json` with the new commit hash and **STOP**.
 
-7. Filter to source files only (`.ts`, `.tsx`, `.js`, `.jsx`, `.py`, `.go`, `.rs`, `.java`, `.rb`, `.cpp`, `.c`, `.h`, `.cs`, `.swift`, `.kt`, `.php`).
+7. Filter to source files only (`.ts`, `.tsx`, `.js`, `.jsx`, `.go`, `.rs`, `.java`, `.rb`, `.cpp`, `.c`, `.h`, `.cs`, `.swift`, `.kt`, `.php`).
    If no source files changed: update `meta.json` with the new commit hash, report "Only non-source files changed. Metadata updated." and **STOP**.
 
 8. Create intermediate directory:

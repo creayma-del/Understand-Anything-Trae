@@ -1,7 +1,6 @@
 import type { LanguageConfig } from "../types.js";
 import { typescriptConfig } from "./typescript.js";
 import { javascriptConfig } from "./javascript.js";
-import { pythonConfig } from "./python.js";
 import { vueSfcConfig } from "./vue-sfc.js";
 import { svelteConfig } from "./svelte.js";
 // Non-code language configs
@@ -24,7 +23,6 @@ export const builtinLanguageConfigs: LanguageConfig[] = [
   // Code languages
   typescriptConfig,
   javascriptConfig,
-  pythonConfig,
   vueSfcConfig,
   svelteConfig,
   // Non-code languages
@@ -48,7 +46,6 @@ export {
   // Code languages
   typescriptConfig,
   javascriptConfig,
-  pythonConfig,
   vueSfcConfig,
   svelteConfig,
   // Non-code languages

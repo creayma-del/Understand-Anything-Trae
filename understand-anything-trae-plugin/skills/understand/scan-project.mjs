@@ -110,9 +110,6 @@ const LANGUAGE_BY_EXT = Object.freeze({
   '.jsx': 'javascript',
   '.mjs': 'javascript',
   '.cjs': 'javascript',
-  // Python
-  '.py': 'python',
-  '.pyi': 'python',
   // Vue / Svelte (no tree-sitter extractor, but project-scanner contract
   // lists them as code languages — downstream import map will return [])
   '.vue': 'vue-sfc',

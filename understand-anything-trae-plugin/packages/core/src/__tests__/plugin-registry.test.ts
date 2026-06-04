@@ -51,27 +51,26 @@ describe("PluginRegistry", () => {
 
   it("maps common extensions to languages", () => {
     const registry = new PluginRegistry();
-    const plugin = createMockPlugin("multi", ["python", "go", "rust"]);
+    const plugin = createMockPlugin("multi", ["vue-sfc", "svelte"]);
     registry.register(plugin);
-    expect(registry.getPluginForFile("main.py")).toBe(plugin);
-    expect(registry.getPluginForFile("main.go")).toBe(plugin);
-    expect(registry.getPluginForFile("main.rs")).toBe(plugin);
+    expect(registry.getPluginForFile("App.vue")).toBe(plugin);
+    expect(registry.getPluginForFile("App.svelte")).toBe(plugin);
   });
 
   it("lists all registered plugins", () => {
     const registry = new PluginRegistry();
     registry.register(createMockPlugin("a", ["typescript"]));
-    registry.register(createMockPlugin("b", ["python"]));
+    registry.register(createMockPlugin("b", ["vue-sfc"]));
     expect(registry.getPlugins()).toHaveLength(2);
   });
 
   it("lists supported languages", () => {
     const registry = new PluginRegistry();
     registry.register(createMockPlugin("a", ["typescript", "javascript"]));
-    registry.register(createMockPlugin("b", ["python"]));
+    registry.register(createMockPlugin("b", ["vue-sfc"]));
     const langs = registry.getSupportedLanguages();
     expect(langs).toContain("typescript");
-    expect(langs).toContain("python");
+    expect(langs).toContain("vue-sfc");
   });
 
   it("unregisters a plugin by name", () => {
@@ -108,25 +107,25 @@ describe("PluginRegistry", () => {
   it("analyzeFile returns null for unsupported files", () => {
     const registry = new PluginRegistry();
     registry.register(createMockPlugin("ts-plugin", ["typescript"]));
-    const result = registry.analyzeFile("main.py", "print('hello')");
+    const result = registry.analyzeFile("App.vue", "<template><div/></template>");
     expect(result).toBeNull();
   });
 
   it("unregister rebuilds language map correctly", () => {
     const registry = new PluginRegistry();
     const plugin1 = createMockPlugin("plugin1", ["typescript", "javascript"]);
-    const plugin2 = createMockPlugin("plugin2", ["python"]);
+    const plugin2 = createMockPlugin("plugin2", ["vue-sfc"]);
 
     registry.register(plugin1);
     registry.register(plugin2);
 
     expect(registry.getPluginForLanguage("typescript")).toBe(plugin1);
-    expect(registry.getPluginForLanguage("python")).toBe(plugin2);
+    expect(registry.getPluginForLanguage("vue-sfc")).toBe(plugin2);
 
     registry.unregister("plugin1");
 
     expect(registry.getPluginForLanguage("typescript")).toBeNull();
-    expect(registry.getPluginForLanguage("python")).toBe(plugin2);
+    expect(registry.getPluginForLanguage("vue-sfc")).toBe(plugin2);
   });
 
   it("unregister does nothing for non-existent plugin", () => {
@@ -176,7 +175,7 @@ describe("PluginRegistry", () => {
     const registry = new PluginRegistry();
     registry.register(createMockPlugin("ts-plugin", ["typescript"]));
 
-    const result = registry.resolveImports("main.py", "import os");
+    const result = registry.resolveImports("App.vue", "import './utils'");
     expect(result).toBeNull();
   });
 

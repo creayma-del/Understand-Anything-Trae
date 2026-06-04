@@ -24,12 +24,12 @@ describe("LLM Analyzer", () => {
 
     it("should include project context", () => {
       const prompt = buildFileAnalysisPrompt(
-        "app.py",
-        "print('hello')",
-        "A Python web server",
+        "app.ts",
+        "export const app = express();",
+        "A TypeScript web server",
       );
 
-      expect(prompt).toContain("A Python web server");
+      expect(prompt).toContain("A TypeScript web server");
     });
   });
 

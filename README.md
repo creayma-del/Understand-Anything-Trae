@@ -195,11 +195,11 @@ git add .gitattributes .understand-anything-trae/
 
 ### Supported Languages
 
-**Code languages (3):** TypeScript, JavaScript, Python
+**Code languages (4):** TypeScript, JavaScript, Vue SFC, Svelte
 
-**Non-code languages (14):** Markdown, YAML, JSON Config, TOML, Env, Dockerfile, SQL, GraphQL, Makefile, Shell, HTML, CSS, reStructuredText, Plain Text
+**Non-code languages (15):** Markdown, YAML, JSON Config, TOML, Env, Dockerfile, SQL, GraphQL, Prisma, Makefile, Shell, HTML, CSS, reStructuredText, Plain Text
 
-**Frameworks (7):** React, Vue, Next.js, Express, Django, Flask, FastAPI
+**Frameworks (4):** React, Vue, Next.js, Express
 
 ### Tree-sitter + LLM hybrid
 

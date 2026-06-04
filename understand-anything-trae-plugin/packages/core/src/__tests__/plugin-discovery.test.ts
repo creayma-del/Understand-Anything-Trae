@@ -12,7 +12,7 @@ describe("plugin-discovery", () => {
       const json = JSON.stringify({
         plugins: [
           { name: "tree-sitter", enabled: true, languages: ["typescript", "javascript"] },
-          { name: "python-ast", enabled: false, languages: ["python"] },
+          { name: "sfc-ast", enabled: false, languages: ["vue-sfc"] },
         ],
       });
       const config = parsePluginConfig(json);
@@ -35,7 +35,7 @@ describe("plugin-discovery", () => {
       const json = JSON.stringify({
         plugins: [
           { name: "valid", enabled: true, languages: ["typescript"] },
-          { enabled: true, languages: ["python"] }, // missing name
+          { enabled: true, languages: ["vue-sfc"] }, // missing name
           { name: "no-langs", enabled: true }, // missing languages
         ],
       });
@@ -102,7 +102,7 @@ describe("plugin-discovery", () => {
           {
             name: "custom-plugin",
             enabled: true,
-            languages: ["python"],
+            languages: ["vue-sfc"],
             options: { strict: true, timeout: 5000 },
           },
         ],

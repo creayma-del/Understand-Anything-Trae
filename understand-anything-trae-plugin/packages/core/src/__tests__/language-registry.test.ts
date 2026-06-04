@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { LanguageRegistry } from "../languages/language-registry.js";
 import { StrictLanguageConfigSchema } from "../languages/types.js";
 import { typescriptConfig } from "../languages/configs/typescript.js";
-import { pythonConfig } from "../languages/configs/python.js";
+import { vueSfcConfig } from "../languages/configs/vue-sfc.js";
 
 describe("LanguageRegistry", () => {
   it("registers and retrieves a language config by id", () => {
@@ -21,9 +21,9 @@ describe("LanguageRegistry", () => {
   it("retrieves config for a file path", () => {
     const registry = new LanguageRegistry();
     registry.register(typescriptConfig);
-    registry.register(pythonConfig);
+    registry.register(vueSfcConfig);
     expect(registry.getForFile("src/index.ts")?.id).toBe("typescript");
-    expect(registry.getForFile("app/models.py")?.id).toBe("python");
+    expect(registry.getForFile("src/App.vue")?.id).toBe("vue-sfc");
   });
 
   it("returns null for unknown extensions", () => {
@@ -41,24 +41,24 @@ describe("LanguageRegistry", () => {
   it("lists all registered languages", () => {
     const registry = new LanguageRegistry();
     registry.register(typescriptConfig);
-    registry.register(pythonConfig);
+    registry.register(vueSfcConfig);
     const all = registry.getAllLanguages();
     expect(all).toHaveLength(2);
     expect(all.map(c => c.id)).toContain("typescript");
-    expect(all.map(c => c.id)).toContain("python");
+    expect(all.map(c => c.id)).toContain("vue-sfc");
   });
 
   describe("createDefault", () => {
-    it("registers all 40 built-in language configs", () => {
+    it("registers all 39 built-in language configs", () => {
       const registry = LanguageRegistry.createDefault();
       const all = registry.getAllLanguages();
-      expect(all.length).toBe(40);
+      expect(all.length).toBe(39);
     });
 
     it("maps all expected extensions", () => {
       const registry = LanguageRegistry.createDefault();
       expect(registry.getByExtension(".ts")?.id).toBe("typescript");
-      expect(registry.getByExtension(".py")?.id).toBe("python");
+      expect(registry.getByExtension(".vue")?.id).toBe("vue-sfc");
       expect(registry.getByExtension(".go")?.id).toBe("go");
       expect(registry.getByExtension(".rs")?.id).toBe("rust");
       expect(registry.getByExtension(".java")?.id).toBe("java");

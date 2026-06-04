@@ -65,7 +65,7 @@ For every node, count how many other nodes it has edges pointing TO (fan-out). H
 Identify likely entry points using these signals (score each node, sum the scores):
 
 For code files:
-- Filename matches `index.ts`, `index.js`, `main.ts`, `main.js`, `app.ts`, `app.js`, `server.ts`, `server.js`, `main.py`, `manage.py`, `app.py`, `wsgi.py`, `asgi.py`, `run.py`, `__main__.py` -> +3 points
+- Filename matches `index.ts`, `index.js`, `main.ts`, `main.js`, `app.ts`, `app.js`, `server.ts`, `server.js` -> +3 points
 - File is at the project root or one level deep (e.g., `src/index.ts`) -> +1 point
 - High fan-out (top 10%) -> +1 point
 - Low fan-in (bottom 25%) -> +1 point (entry points are imported by few files)
@@ -288,7 +288,6 @@ If a step involves notable language-specific or format-specific patterns, includ
 **For code files:**
 - **TypeScript:** generics, discriminated unions, utility types, decorators, template literal types
 - **React:** hooks, context, render patterns, suspense, compound components
-- **Python:** decorators, generators, context managers, metaclasses, protocols
 
 **For non-code files:**
 - **Dockerfile:** multi-stage builds reduce image size by separating build and runtime dependencies. Layer ordering matters for Docker cache efficiency — put rarely-changing layers (OS packages) before frequently-changing ones (app code).

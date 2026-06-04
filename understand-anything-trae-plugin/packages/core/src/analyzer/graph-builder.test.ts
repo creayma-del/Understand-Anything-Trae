@@ -185,8 +185,8 @@ describe("GraphBuilder", () => {
       tags: [],
       complexity: "simple",
     });
-    builder.addFile("src/script.py", {
-      summary: "Script",
+    builder.addFile("src/utils.ts", {
+      summary: "Utils",
       tags: [],
       complexity: "simple",
     });
@@ -196,7 +196,7 @@ describe("GraphBuilder", () => {
     expect(graph.version).toBe("1.0.0");
     expect(graph.project.name).toBe("my-awesome-project");
     expect(graph.project.gitCommitHash).toBe("deadbeef");
-    expect(graph.project.languages).toEqual(["python", "typescript"]);
+    expect(graph.project.languages).toEqual(["typescript"]);
     expect(graph.project.analyzedAt).toBeTruthy();
     expect(graph.layers).toEqual([]);
     expect(graph.tour).toEqual([]);

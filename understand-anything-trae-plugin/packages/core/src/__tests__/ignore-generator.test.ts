@@ -97,12 +97,12 @@ describe("generateStarterIgnoreFile", () => {
 
   describe(".gitignore integration", () => {
     it("includes .gitignore patterns not covered by defaults", () => {
-      writeFileSync(join(testDir, ".gitignore"), ".env\nsecrets/\n*.pyc\n");
+      writeFileSync(join(testDir, ".gitignore"), ".env\nsecrets/\n*.d.ts\n");
       const content = generateStarterIgnoreFile(testDir);
       expect(content).toContain("From .gitignore");
       expect(content).toContain("# .env");
       expect(content).toContain("# secrets/");
-      expect(content).toContain("# *.pyc");
+      expect(content).toContain("# *.d.ts");
     });
 
     it("excludes .gitignore patterns already in defaults", () => {
@@ -153,7 +153,7 @@ describe("generateStarterIgnoreFile", () => {
     });
 
     it("all .gitignore suggestions are commented out", () => {
-      writeFileSync(join(testDir, ".gitignore"), ".env\nsecrets/\n*.pyc\n");
+      writeFileSync(join(testDir, ".gitignore"), ".env\nsecrets/\n*.d.ts\n");
       const content = generateStarterIgnoreFile(testDir);
       const lines = content.split("\n").filter((l) => l.trim() && !l.startsWith("#"));
       expect(lines).toHaveLength(0);

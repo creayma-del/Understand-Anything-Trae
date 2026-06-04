@@ -2,8 +2,8 @@ import { describe, it, expect } from "vitest";
 import { buildResult } from "../../skills/understand/extract-structure.mjs";
 
 const file = (overrides = {}) => ({
-  path: "src/foo.py",
-  language: "python",
+  path: "src/foo.ts",
+  language: "typescript",
   fileCategory: "code",
   ...overrides,
 });
@@ -19,8 +19,8 @@ const analysis = (overrides = {}) => ({
 describe("extract-structure buildResult", () => {
   describe("language pass-through", () => {
     it("preserves the input language on the output", () => {
-      const result = buildResult(file({ language: "python" }), 10, 8, analysis(), null, {});
-      expect(result.language).toBe("python");
+      const result = buildResult(file({ language: "typescript" }), 10, 8, analysis(), null, {});
+      expect(result.language).toBe("typescript");
     });
 
     it("preserves null when caller did not set a language", () => {
@@ -44,16 +44,16 @@ describe("extract-structure buildResult", () => {
     });
 
     it("uses pre-resolved imports when batchImportData has entries", () => {
-      const batchImportData = { "src/foo.py": ["src/bar.py", "src/baz.py"] };
+      const batchImportData = { "src/foo.ts": ["src/bar.ts", "src/baz.ts"] };
       const result = buildResult(file(), 10, 8, analysisWithImports, null, batchImportData);
       expect(result.metrics.importCount).toBe(2);
     });
 
     it("falls back to parser imports when batchImportData entry is an empty array", () => {
       // Regression test: empty arrays are truthy in JS, so a naive `if (importPaths)`
-      // would clobber the parser's count with 0. This is the bug Python projects
+      // would clobber the parser's count with 0. This is the bug projects
       // using absolute imports (which the project scanner doesn't resolve) hit.
-      const batchImportData = { "src/foo.py": [] };
+      const batchImportData = { "src/foo.ts": [] };
       const result = buildResult(file(), 10, 8, analysisWithImports, null, batchImportData);
       expect(result.metrics.importCount).toBe(3);
     });
@@ -69,7 +69,7 @@ describe("extract-structure buildResult", () => {
     });
 
     it("reports 0 imports when neither source has any", () => {
-      const result = buildResult(file(), 10, 8, analysis(), null, { "src/foo.py": [] });
+      const result = buildResult(file(), 10, 8, analysis(), null, { "src/foo.ts": [] });
       expect(result.metrics.importCount).toBe(0);
     });
 

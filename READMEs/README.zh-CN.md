@@ -194,11 +194,11 @@ git add .gitattributes .understand-anything-trae/
 
 ### 支持的语言
 
-**代码语言（3 种）：** TypeScript、JavaScript、Python
+**代码语言（4 种）：** TypeScript、JavaScript、Vue SFC、Svelte
 
-**非代码语言（14 种）：** Markdown、YAML、JSON Config、TOML、Env、Dockerfile、SQL、GraphQL、Makefile、Shell、HTML、CSS、reStructuredText、Plain Text
+**非代码语言（15 种）：** Markdown、YAML、JSON Config、TOML、Env、Dockerfile、SQL、GraphQL、Prisma、Makefile、Shell、HTML、CSS、reStructuredText、Plain Text
 
-**框架（7 种）：** React、Vue、Next.js、Express、Django、Flask、FastAPI
+**框架（4 种）：** React、Vue、Next.js、Express
 
 ### Tree-sitter + LLM 混合分析
 

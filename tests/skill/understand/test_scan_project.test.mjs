@@ -123,13 +123,13 @@ describe('scan-project.mjs — language detection', () => {
     expect(byPath(r.output, 'f.cjs').language).toBe('javascript');
   });
 
-  it('maps Python to its language id', () => {
+  it('maps .py to bare extension fallback (Python support removed)', () => {
     projectRoot = setupTree({
       'a.py': 'x = 1\n',
     });
     const r = runScript(projectRoot);
     expect(r.status).toBe(0);
-    expect(byPath(r.output, 'a.py').language).toBe('python');
+    expect(byPath(r.output, 'a.py').language).toBe('py');
   });
 
   it('falls back to bare extension for unsupported backend languages', () => {
@@ -235,16 +235,16 @@ describe('scan-project.mjs — category assignment (project-scanner.md Step 4)',
     }
   });
 
-  it('assigns code to TypeScript, JavaScript, Python source files', () => {
+  it('assigns code to TypeScript, JavaScript, Vue source files', () => {
     projectRoot = setupTree({
       'src/a.ts': 'export const a = 1;\n',
-      'src/b.py': 'def b(): pass\n',
+      'src/b.vue': '<template><div/></template>\n',
       'src/c.js': 'module.exports = {};\n',
     });
     const r = runScript(projectRoot);
     expect(r.status).toBe(0);
     expect(byPath(r.output, 'src/a.ts').fileCategory).toBe('code');
-    expect(byPath(r.output, 'src/b.py').fileCategory).toBe('code');
+    expect(byPath(r.output, 'src/b.vue').fileCategory).toBe('code');
     expect(byPath(r.output, 'src/c.js').fileCategory).toBe('code');
   });
 

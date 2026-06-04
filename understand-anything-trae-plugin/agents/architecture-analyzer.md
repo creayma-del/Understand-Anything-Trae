@@ -146,11 +146,9 @@ Classify each directory name against known architectural patterns:
 | `sql`, `database`, `schema` | `data` |
 
 Also check file-level patterns:
-- Files matching `*.test.*` or `*.spec.*` or `test_*.py` or `*_test.go` or `*Test.java` or `*_spec.rb` or `*Test.php` or `*Tests.cs` -> `test`
+- Files matching `*.test.*` or `*.spec.*` or `*_test.go` or `*Test.java` or `*_spec.rb` or `*Test.php` or `*Tests.cs` -> `test`
 - Files matching `*.d.ts` -> `types` (TypeScript declaration files only)
-- Files named `index.ts`, `index.js`, or `__init__.py` at a package/directory root -> `entry`
-- Files named `manage.py` at the project root -> `entry` (Django management entry point)
-- Files named `wsgi.py` or `asgi.py` -> `config` (Python WSGI/ASGI server config)
+- Files named `index.ts`, `index.js` at a package/directory root -> `entry`
 - Files named `main.go` at `cmd/*/` -> `entry` (Go binary entry points)
 - Files named `main.rs` or `lib.rs` at `src/` -> `entry` (Rust crate roots)
 - Files named `Application.java` or `Program.cs` -> `entry` (JVM / .NET entry points)

@@ -63,8 +63,8 @@ describe("merge-batch-graphs.py imports recovery", () => {
     writeFileSync(
       join(intermediateDir, "batch-0.json"),
       JSON.stringify({
-        nodes: [fileNode("src/a.py"), fileNode("src/b.py"), fileNode("src/c.py"), fileNode("src/d.py")],
-        edges: [importsEdge("src/a.py", "src/b.py")],
+        nodes: [fileNode("src/a.ts"), fileNode("src/b.ts"), fileNode("src/c.ts"), fileNode("src/d.ts")],
+        edges: [importsEdge("src/a.ts", "src/b.ts")],
       }),
     );
     // scan-result.json has the full importMap — agent dropped 2/3 of these.
@@ -72,8 +72,8 @@ describe("merge-batch-graphs.py imports recovery", () => {
       join(intermediateDir, "scan-result.json"),
       JSON.stringify({
         importMap: {
-          "src/a.py": ["src/b.py", "src/c.py", "src/d.py"],
-          "src/b.py": [],
+          "src/a.ts": ["src/b.ts", "src/c.ts", "src/d.ts"],
+          "src/b.ts": [],
         },
       }),
     );
@@ -82,7 +82,7 @@ describe("merge-batch-graphs.py imports recovery", () => {
     const importsEdges = assembled.edges.filter((e) => e.type === "imports");
     expect(importsEdges).toHaveLength(3);
     const targets = new Set(importsEdges.map((e) => e.target));
-    expect(targets).toEqual(new Set(["file:src/b.py", "file:src/c.py", "file:src/d.py"]));
+    expect(targets).toEqual(new Set(["file:src/b.ts", "file:src/c.ts", "file:src/d.ts"]));
     // Recovered edges are tagged so downstream consumers can audit.
     const recovered = importsEdges.filter((e) => e.recoveredFromImportMap);
     expect(recovered).toHaveLength(2);
@@ -93,14 +93,14 @@ describe("merge-batch-graphs.py imports recovery", () => {
     writeFileSync(
       join(intermediateDir, "batch-0.json"),
       JSON.stringify({
-        nodes: [fileNode("src/a.py"), fileNode("src/b.py")],
-        edges: [importsEdge("src/a.py", "src/b.py")],
+        nodes: [fileNode("src/a.ts"), fileNode("src/b.ts")],
+        edges: [importsEdge("src/a.ts", "src/b.ts")],
       }),
     );
     writeFileSync(
       join(intermediateDir, "scan-result.json"),
       JSON.stringify({
-        importMap: { "src/a.py": ["src/b.py"], "src/b.py": [] },
+        importMap: { "src/a.ts": ["src/b.ts"], "src/b.ts": [] },
       }),
     );
 
@@ -111,18 +111,18 @@ describe("merge-batch-graphs.py imports recovery", () => {
   });
 
   it("skips importMap entries whose source file is missing from the graph", () => {
-    // src/missing.py is in importMap but has no file: node — must not produce a dangling edge.
+    // src/missing.ts is in importMap but has no file: node — must not produce a dangling edge.
     writeFileSync(
       join(intermediateDir, "batch-0.json"),
       JSON.stringify({
-        nodes: [fileNode("src/b.py")],
+        nodes: [fileNode("src/b.ts")],
         edges: [],
       }),
     );
     writeFileSync(
       join(intermediateDir, "scan-result.json"),
       JSON.stringify({
-        importMap: { "src/missing.py": ["src/b.py"] },
+        importMap: { "src/missing.ts": ["src/b.ts"] },
       }),
     );
 
@@ -135,14 +135,14 @@ describe("merge-batch-graphs.py imports recovery", () => {
     writeFileSync(
       join(intermediateDir, "batch-0.json"),
       JSON.stringify({
-        nodes: [fileNode("src/a.py")],
+        nodes: [fileNode("src/a.ts")],
         edges: [],
       }),
     );
     writeFileSync(
       join(intermediateDir, "scan-result.json"),
       JSON.stringify({
-        importMap: { "src/a.py": ["src/dropped.py", "src/also-missing.py"] },
+        importMap: { "src/a.ts": ["src/dropped.ts", "src/also-missing.ts"] },
       }),
     );
 
@@ -155,8 +155,8 @@ describe("merge-batch-graphs.py imports recovery", () => {
     writeFileSync(
       join(intermediateDir, "batch-0.json"),
       JSON.stringify({
-        nodes: [fileNode("src/a.py"), fileNode("src/b.py")],
-        edges: [importsEdge("src/a.py", "src/b.py")],
+        nodes: [fileNode("src/a.ts"), fileNode("src/b.ts")],
+        edges: [importsEdge("src/a.ts", "src/b.ts")],
       }),
     );
     // No scan-result.json written.
@@ -170,14 +170,14 @@ describe("merge-batch-graphs.py imports recovery", () => {
     writeFileSync(
       join(intermediateDir, "batch-0.json"),
       JSON.stringify({
-        nodes: [fileNode("src/a.py")],
+        nodes: [fileNode("src/a.ts")],
         edges: [],
       }),
     );
     writeFileSync(
       join(intermediateDir, "scan-result.json"),
       JSON.stringify({
-        importMap: { "src/a.py": ["src/a.py"] }, // pathological self-reference
+        importMap: { "src/a.ts": ["src/a.ts"] }, // pathological self-reference
       }),
     );
 
