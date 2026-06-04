@@ -115,12 +115,16 @@ const LANGUAGE_BY_EXT = Object.freeze({
   '.pyi': 'python',
   // Vue / Svelte (no tree-sitter extractor, but project-scanner contract
   // lists them as code languages — downstream import map will return [])
-  '.vue': 'vue',
+  '.vue': 'vue-sfc',
   '.svelte': 'svelte',
   // Shell
   '.sh': 'shell',
   '.bash': 'shell',
   '.zsh': 'shell',
+  '.ps1': 'powershell',
+  // Terraform
+  '.tf': 'terraform',
+  '.tfvars': 'terraform',
   // Markup / docs
   '.html': 'html',
   '.htm': 'html',
@@ -145,15 +149,8 @@ const LANGUAGE_BY_EXT = Object.freeze({
   '.graphql': 'graphql',
   '.gql': 'graphql',
   '.prisma': 'prisma',
-  // JVM build files (categorized via filename-or-extension)
+  // Build files (categorized via CATEGORY_BY_EXT)
   '.gradle': 'gradle',
-  // .NET project files (mapped to extension-derived ids; downstream
-  // treats them as config — see CATEGORY_BY_EXT)
-  '.csproj': 'csproj',
-  '.sln': 'sln',
-  '.properties': 'properties',
-  '.mod': 'mod',
-  '.sum': 'sum',
 });
 
 /**
@@ -260,11 +257,6 @@ const CATEGORY_BY_EXT = Object.freeze({
   '.cfg': 'config',
   '.ini': 'config',
   '.env': 'config',
-  '.properties': 'config',
-  '.csproj': 'config',
-  '.sln': 'config',
-  '.mod': 'config',
-  '.sum': 'config',
   '.gradle': 'config',
   // data
   '.sql': 'data',
@@ -276,6 +268,7 @@ const CATEGORY_BY_EXT = Object.freeze({
   '.sh': 'script',
   '.bash': 'script',
   '.zsh': 'script',
+  '.ps1': 'script',
   // markup
   '.html': 'markup',
   '.htm': 'markup',
@@ -298,6 +291,7 @@ const INFRA_FILENAMES = new Set([
   'makefile',
   'Procfile',
   'Vagrantfile',
+  'Jenkinsfile',
   '.gitlab-ci.yml',
 ]);
 
@@ -337,6 +331,10 @@ export function detectCategory(filePath) {
   if (posix.startsWith('.circleci/')) return 'infra';
   // `*.k8s.yml` and `*.k8s.yaml` — Kubernetes-flavored YAML.
   if (/\.k8s\.(ya?ml)$/i.test(base)) return 'infra';
+  // Terraform files (.tf, .tfvars) — infrastructure as code.
+  if (ext === '.tf' || ext === '.tfvars') return 'infra';
+  // k8s/ and kubernetes/ directories — deployment manifests.
+  if (posix.startsWith('k8s/') || posix.startsWith('kubernetes/')) return 'infra';
 
   // Rule 4: extension-based lookup.
   if (ext) {

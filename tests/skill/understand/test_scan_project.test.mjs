@@ -123,42 +123,40 @@ describe('scan-project.mjs — language detection', () => {
     expect(byPath(r.output, 'f.cjs').language).toBe('javascript');
   });
 
-  it('maps Python, Go, Rust, Java, Kotlin, C# to their language ids', () => {
+  it('maps Python to its language id', () => {
     projectRoot = setupTree({
       'a.py': 'x = 1\n',
+    });
+    const r = runScript(projectRoot);
+    expect(r.status).toBe(0);
+    expect(byPath(r.output, 'a.py').language).toBe('python');
+  });
+
+  it('falls back to bare extension for unsupported backend languages', () => {
+    // Go/Rust/Java/Kotlin/C#/Ruby/PHP/C/C++ have no language config,
+    // parser, or resolver — they fall back to the bare extension.
+    projectRoot = setupTree({
       'b.go': 'package main\n',
       'c.rs': 'fn main() {}\n',
       'd.java': 'class D {}\n',
       'e.kt': 'fun main() {}\n',
       'f.cs': 'class F {}\n',
-    });
-    const r = runScript(projectRoot);
-    expect(r.status).toBe(0);
-    expect(byPath(r.output, 'a.py').language).toBe('python');
-    expect(byPath(r.output, 'b.go').language).toBe('go');
-    expect(byPath(r.output, 'c.rs').language).toBe('rust');
-    expect(byPath(r.output, 'd.java').language).toBe('java');
-    expect(byPath(r.output, 'e.kt').language).toBe('kotlin');
-    expect(byPath(r.output, 'f.cs').language).toBe('csharp');
-  });
-
-  it('maps Ruby, PHP, C, C++ to their language ids', () => {
-    projectRoot = setupTree({
       'a.rb': 'puts 1\n',
       'b.php': '<?php echo 1;\n',
       'c.c': 'int main() { return 0; }\n',
-      'd.h': 'void f();\n',
       'e.cpp': 'int main() {}\n',
-      'f.hpp': 'class F {};\n',
     });
     const r = runScript(projectRoot);
     expect(r.status).toBe(0);
-    expect(byPath(r.output, 'a.rb').language).toBe('ruby');
+    expect(byPath(r.output, 'b.go').language).toBe('go');
+    expect(byPath(r.output, 'c.rs').language).toBe('rs');
+    expect(byPath(r.output, 'd.java').language).toBe('java');
+    expect(byPath(r.output, 'e.kt').language).toBe('kt');
+    expect(byPath(r.output, 'f.cs').language).toBe('cs');
+    expect(byPath(r.output, 'a.rb').language).toBe('rb');
     expect(byPath(r.output, 'b.php').language).toBe('php');
     expect(byPath(r.output, 'c.c').language).toBe('c');
-    expect(byPath(r.output, 'd.h').language).toBe('c');
     expect(byPath(r.output, 'e.cpp').language).toBe('cpp');
-    expect(byPath(r.output, 'f.hpp').language).toBe('cpp');
   });
 
   it('maps web markup (HTML, CSS) to their language ids', () => {
@@ -237,19 +235,17 @@ describe('scan-project.mjs — category assignment (project-scanner.md Step 4)',
     }
   });
 
-  it('assigns code to TypeScript, JavaScript, Python, Go, Rust source files', () => {
+  it('assigns code to TypeScript, JavaScript, Python source files', () => {
     projectRoot = setupTree({
       'src/a.ts': 'export const a = 1;\n',
       'src/b.py': 'def b(): pass\n',
-      'src/c.go': 'package main\n',
-      'src/d.rs': 'fn main() {}\n',
+      'src/c.js': 'module.exports = {};\n',
     });
     const r = runScript(projectRoot);
     expect(r.status).toBe(0);
     expect(byPath(r.output, 'src/a.ts').fileCategory).toBe('code');
     expect(byPath(r.output, 'src/b.py').fileCategory).toBe('code');
-    expect(byPath(r.output, 'src/c.go').fileCategory).toBe('code');
-    expect(byPath(r.output, 'src/d.rs').fileCategory).toBe('code');
+    expect(byPath(r.output, 'src/c.js').fileCategory).toBe('code');
   });
 
   it('assigns config to JSON/YAML/TOML/INI', () => {

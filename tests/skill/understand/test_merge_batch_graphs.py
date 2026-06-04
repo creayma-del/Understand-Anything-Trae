@@ -23,7 +23,7 @@ _HERE = Path(__file__).resolve().parent
 _REPO_ROOT = _HERE.parent.parent.parent
 _MODULE_PATH = (
     _REPO_ROOT
-    / "understand-anything-plugin"
+    / "understand-anything-trae-plugin"
     / "skills"
     / "understand"
     / "merge-batch-graphs.py"
@@ -91,48 +91,20 @@ class IsTestPathTests(unittest.TestCase):
         self.assertTrue(mbg.is_test_path("test/foo/X.test.ts"))
         self.assertTrue(mbg.is_test_path("spec/foo/X.spec.ts"))
 
-    def test_go_test_files(self) -> None:
-        self.assertTrue(mbg.is_test_path("internal/bar_test.go"))
-        self.assertTrue(mbg.is_test_path("bar_test.go"))
-
     def test_python_test_files(self) -> None:
         self.assertTrue(mbg.is_test_path("tests/test_bar.py"))
         self.assertTrue(mbg.is_test_path("bar_test.py"))
         self.assertTrue(mbg.is_test_path("test_bar.py"))
 
-    def test_java_test_files(self) -> None:
-        self.assertTrue(mbg.is_test_path("src/test/java/com/foo/BarTest.java"))
-        self.assertTrue(mbg.is_test_path("src/test/java/com/foo/BarTests.java"))
-        self.assertTrue(mbg.is_test_path("src/test/java/com/foo/BarIT.java"))
-
-    def test_kotlin_test_files(self) -> None:
-        self.assertTrue(mbg.is_test_path("src/test/kotlin/com/foo/BarTest.kt"))
-        self.assertTrue(mbg.is_test_path("src/test/kotlin/com/foo/BarTests.kt"))
-
-    def test_csharp_test_files(self) -> None:
-        self.assertTrue(mbg.is_test_path("Foo.Tests/BarTests.cs"))
-        self.assertTrue(mbg.is_test_path("Foo.Tests/BarTest.cs"))
-
-    def test_c_cpp_test_files(self) -> None:
-        self.assertTrue(mbg.is_test_path("test/bar_test.c"))
-        self.assertTrue(mbg.is_test_path("test/test_bar.c"))
-        self.assertTrue(mbg.is_test_path("test/bar_test.cpp"))
-        self.assertTrue(mbg.is_test_path("test/bar_test.cc"))
-        self.assertTrue(mbg.is_test_path("test/test_bar.cpp"))
-
     def test_production_files_rejected(self) -> None:
         for path in [
             "src/foo.ts",
             "src/foo.tsx",
-            "internal/bar.go",
             "src/index.tsx",
             "README.md",
             "docs/guide.md",
             "main.py",
             "src/foo/bar.js",
-            "Foo.cs",
-            "Bar.kt",
-            "Bar.java",
         ]:
             with self.subTest(path=path):
                 self.assertFalse(mbg.is_test_path(path), f"{path} should be production")
@@ -175,10 +147,6 @@ class ProductionCandidatesTests(unittest.TestCase):
         self.assertIn("src/foo/X.ts", cands)
         self.assertIn("foo/X.ts", cands)
 
-    def test_go_sibling(self) -> None:
-        cands = mbg.production_candidates("internal/bar_test.go")
-        self.assertIn("internal/bar.go", cands)
-
     def test_python_test_prefix(self) -> None:
         cands = mbg.production_candidates("tests/test_bar.py")
         self.assertIn("tests/bar.py", cands)
@@ -189,22 +157,6 @@ class ProductionCandidatesTests(unittest.TestCase):
     def test_python_test_suffix(self) -> None:
         cands = mbg.production_candidates("foo/bar_test.py")
         self.assertIn("foo/bar.py", cands)
-
-    def test_java_maven_layout(self) -> None:
-        cands = mbg.production_candidates("src/test/java/com/foo/BarTest.java")
-        self.assertIn("src/main/java/com/foo/Bar.java", cands)
-
-    def test_java_tests_suffix(self) -> None:
-        cands = mbg.production_candidates("src/test/java/com/foo/BarTests.java")
-        self.assertIn("src/main/java/com/foo/Bar.java", cands)
-
-    def test_java_it_suffix(self) -> None:
-        cands = mbg.production_candidates("src/test/java/com/foo/BarIT.java")
-        self.assertIn("src/main/java/com/foo/Bar.java", cands)
-
-    def test_kotlin_maven_layout(self) -> None:
-        cands = mbg.production_candidates("src/test/kotlin/com/foo/BarTest.kt")
-        self.assertIn("src/main/kotlin/com/foo/Bar.kt", cands)
 
     def test_js_ts_test_subdir_walkout(self) -> None:
         # Some JS/TS projects use `<dir>/test/` or `<dir>/spec/` instead of
@@ -222,32 +174,6 @@ class ProductionCandidatesTests(unittest.TestCase):
         # Also nested:
         cands_nested = mbg.production_candidates("a/b/test/test_bar.py")
         self.assertIn("a/b/bar.py", cands_nested)
-
-    def test_csharp_tests_subdir_mirror_to_src(self) -> None:
-        # Real case from microservices-demo cartservice:
-        # `src/cartservice/tests/CartServiceTests.cs` ↔
-        # `src/cartservice/src/services/CartService.cs`. The candidate list
-        # only knows the basename; the matcher must produce a parent-level
-        # candidate that the linker can verify against the actual file index.
-        cands = mbg.production_candidates(
-            "src/cartservice/tests/CartServiceTests.cs"
-        )
-        # Drop tests/ entirely:
-        self.assertIn("src/cartservice/CartService.cs", cands)
-        # Mirror through `src/`:
-        self.assertIn("src/cartservice/src/CartService.cs", cands)
-        # Sibling fallback retained:
-        self.assertIn("src/cartservice/tests/CartService.cs", cands)
-
-    def test_csharp_dotnet_sibling_project_mirror(self) -> None:
-        # `.NET` convention: `MyApp.Tests/Foo/BarTests.cs` ↔
-        # `MyApp/Foo/Bar.cs`. Strip the `.Tests` suffix from the top dir
-        # and try the same tail under the sibling project.
-        cands = mbg.production_candidates("MyApp.Tests/Foo/BarTests.cs")
-        self.assertIn("MyApp/Foo/Bar.cs", cands)
-        # Also `.Test` (singular) is sometimes used.
-        cands_singular = mbg.production_candidates("MyApp.Test/BarTest.cs")
-        self.assertIn("MyApp/Bar.cs", cands_singular)
 
     def test_priority_underscore_tests_sibling_before_walkup(self) -> None:
         # When a test sits in `src/__tests__/`, the sibling-de-infix path
@@ -604,49 +530,6 @@ class LinkTestsTests(unittest.TestCase):
         )
         self.assertEqual(len(tested_by_edges), 2)
 
-    def test_swap_recovers_real_world_one_test_many_production(self) -> None:
-        # Real case from microservices-demo: shippingservice_test.go does
-        # not have a `shippingservice.go` sibling — it tests `main.go`,
-        # `tracker.go`, and `quote.go`. Path convention can't pair these,
-        # but the LLM saw the same-package usage and emitted the edges
-        # (with wrong direction). Swap should recover them.
-        nodes_by_id = {
-            "file:src/shippingservice/main.go": _file_node("src/shippingservice/main.go"),
-            "file:src/shippingservice/tracker.go": _file_node("src/shippingservice/tracker.go"),
-            "file:src/shippingservice/quote.go": _file_node("src/shippingservice/quote.go"),
-            "file:src/shippingservice/shippingservice_test.go": _file_node("src/shippingservice/shippingservice_test.go"),
-        }
-        edges: list[dict[str, Any]] = [
-            {
-                "source": "file:src/shippingservice/shippingservice_test.go",
-                "target": "file:src/shippingservice/main.go",
-                "type": "tested_by",
-                "direction": "forward",
-                "weight": 0.5,
-            },
-            {
-                "source": "file:src/shippingservice/shippingservice_test.go",
-                "target": "file:src/shippingservice/tracker.go",
-                "type": "tested_by",
-                "direction": "forward",
-                "weight": 0.5,
-            },
-        ]
-
-        added, dropped, tagged, swapped = mbg.link_tests(nodes_by_id, edges)
-
-        self.assertEqual(swapped, 2)
-        # Pass 2 fallback: the test file with no shippingservice.go sibling
-        # produces no path-convention candidate — we rely entirely on swap.
-        self.assertEqual(added, 0)
-        self.assertEqual(dropped, 0)
-        # main.go and tracker.go were tagged; quote.go was not (LLM didn't
-        # emit an edge for it, and there's no path-convention pair).
-        self.assertEqual(tagged, 2)
-        self.assertIn("tested", nodes_by_id["file:src/shippingservice/main.go"]["tags"])
-        self.assertIn("tested", nodes_by_id["file:src/shippingservice/tracker.go"]["tags"])
-        self.assertNotIn("tested", nodes_by_id["file:src/shippingservice/quote.go"]["tags"])
-
     def test_unrelated_edges_pass_through(self) -> None:
         nodes_by_id = {
             "file:src/foo.ts": _file_node("src/foo.ts"),
@@ -681,16 +564,12 @@ class LinkTestsTests(unittest.TestCase):
         nodes_by_id = {
             "file:src/foo.ts": _file_node("src/foo.ts"),
             "file:src/__tests__/foo.test.ts": _file_node("src/__tests__/foo.test.ts"),
-            "file:internal/bar.go": _file_node("internal/bar.go"),
-            "file:internal/bar_test.go": _file_node("internal/bar_test.go"),
-            "file:src/main/java/com/foo/Bar.java": _file_node("src/main/java/com/foo/Bar.java"),
-            "file:src/test/java/com/foo/BarTest.java": _file_node("src/test/java/com/foo/BarTest.java"),
         }
         edges: list[dict[str, Any]] = []
 
         added, dropped, tagged, swapped = mbg.link_tests(nodes_by_id, edges)
 
-        self.assertEqual(added, 3)
+        self.assertEqual(added, 1)
         for edge in edges:
             self.assertEqual(edge["type"], "tested_by")
             self.assertEqual(edge["direction"], "forward")

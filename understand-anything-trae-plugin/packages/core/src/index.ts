@@ -112,6 +112,8 @@ export {
   GraphQLParser,
   MakefileParser,
   ShellParser,
+  VueSfcPlugin,
+  SveltePlugin,
   registerAllParsers,
 } from "./plugins/parsers/index.js";
 export {

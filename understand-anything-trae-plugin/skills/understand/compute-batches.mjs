@@ -47,7 +47,7 @@ async function extractExports(projectRoot, codeFiles) {
     await tsPlugin.init();
     registry = new PluginRegistry();
     registry.register(tsPlugin);
-    registerAllParsers(registry);
+    registerAllParsers(registry, tsPlugin);
   } catch (err) {
     process.stderr.write(
       `Warning: compute-batches: tree-sitter init failed (${err.message}) ` +

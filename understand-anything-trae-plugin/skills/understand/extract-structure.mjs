@@ -70,7 +70,7 @@ async function main() {
   // Create registry and register tree-sitter + all non-code parsers
   const registry = new PluginRegistry();
   registry.register(tsPlugin);
-  registerAllParsers(registry);
+  registerAllParsers(registry, tsPlugin);
 
   const results = [];
   const filesSkipped = [];

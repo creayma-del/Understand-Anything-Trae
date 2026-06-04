@@ -78,7 +78,7 @@ async function main() {
 
   const registry = new PluginRegistry();
   registry.register(tsPlugin);
-  registerAllParsers(registry);
+  registerAllParsers(registry, tsPlugin);
 
   const store = buildFingerprintStore(projectRoot, sourceFilePaths, registry, gitCommitHash);
   saveFingerprints(projectRoot, store);

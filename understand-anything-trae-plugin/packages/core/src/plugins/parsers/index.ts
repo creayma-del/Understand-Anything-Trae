@@ -8,8 +8,11 @@ export { SQLParser } from "./sql-parser.js";
 export { GraphQLParser } from "./graphql-parser.js";
 export { MakefileParser } from "./makefile-parser.js";
 export { ShellParser } from "./shell-parser.js";
+export { VueSfcPlugin } from "./vue-sfc-parser.js";
+export { SveltePlugin } from "./svelte-parser.js";
 
 import type { PluginRegistry } from "../registry.js";
+import type { TreeSitterPlugin } from "../tree-sitter-plugin.js";
 import { MarkdownParser } from "./markdown-parser.js";
 import { YAMLConfigParser } from "./yaml-parser.js";
 import { JSONConfigParser } from "./json-parser.js";
@@ -20,11 +23,15 @@ import { SQLParser } from "./sql-parser.js";
 import { GraphQLParser } from "./graphql-parser.js";
 import { MakefileParser } from "./makefile-parser.js";
 import { ShellParser } from "./shell-parser.js";
+import { VueSfcPlugin } from "./vue-sfc-parser.js";
+import { SveltePlugin } from "./svelte-parser.js";
 
 /**
  * Register all built-in non-code parsers with a PluginRegistry.
+ * @param registry The plugin registry to register parsers with.
+ * @param tsPlugin Optional TreeSitterPlugin reference for Vue SFC parser.
  */
-export function registerAllParsers(registry: PluginRegistry): void {
+export function registerAllParsers(registry: PluginRegistry, tsPlugin?: TreeSitterPlugin): void {
   registry.register(new MarkdownParser());
   registry.register(new YAMLConfigParser());
   registry.register(new JSONConfigParser());
@@ -35,4 +42,18 @@ export function registerAllParsers(registry: PluginRegistry): void {
   registry.register(new GraphQLParser());
   registry.register(new MakefileParser());
   registry.register(new ShellParser());
+
+  // Vue SFC plugin — needs TreeSitterPlugin reference for TypeScript grammar access
+  if (tsPlugin) {
+    const vuePlugin = new VueSfcPlugin();
+    vuePlugin.init(tsPlugin);
+    registry.register(vuePlugin);
+  }
+
+  // Svelte plugin — needs TreeSitterPlugin reference for TypeScript grammar access
+  if (tsPlugin) {
+    const sveltePlugin = new SveltePlugin();
+    sveltePlugin.init(tsPlugin);
+    registry.register(sveltePlugin);
+  }
 }

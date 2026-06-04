@@ -96,14 +96,7 @@ _MIRROR_PRODUCTION_ROOTS: tuple[str, ...] = ("src", "app", "lib", "")
 # because its `.test`/`.spec` infix sits on the *stem* of a double-extension
 # basename (e.g. `foo.test.ts` has ext `.ts`, stem `foo.test`).
 _TEST_NAME_PATTERNS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
-    ".go": ((), ("_test",)),
     ".py": (("test_",), ("_test",)),
-    ".java": ((), ("Test", "Tests", "IT")),
-    ".kt": ((), ("Test", "Tests")),
-    ".cs": ((), ("Test", "Tests")),
-    ".c": (("test_",), ("_test",)),
-    ".cpp": (("test_",), ("_test",)),
-    ".cc": (("test_",), ("_test",)),
 }
 
 
@@ -266,15 +259,12 @@ def normalize_complexity(value: Any) -> tuple[str, str]:
 #
 # Pass 2 — supplement with path-convention pairings.
 #   For test files the LLM didn't link to anything, fall back to filename
-#   conventions (sibling `_test.go`, JS/TS `__tests__/`, Maven `src/test/`,
-#   etc.) to find a production counterpart. Pairs already covered by
-#   Pass 1 are skipped.
+#   conventions (JS/TS `__tests__/`, Python `test_`/`_test`, etc.) to find a
+#   production counterpart. Pairs already covered by Pass 1 are skipped.
 #
 # Why this beats strip-and-rederive: real projects often violate the
-# linker's naming conventions (one Go `_test.go` covering several `.go`
-# files in the same package, .NET `<svc>/tests/X.cs` against
-# `<svc>/src/Y/X.cs`). Stripping LLM edges drops that real-world coverage
-# signal entirely. Swapping preserves it.
+# linker's naming conventions. Stripping LLM edges drops that real-world
+# coverage signal entirely. Swapping preserves it.
 
 def _path_segments(path: str) -> list[str]:
     """Split a relative POSIX-style path into segments (ignoring empties)."""
@@ -383,11 +373,6 @@ def production_candidates(test_path: str) -> list[str]:
                     for c in _js_ts_sibling_candidates(new_dir, base_stem):
                         _add_unique(candidates, c)
 
-    # ── Go ────────────────────────────────────────────────────────────
-    elif ext == ".go" and stem.endswith("_test"):
-        base_stem = stem[: -len("_test")]
-        _add_unique(candidates, _join(dir_path, f"{base_stem}.go"))
-
     # ── Python ────────────────────────────────────────────────────────
     elif ext == ".py" and (stem.startswith("test_") or stem.endswith("_test")):
         if stem.startswith("test_"):
@@ -411,98 +396,6 @@ def production_candidates(test_path: str) -> list[str]:
             for root in _MIRROR_PRODUCTION_ROOTS:
                 new_dir = "/".join(p for p in (root, tail_path) if p)
                 _add_unique(candidates, _join(new_dir, f"{base_stem}.py"))
-
-    # ── Java ──────────────────────────────────────────────────────────
-    elif ext == ".java":
-        for suffix in ("Tests", "Test", "IT"):
-            if stem.endswith(suffix):
-                base_stem = stem[: -len(suffix)]
-                # Maven/Gradle layout: swap src/test/java/... → src/main/java/...
-                if (
-                    len(dir_segs) >= 3
-                    and dir_segs[0] == "src"
-                    and dir_segs[1] == "test"
-                    and dir_segs[2] == "java"
-                ):
-                    new_dir = "/".join(["src", "main", "java"] + list(dir_segs[3:]))
-                    _add_unique(candidates, f"{new_dir}/{base_stem}.java")
-                # Sibling fallback
-                _add_unique(candidates, _join(dir_path, f"{base_stem}.java"))
-                break
-
-    # ── Kotlin ────────────────────────────────────────────────────────
-    elif ext == ".kt":
-        for suffix in ("Tests", "Test"):
-            if stem.endswith(suffix):
-                base_stem = stem[: -len(suffix)]
-                if (
-                    len(dir_segs) >= 3
-                    and dir_segs[0] == "src"
-                    and dir_segs[1] == "test"
-                    and dir_segs[2] == "kotlin"
-                ):
-                    new_dir = "/".join(["src", "main", "kotlin"] + list(dir_segs[3:]))
-                    _add_unique(candidates, f"{new_dir}/{base_stem}.kt")
-                _add_unique(candidates, _join(dir_path, f"{base_stem}.kt"))
-                break
-
-    # ── C# ────────────────────────────────────────────────────────────
-    elif ext == ".cs":
-        for suffix in ("Tests", "Test"):
-            if stem.endswith(suffix):
-                base_stem = stem[: -len(suffix)]
-                # Sibling fallback (e.g. `Foo.Tests/BarTests.cs` ↔ same dir
-                # is rare but cheap to try).
-                _add_unique(candidates, _join(dir_path, f"{base_stem}.cs"))
-
-                # Walk out of an in-service `tests/` directory and search
-                # the sibling `src/` subtree. Handles layouts like
-                # `src/<svc>/tests/BarTests.cs` ↔ `src/<svc>/src/.../Bar.cs`
-                # (microservices-demo cartservice) and bare
-                # `<proj>/tests/BarTests.cs` ↔ `<proj>/src/Bar.cs`.
-                tests_idx = None
-                for i in range(len(dir_segs) - 1, -1, -1):
-                    if dir_segs[i].lower() in ("tests", "test"):
-                        tests_idx = i
-                        break
-                if tests_idx is not None:
-                    parent_segs = dir_segs[:tests_idx]
-                    tail_segs = dir_segs[tests_idx + 1 :]
-                    parent_dir = "/".join(parent_segs)
-                    # `<parent>/<base_stem>.cs` (drop `tests/` entirely).
-                    _add_unique(
-                        candidates,
-                        _join(parent_dir, f"{base_stem}.cs"),
-                    )
-                    # `<parent>/src/<tail>/<base_stem>.cs` (mirror through src/).
-                    src_dir = "/".join([*parent_segs, "src", *tail_segs])
-                    _add_unique(candidates, _join(src_dir, f"{base_stem}.cs"))
-
-                # `.NET`-style sibling-project mirror: `My.App.Tests/...` ↔
-                # `My.App/...`. The test project's top dir typically ends in
-                # `.Tests`. Strip it and try the same tail under the sibling.
-                if dir_segs:
-                    top = dir_segs[0]
-                    if top.endswith(".Tests") or top.endswith(".Test"):
-                        sibling = top[: -len(".Tests")] if top.endswith(".Tests") else top[: -len(".Test")]
-                        if sibling:
-                            mirror_dir = "/".join([sibling, *dir_segs[1:]])
-                            _add_unique(
-                                candidates,
-                                _join(mirror_dir, f"{base_stem}.cs"),
-                            )
-                break
-
-    # ── C/C++ ─────────────────────────────────────────────────────────
-    elif ext in {".c", ".cpp", ".cc"}:
-        if stem.startswith("test_"):
-            base_stem = stem[len("test_"):]
-        elif stem.endswith("_test"):
-            base_stem = stem[: -len("_test")]
-        else:
-            base_stem = None
-        if base_stem is not None:
-            _add_unique(candidates, _join(dir_path, f"{base_stem}{ext}"))
 
     return candidates
 
