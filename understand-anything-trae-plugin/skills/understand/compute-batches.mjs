@@ -27,7 +27,7 @@ try {
 } catch {
   core = await import(pathToFileURL(resolve(PLUGIN_ROOT, 'packages/core/dist/index.js')).href);
 }
-const { TreeSitterPlugin, PluginRegistry, builtinLanguageConfigs, registerAllParsers } = core;
+const { TreeSitterPlugin, PluginRegistry, builtinLanguageConfigs, registerAllParsers, CssPlugin } = core;
 
 import Graph from 'graphology';
 import louvain from 'graphology-communities-louvain';
@@ -47,7 +47,8 @@ async function extractExports(projectRoot, codeFiles) {
     await tsPlugin.init();
     registry = new PluginRegistry();
     registry.register(tsPlugin);
-    registerAllParsers(registry, tsPlugin);
+    const cssPlugin = new CssPlugin();
+    registerAllParsers(registry, tsPlugin, cssPlugin);
   } catch (err) {
     process.stderr.write(
       `Warning: compute-batches: tree-sitter init failed (${err.message}) ` +

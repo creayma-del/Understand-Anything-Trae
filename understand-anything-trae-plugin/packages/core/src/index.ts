@@ -114,6 +114,8 @@ export {
   ShellParser,
   VueSfcPlugin,
   SveltePlugin,
+  CssPlugin,
+  HtmlPlugin,
   registerAllParsers,
 } from "./plugins/parsers/index.js";
 export {

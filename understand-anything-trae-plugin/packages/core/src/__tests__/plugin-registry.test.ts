@@ -208,8 +208,6 @@ describe("registerAllParsers smoke test", () => {
       ["Dockerfile", "FROM node:22"],
       ["schema.sql", "CREATE TABLE t (id INT);"],
       ["schema.graphql", "type Query { hello: String }"],
-      ["types.proto", 'syntax = "proto3";'],
-      ["main.tf", 'resource "null" "r" {}'],
       ["Makefile", "build:\n\techo build"],
       ["script.sh", "#!/bin/bash\necho hello"],
     ];

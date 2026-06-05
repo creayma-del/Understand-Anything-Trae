@@ -269,10 +269,11 @@ const CATEGORY_BY_EXT = Object.freeze({
   // markup
   '.html': 'markup',
   '.htm': 'markup',
-  '.css': 'markup',
-  '.scss': 'markup',
-  '.sass': 'markup',
-  '.less': 'markup',
+  // CSS/SCSS 现在由 CssPlugin 提供结构化分析能力，归类为 code
+  '.css': 'code',
+  '.scss': 'code',
+  '.sass': 'code',
+  '.less': 'code',
 });
 
 /**

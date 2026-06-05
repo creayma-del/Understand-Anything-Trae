@@ -41,7 +41,7 @@ try {
   core = await import(pathToFileURL(resolve(pluginRoot, 'packages/core/dist/index.js')).href);
 }
 
-const { TreeSitterPlugin, PluginRegistry, builtinLanguageConfigs, registerAllParsers } = core;
+const { TreeSitterPlugin, PluginRegistry, builtinLanguageConfigs, registerAllParsers, CssPlugin } = core;
 
 // ---------------------------------------------------------------------------
 // Main
@@ -70,7 +70,8 @@ async function main() {
   // Create registry and register tree-sitter + all non-code parsers
   const registry = new PluginRegistry();
   registry.register(tsPlugin);
-  registerAllParsers(registry, tsPlugin);
+  const cssPlugin = new CssPlugin();
+  registerAllParsers(registry, tsPlugin, cssPlugin);
 
   const results = [];
   const filesSkipped = [];

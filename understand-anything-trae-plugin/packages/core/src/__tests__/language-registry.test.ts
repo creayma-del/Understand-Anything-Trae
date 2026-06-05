@@ -49,29 +49,27 @@ describe("LanguageRegistry", () => {
   });
 
   describe("createDefault", () => {
-    it("registers all 39 built-in language configs", () => {
+    it("registers all 18 built-in language configs", () => {
       const registry = LanguageRegistry.createDefault();
       const all = registry.getAllLanguages();
-      expect(all.length).toBe(39);
+      expect(all.length).toBe(18);
     });
 
     it("maps all expected extensions", () => {
       const registry = LanguageRegistry.createDefault();
       expect(registry.getByExtension(".ts")?.id).toBe("typescript");
       expect(registry.getByExtension(".vue")?.id).toBe("vue-sfc");
-      expect(registry.getByExtension(".go")?.id).toBe("go");
-      expect(registry.getByExtension(".rs")?.id).toBe("rust");
-      expect(registry.getByExtension(".java")?.id).toBe("java");
-      expect(registry.getByExtension(".rb")?.id).toBe("ruby");
-      expect(registry.getByExtension(".php")?.id).toBe("php");
-      expect(registry.getByExtension(".swift")?.id).toBe("swift");
-      expect(registry.getByExtension(".kt")?.id).toBe("kotlin");
-      expect(registry.getByExtension(".cs")?.id).toBe("csharp");
-      expect(registry.getByExtension(".cpp")?.id).toBe("cpp");
-      expect(registry.getByExtension(".c")?.id).toBe("c");
-      expect(registry.getByExtension(".h")?.id).toBe("c");
-      expect(registry.getByExtension(".lua")?.id).toBe("lua");
       expect(registry.getByExtension(".js")?.id).toBe("javascript");
+      expect(registry.getByExtension(".svelte")?.id).toBe("svelte");
+      expect(registry.getByExtension(".html")?.id).toBe("html");
+      expect(registry.getByExtension(".css")?.id).toBe("css");
+      expect(registry.getByExtension(".md")?.id).toBe("markdown");
+      expect(registry.getByExtension(".yaml")?.id).toBe("yaml");
+      expect(registry.getByExtension(".json")?.id).toBe("json");
+      expect(registry.getByExtension(".toml")?.id).toBe("toml");
+      expect(registry.getByExtension(".sql")?.id).toBe("sql");
+      expect(registry.getByExtension(".graphql")?.id).toBe("graphql");
+      expect(registry.getByExtension(".sh")?.id).toBe("shell");
     });
 
     it("has no duplicate extension mappings across configs", () => {

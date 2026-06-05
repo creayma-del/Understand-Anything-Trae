@@ -10,6 +10,8 @@ export { MakefileParser } from "./makefile-parser.js";
 export { ShellParser } from "./shell-parser.js";
 export { VueSfcPlugin } from "./vue-sfc-parser.js";
 export { SveltePlugin } from "./svelte-parser.js";
+export { CssPlugin } from "./css-parser.js";
+export { HtmlPlugin } from "./html-parser.js";
 
 import type { PluginRegistry } from "../registry.js";
 import type { TreeSitterPlugin } from "../tree-sitter-plugin.js";
@@ -25,13 +27,16 @@ import { MakefileParser } from "./makefile-parser.js";
 import { ShellParser } from "./shell-parser.js";
 import { VueSfcPlugin } from "./vue-sfc-parser.js";
 import { SveltePlugin } from "./svelte-parser.js";
+import { CssPlugin } from "./css-parser.js";
+import { HtmlPlugin } from "./html-parser.js";
 
 /**
  * Register all built-in non-code parsers with a PluginRegistry.
  * @param registry The plugin registry to register parsers with.
  * @param tsPlugin Optional TreeSitterPlugin reference for Vue SFC parser.
+ * @param cssPlugin Optional CssPlugin reference for Vue/Svelte style block analysis.
  */
-export function registerAllParsers(registry: PluginRegistry, tsPlugin?: TreeSitterPlugin): void {
+export function registerAllParsers(registry: PluginRegistry, tsPlugin?: TreeSitterPlugin, cssPlugin?: CssPlugin): void {
   registry.register(new MarkdownParser());
   registry.register(new YAMLConfigParser());
   registry.register(new JSONConfigParser());
@@ -43,17 +48,23 @@ export function registerAllParsers(registry: PluginRegistry, tsPlugin?: TreeSitt
   registry.register(new MakefileParser());
   registry.register(new ShellParser());
 
-  // Vue SFC plugin — needs TreeSitterPlugin reference for TypeScript grammar access
+  // Vue SFC plugin — needs TreeSitterPlugin + optional CssPlugin for style block analysis
   if (tsPlugin) {
     const vuePlugin = new VueSfcPlugin();
-    vuePlugin.init(tsPlugin);
+    vuePlugin.init(tsPlugin, cssPlugin);
     registry.register(vuePlugin);
   }
 
-  // Svelte plugin — needs TreeSitterPlugin reference for TypeScript grammar access
+  // Svelte plugin — needs TreeSitterPlugin + optional CssPlugin for style block analysis
   if (tsPlugin) {
     const sveltePlugin = new SveltePlugin();
-    sveltePlugin.init(tsPlugin);
+    sveltePlugin.init(tsPlugin, cssPlugin);
     registry.register(sveltePlugin);
   }
+
+  // HTML plugin — 无外部依赖，直接注册
+  registry.register(new HtmlPlugin());
+
+  // CSS/SCSS plugin — 无需 TreeSitterPlugin 引用
+  registry.register(new CssPlugin());
 }

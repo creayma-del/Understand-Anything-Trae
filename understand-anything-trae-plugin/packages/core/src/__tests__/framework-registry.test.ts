@@ -2,6 +2,8 @@ import { describe, it, expect } from "vitest";
 import { FrameworkRegistry } from "../languages/framework-registry.js";
 import { expressConfig } from "../languages/frameworks/express.js";
 import { reactConfig } from "../languages/frameworks/react.js";
+import { nuxtConfig } from "../languages/frameworks/nuxt.js";
+import { sveltekitConfig } from "../languages/frameworks/sveltekit.js";
 
 describe("FrameworkRegistry", () => {
   it("registers and retrieves a framework config by id", () => {
@@ -15,8 +17,9 @@ describe("FrameworkRegistry", () => {
     registry.register(expressConfig);
     registry.register(reactConfig);
     const jsFrameworks = registry.getForLanguage("javascript");
-    expect(jsFrameworks).toHaveLength(1);
-    expect(jsFrameworks[0].id).toBe("express");
+    expect(jsFrameworks).toHaveLength(2);
+    expect(jsFrameworks.map(f => f.id)).toContain("express");
+    expect(jsFrameworks.map(f => f.id)).toContain("react");
   });
 
   it("returns empty array for unknown language", () => {
@@ -105,9 +108,9 @@ describe("FrameworkRegistry", () => {
   });
 
   describe("createDefault", () => {
-    it("registers all 4 built-in framework configs", () => {
+    it("registers all 6 built-in framework configs", () => {
       const registry = FrameworkRegistry.createDefault();
-      expect(registry.getAllFrameworks()).toHaveLength(4);
+      expect(registry.getAllFrameworks()).toHaveLength(6);
     });
 
     it("includes frameworks for multiple languages", () => {
@@ -115,5 +118,124 @@ describe("FrameworkRegistry", () => {
       expect(registry.getForLanguage("typescript").length).toBeGreaterThanOrEqual(2);
       expect(registry.getForLanguage("javascript").length).toBeGreaterThanOrEqual(1);
     });
+  });
+});
+
+describe("Nuxt framework detection", () => {
+  it("detects Nuxt 3 from package.json", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"dependencies": {"nuxt": "^3.12.0"}}',
+    });
+    expect(detected.some(f => f.id === "nuxt")).toBe(true);
+  });
+
+  it("detects Nuxt 2 from package.json", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"dependencies": {"nuxtjs": "^2.16.0"}}',
+    });
+    expect(detected.some(f => f.id === "nuxt")).toBe(true);
+  });
+
+  it("detects Nuxt from @nuxt/ modules", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"dependencies": {"@nuxt/content": "^2.0.0"}}',
+    });
+    expect(detected.some(f => f.id === "nuxt")).toBe(true);
+  });
+
+  it("Nuxt takes priority over Vue when both match", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"dependencies": {"nuxt": "^3.12.0", "vue": "^3.4.0"}}',
+    });
+    const nuxtIndex = detected.findIndex(f => f.id === "nuxt");
+    const vueIndex = detected.findIndex(f => f.id === "vue");
+    expect(nuxtIndex).toBeLessThan(vueIndex);
+  });
+
+  it("does not detect Vue as Nuxt", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"dependencies": {"vue": "^3.4.0"}}',
+    });
+    expect(detected.some(f => f.id === "nuxt")).toBe(false);
+    expect(detected.some(f => f.id === "vue")).toBe(true);
+  });
+});
+
+describe("Nuxt layerHints", () => {
+  const config = nuxtConfig;
+
+  it("maps pages to ui", () => {
+    expect(config.layerHints?.["pages"]).toBe("ui");
+  });
+
+  it("maps server/api to api", () => {
+    expect(config.layerHints?.["server/api"]).toBe("api");
+  });
+
+  it("maps composables to service", () => {
+    expect(config.layerHints?.["composables"]).toBe("service");
+  });
+
+  it("maps middleware to middleware", () => {
+    expect(config.layerHints?.["middleware"]).toBe("middleware");
+  });
+});
+
+describe("SvelteKit framework detection", () => {
+  it("detects SvelteKit from @sveltejs/kit in package.json", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"devDependencies": {"@sveltejs/kit": "^2.0.0"}}',
+    });
+    expect(detected.some(f => f.id === "sveltekit")).toBe(true);
+  });
+
+  it("detects SvelteKit from @sveltejs/adapter- in package.json", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"devDependencies": {"@sveltejs/adapter-node": "^4.0.0"}}',
+    });
+    expect(detected.some(f => f.id === "sveltekit")).toBe(true);
+  });
+
+  it("detects SvelteKit when both @sveltejs/kit and adapter are present", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"devDependencies": {"@sveltejs/kit": "^2.0.0", "@sveltejs/adapter-static": "^3.0.0"}}',
+    });
+    expect(detected.filter(f => f.id === "sveltekit")).toHaveLength(1);
+  });
+
+  it("does not detect SvelteKit from svelte dependency alone", () => {
+    const registry = FrameworkRegistry.createDefault();
+    const detected = registry.detectFrameworks({
+      "package.json": '{"dependencies": {"svelte": "^5.0.0"}}',
+    });
+    expect(detected.some(f => f.id === "sveltekit")).toBe(false);
+  });
+});
+
+describe("SvelteKit layerHints", () => {
+  const config = sveltekitConfig;
+
+  it("maps src/routes to ui", () => {
+    expect(config.layerHints?.["src/routes"]).toBe("ui");
+  });
+
+  it("maps src/lib/components to ui (takes priority over src/lib)", () => {
+    expect(config.layerHints?.["src/lib/components"]).toBe("ui");
+  });
+
+  it("maps src/lib to service", () => {
+    expect(config.layerHints?.["src/lib"]).toBe("service");
+  });
+
+  it("maps src/hooks to middleware", () => {
+    expect(config.layerHints?.["src/hooks"]).toBe("middleware");
   });
 });

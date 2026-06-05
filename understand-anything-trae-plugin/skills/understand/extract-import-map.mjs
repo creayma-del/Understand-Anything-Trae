@@ -58,7 +58,7 @@ try {
   core = await import(pathToFileURL(resolve(pluginRoot, 'packages/core/dist/index.js')).href);
 }
 
-const { TreeSitterPlugin, PluginRegistry, builtinLanguageConfigs, registerAllParsers } = core;
+const { TreeSitterPlugin, PluginRegistry, builtinLanguageConfigs, registerAllParsers, CssPlugin } = core;
 
 // ---------------------------------------------------------------------------
 // Path helpers
@@ -435,6 +435,116 @@ function extractRequireSources(content) {
 }
 
 // ---------------------------------------------------------------------------
+// CSS/SCSS resolver
+//
+// Handles:
+//   - Relative imports: @import './foo', @use 'base', @forward 'themes'
+//   - SCSS partial path probing (_ prefix + extension omission)
+//   - Dart Sass probing order for extensionless imports
+// ---------------------------------------------------------------------------
+
+/**
+ * 解析 CSS/SCSS 导入路径。
+ * 处理 SCSS partial 约定（_ 前缀 + 省略扩展名）。
+ */
+function resolveCssImport(rawImport, file, ctx) {
+  if (!rawImport || typeof rawImport !== 'string') return null;
+  const src = rawImport.trim();
+  if (!src) return null;
+
+  // 仅处理相对路径
+  if (!src.startsWith('./') && !src.startsWith('../')) return null;
+
+  const importerDir = dirOf(toPosix(file.path));
+  const base = resolveRelative(importerDir, src);
+
+  // 如果已有扩展名且存在于文件集中，直接返回
+  if (ctx.fileSet.has(base)) return base;
+
+  // 生成 SCSS partial 候选路径
+  const dir = base.includes('/') ? base.substring(0, base.lastIndexOf('/') + 1) : '';
+  const name = base.includes('/') ? base.substring(base.lastIndexOf('/') + 1) : base;
+
+  // 如果已有扩展名
+  if (/\.(scss|sass|css)$/.test(name)) {
+    // 尝试 _ 前缀版本
+    if (!name.startsWith('_')) {
+      const candidate = dir + '_' + name;
+      if (ctx.fileSet.has(candidate)) return candidate;
+    }
+    return null;
+  }
+
+  // 无扩展名：按 Dart Sass 规范顺序探测所有候选
+  // 1. 非partial .scss / .sass
+  for (const ext of ['.scss', '.sass']) {
+    const candidate = dir + name + ext;
+    if (ctx.fileSet.has(candidate)) return candidate;
+  }
+
+  // 2. partial（_ 前缀）.scss / .sass
+  if (!name.startsWith('_')) {
+    for (const ext of ['.scss', '.sass']) {
+      const candidate = dir + '_' + name + ext;
+      if (ctx.fileSet.has(candidate)) return candidate;
+    }
+  }
+
+  // 3. index 文件（仅 .scss）
+  if (ctx.fileSet.has(base + '/index.scss')) return base + '/index.scss';
+  if (ctx.fileSet.has(base + '/_index.scss')) return base + '/_index.scss';
+
+  // 4. .css 最后（Dart Sass 将 .css 视为最低优先级）
+  const cssCandidate = dir + name + '.css';
+  if (ctx.fileSet.has(cssCandidate)) return cssCandidate;
+
+  return null;
+}
+
+// ---------------------------------------------------------------------------
+// HTML resolver
+//
+// Handles:
+//   - Relative imports: <script src="./app.js">, <link href="./styles.css">
+//   - Absolute imports: <link href="/css/main.css"> → project root relative
+//   - External URLs are skipped (https://, //, data:, etc.)
+// ---------------------------------------------------------------------------
+
+/**
+ * 判断是否为外部 URL（不需要解析为项目内部引用）。
+ */
+function isExternalUrl(url) {
+  return /^(https?:)?\/\//i.test(url) || /^(data:|blob:|mailto:|tel:|javascript:)/i.test(url);
+}
+
+/**
+ * 解析 HTML 文件中的导入引用。
+ * script src / link href 可能是相对路径或绝对路径。
+ */
+function resolveHtmlImport(rawImport, file, ctx) {
+  if (!rawImport || typeof rawImport !== 'string') return null;
+  const src = rawImport.trim();
+  if (!src || isExternalUrl(src)) return null;
+
+  const importerDir = dirOf(toPosix(file.path));
+
+  if (src.startsWith('./') || src.startsWith('../')) {
+    const base = resolveRelative(importerDir, src);
+    return probeWithExtensions(base, ctx.fileSet) || (ctx.fileSet.has(base) ? base : null);
+  }
+
+  if (src.startsWith('/')) {
+    // 绝对路径 → 项目根目录相对
+    const base = src.slice(1);
+    return probeWithExtensions(base, ctx.fileSet) || (ctx.fileSet.has(base) ? base : null);
+  }
+
+  // 裸路径（无前缀）→ 相对于当前目录
+  const base = resolveRelative(importerDir, src);
+  return probeWithExtensions(base, ctx.fileSet) || (ctx.fileSet.has(base) ? base : null);
+}
+
+// ---------------------------------------------------------------------------
 // Dispatcher
 // ---------------------------------------------------------------------------
 
@@ -448,6 +558,19 @@ const TS_JS_LANGS = new Set([
 ]);
 
 /**
+ * CSS/SCSS 语言集合，用于导入解析分发。
+ * CSS 文件的 @import/@use/@forward 需要特殊的路径探测逻辑
+ * （SCSS partial 的 _ 前缀和省略扩展名约定）。
+ */
+const CSS_LANGS = new Set(['css']);
+
+/**
+ * HTML 语言集合，用于导入解析分发。
+ * HTML 文件的 <script src> / <link href> 需要特殊的路径探测逻辑。
+ */
+const HTML_LANGS = new Set(['html']);
+
+/**
  * Dispatch a raw import to the language-specific resolver. Returns an array
  * of resolved project-relative paths (most resolvers produce 0 or 1).
  *
@@ -459,6 +582,16 @@ function resolveImport(imp, file, ctx) {
   const src = imp.source;
   if (TS_JS_LANGS.has(lang)) {
     const out = resolveTsJsImport(src, file, ctx);
+    return out ? [out] : [];
+  }
+  // CSS/SCSS 导入解析
+  if (CSS_LANGS.has(lang)) {
+    const out = resolveCssImport(src, file, ctx);
+    return out ? [out] : [];
+  }
+  // HTML 导入解析：script src / link href 直接作为相对路径解析
+  if (HTML_LANGS.has(lang)) {
+    const out = resolveHtmlImport(src, file, ctx);
     return out ? [out] : [];
   }
   return [];
@@ -511,7 +644,8 @@ async function main() {
     await tsPlugin.init();
     registry = new PluginRegistry();
     registry.register(tsPlugin);
-    registerAllParsers(registry, tsPlugin);
+    const cssPlugin = new CssPlugin();
+    registerAllParsers(registry, tsPlugin, cssPlugin);
     treeSitterReady = true;
   } catch (err) {
     process.stderr.write(
@@ -531,8 +665,8 @@ async function main() {
   for (const file of files) {
     const path = toPosix(file.path);
 
-    // Non-code files always get an empty array
-    if (file.fileCategory !== 'code') {
+    // Non-code files always get an empty array (except HTML — parsed by HtmlPlugin)
+    if (file.fileCategory !== 'code' && file.language !== 'html') {
       importMap[path] = [];
       continue;
     }

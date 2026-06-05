@@ -350,9 +350,9 @@ describe('scan-project.mjs — category assignment (project-scanner.md Step 4)',
     expect(r.status).toBe(0);
     expect(byPath(r.output, 'public/index.html').fileCategory).toBe('markup');
     expect(byPath(r.output, 'public/page.htm').fileCategory).toBe('markup');
-    expect(byPath(r.output, 'styles/app.css').fileCategory).toBe('markup');
-    expect(byPath(r.output, 'styles/app.scss').fileCategory).toBe('markup');
-    expect(byPath(r.output, 'styles/app.less').fileCategory).toBe('markup');
+    expect(byPath(r.output, 'styles/app.css').fileCategory).toBe('code');
+    expect(byPath(r.output, 'styles/app.scss').fileCategory).toBe('code');
+    expect(byPath(r.output, 'styles/app.less').fileCategory).toBe('code');
   });
 
   // Regression: path.extname returns '' for `.env` and the second segment

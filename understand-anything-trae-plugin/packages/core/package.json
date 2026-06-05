@@ -38,9 +38,12 @@
   },
   "dependencies": {
     "@vue/compiler-sfc": "^3.5.0",
-    "svelte": "^5.0.0",
     "fuse.js": "^7.1.0",
     "ignore": "^7.0.5",
+    "node-html-parser": "^7.0.0",
+    "postcss": "^8.5.0",
+    "postcss-scss": "^4.0.0",
+    "svelte": "^5.0.0",
     "tree-sitter-javascript": "^0.25.0",
     "tree-sitter-typescript": "^0.23.2",
     "web-tree-sitter": "^0.26.6",

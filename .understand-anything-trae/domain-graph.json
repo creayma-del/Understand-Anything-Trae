@@ -1,0 +1,1447 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "Understand Anything Trae",
+    "description": "将任意代码库、知识库或文档转化为可交互的知识图谱，支持探索、搜索和提问",
+    "languages": ["typescript", "javascript", "python", "css", "html", "shell", "yaml", "json", "markdown"],
+    "frameworks": ["React", "Vite", "Tree-sitter", "Graphology", "Vitest"]
+  },
+  "nodes": [
+    {
+      "id": "domain:code-parsing-structure-extraction",
+      "type": "domain",
+      "name": "代码解析与结构提取",
+      "summary": "负责识别编程语言、加载对应配置与 Tree-sitter 解析器、遍历 AST 提取函数/类/导入/导出等结构信息，以及解析非代码文件（YAML、JSON、Markdown 等）的结构分区。是整个知识图谱生成流水线的数据采集基础。",
+      "tags": ["解析", "AST", "Tree-sitter", "结构提取"],
+      "complexity": "complex"
+    },
+    {
+      "id": "domain:knowledge-graph-construction",
+      "type": "domain",
+      "name": "知识图谱构建与分析",
+      "summary": "将结构提取结果组装为知识图谱，包含节点创建、边关系建立、Schema 校验与自动修复、图标准化归一化、模糊搜索与语义搜索等核心能力。是项目的核心数据模型与处理引擎。",
+      "tags": ["知识图谱", "Schema", "校验", "搜索"],
+      "complexity": "complex"
+    },
+    {
+      "id": "domain:visualization-dashboard",
+      "type": "domain",
+      "name": "可视化仪表盘",
+      "summary": "基于 React + React Flow 的交互式知识图谱可视化前端，支持层聚合概览与层详情钻取两种导航层级、域图谱视图、搜索筛选、路径查找、导出、主题切换、国际化与移动端适配。",
+      "tags": ["可视化", "React", "仪表盘", "交互"],
+      "complexity": "complex"
+    },
+    {
+      "id": "domain:multi-agent-pipeline",
+      "type": "domain",
+      "name": "多智能体分析流水线",
+      "summary": "编排多个 LLM Agent 与确定性脚本协同工作的端到端流水线，包括项目扫描、批次计算、文件分析、图谱合并、架构识别、导览生成和图谱审查。Agent 定义以 Markdown 提示词模板形式存在，脚本负责确定性计算步骤。",
+      "tags": ["Agent", "LLM", "流水线", "编排"],
+      "complexity": "complex"
+    },
+    {
+      "id": "domain:incremental-update",
+      "type": "domain",
+      "name": "增量更新与变更检测",
+      "summary": "通过文件指纹（SHA-256 哈希 + 结构签名）实现增量变更检测，区分无变更/外观变更/结构变更三级，根据变更分类决定图谱更新策略（跳过/部分更新/架构更新/全量更新），并执行增量图谱合并。",
+      "tags": ["增量更新", "指纹", "变更检测", "优化"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "flow:language-identification-config-loading",
+      "type": "flow",
+      "name": "语言识别与配置加载",
+      "summary": "将 17 种内置语言配置注册到 LanguageRegistry，根据文件扩展名或文件名自动匹配语言，加载对应的 Tree-sitter WASM 解析器，为后续结构提取提供语言上下文。",
+      "tags": ["语言配置", "注册表", "Tree-sitter"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:code-structure-extraction",
+      "type": "flow",
+      "name": "代码结构提取",
+      "summary": "基于 Tree-sitter AST 遍历，提取函数声明（含类型注解、装饰器）、类声明（含方法、属性）、导入语句、导出语句和调用图，将结果转换为统一的 StructuralAnalysis 数据结构。",
+      "tags": ["AST", "函数提取", "类提取", "调用图"],
+      "complexity": "complex"
+    },
+    {
+      "id": "flow:non-code-file-parsing",
+      "type": "flow",
+      "name": "非代码文件解析",
+      "summary": "通过 PluginRegistry 将非代码文件（YAML、JSON/JSONC、TOML、Markdown、Dockerfile、Env、SQL、GraphQL、Makefile、Shell）路由到对应的解析器，提取结构化分区信息（标题、键、节等）。",
+      "tags": ["解析器", "非代码", "分区提取"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:framework-detection",
+      "type": "flow",
+      "name": "框架检测与识别",
+      "summary": "通过 FrameworkRegistry 扫描项目清单文件中的关键词，自动检测使用的框架（React、Vue、Next.js、Express、Django、FastAPI、Flask 等），为后续分析提供框架上下文提示。",
+      "tags": ["框架", "自动检测", "注册表"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "flow:graph-construction",
+      "type": "flow",
+      "name": "图谱构建",
+      "summary": "GraphBuilder 从文件列表和结构分析结果构建知识图谱，为代码文件创建函数/类子节点和 contains 边，为非代码文件创建定义/服务/端点/步骤/资源子节点，同时建立 import 和 call 边。",
+      "tags": ["图谱构建", "节点创建", "边建立"],
+      "complexity": "complex"
+    },
+    {
+      "id": "flow:graph-validation-repair",
+      "type": "flow",
+      "name": "图谱校验与修复",
+      "summary": "对知识图谱执行三阶段校验管线：先清洗数据（sanitizeGraph），再自动修复已知问题（autoFixGraph，如节点/边类型别名归一化、权重范围修正、悬空边删除），最后执行严格 Schema 校验（validateGraph）。",
+      "tags": ["校验", "修复", "Schema"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:graph-normalization",
+      "type": "flow",
+      "name": "图谱标准化",
+      "summary": "对批次输出执行标准化处理：节点 ID 规范化（处理双前缀、项目名前缀、裸路径）、复杂度归一化（字符串别名/数值映射）、去重、悬空边删除和边引用重写，确保合并后的图谱数据一致。",
+      "tags": ["标准化", "归一化", "去重"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:search-retrieval",
+      "type": "flow",
+      "name": "搜索与检索",
+      "summary": "提供两种搜索能力：基于 Fuse.js 的模糊搜索（按名称、标签、摘要加权匹配）和基于向量嵌入的语义搜索（余弦相似度），支持类型过滤和结果数量限制。",
+      "tags": ["模糊搜索", "语义搜索", "Fuse.js"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "flow:graph-view-rendering",
+      "type": "flow",
+      "name": "图谱视图渲染",
+      "summary": "核心图谱可视化流程，包含概览层（层聚合为集群节点）和层详情（文件级拓扑 + ELK 两阶段布局）两种导航层级，支持容器展开/收起、Portal 跨层连接和搜索高亮。",
+      "tags": ["图谱视图", "ELK布局", "层聚合"],
+      "complexity": "complex"
+    },
+    {
+      "id": "flow:domain-graph-view",
+      "type": "flow",
+      "name": "域图谱视图",
+      "summary": "领域图谱的交互式可视化，提供概览和详情两种布局模式，注册自定义节点类型（DomainClusterNode、FlowNode、StepNode），使用 ELK 算法进行自动布局，支持单击选中与双击导航。",
+      "tags": ["域图谱", "领域视图", "流程可视化"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:interaction-navigation",
+      "type": "flow",
+      "name": "交互与导航",
+      "summary": "用户交互功能集：节点选中与详情展示（NodeInfo）、搜索与筛选（SearchBar + FilterPanel）、BFS 路径查找（PathFinderModal）、导出为 SVG/PNG/JSON（ExportMenu）、键盘快捷键和导览步骤高亮。",
+      "tags": ["交互", "导航", "搜索", "导出"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:theme-i18n-system",
+      "type": "flow",
+      "name": "主题与国际化",
+      "summary": "主题引擎将 ThemeConfig 解析为 CSS 自定义属性并应用到文档根元素，支持 5 套预设主题和强调色切换；国际化模块提供中英文语言包，通过 React Context 分发给子组件。",
+      "tags": ["主题", "国际化", "CSS变量"],
+      "complexity": "simple"
+    },
+
+    {
+      "id": "flow:project-scanning-batching",
+      "type": "flow",
+      "name": "项目扫描与批次计算",
+      "summary": "确定性扫描脚本枚举项目文件、检测语言和框架、计算复杂度；导入映射脚本提取文件间依赖关系；批次计算脚本基于 Louvain 社区检测对导入图聚类，生成语义化的文件批次划分。",
+      "tags": ["扫描", "Louvain", "批次", "导入图"],
+      "complexity": "complex"
+    },
+    {
+      "id": "flow:file-analysis-assembly",
+      "type": "flow",
+      "name": "文件分析与图谱组装",
+      "summary": "每个批次先运行确定性结构提取脚本（extract-structure.mjs），再由 LLM Agent 生成摘要和关系；批次图合并脚本（merge-batch-graphs.py）执行 ID 规范化、复杂度标准化、边去重与悬空清理，并恢复遗漏的导入边。",
+      "tags": ["文件分析", "LLM", "合并", "规范化"],
+      "complexity": "complex"
+    },
+    {
+      "id": "flow:architecture-tour-generation",
+      "type": "flow",
+      "name": "架构识别与导览生成",
+      "summary": "层级检测模块先执行启发式目录模式匹配，再由 LLM 辅助将文件分配到架构层；导览生成模块基于拓扑排序和层级分组设计 5-15 步引导式学习路径；图谱审查器执行 9 项验证确保质量。",
+      "tags": ["架构", "层级检测", "导览", "审查"],
+      "complexity": "complex"
+    },
+    {
+      "id": "flow:diff-impact-analysis",
+      "type": "flow",
+      "name": "差异影响分析",
+      "summary": "将变更文件列表映射到知识图谱节点，识别涟漪效应（1-hop 受影响节点、受影响层、受影响边），生成结构化的 DiffContext 并格式化为 Markdown 报告，供 Dashboard 的 Diff 覆盖层展示。",
+      "tags": ["差异分析", "影响范围", "涟漪效应"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "flow:fingerprint-computation",
+      "type": "flow",
+      "name": "文件指纹计算",
+      "summary": "通过 SHA-256 内容哈希和结构签名（函数/类/导入/导出列表）为每个文件生成唯一指纹，对比新旧指纹可判定变更级别：NONE（无变更）、COSMETIC（仅外观变更）、STRUCTURAL（结构变更）。",
+      "tags": ["指纹", "SHA-256", "变更级别"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "flow:change-classification-update",
+      "type": "flow",
+      "name": "变更分类与更新策略",
+      "summary": "根据变更分析结果（变更文件数量、比例、目录结构变化）决定图谱更新策略：SKIP（无变更跳过）、PARTIAL_UPDATE（部分更新）、ARCHITECTURE_UPDATE（架构层更新）、FULL_UPDATE（全量重建），并执行增量图谱合并。",
+      "tags": ["变更分类", "更新策略", "增量合并"],
+      "complexity": "moderate"
+    },
+
+    {
+      "id": "step:language-identification-config-loading:register-configs",
+      "type": "step",
+      "name": "注册语言配置",
+      "summary": "将 17 种内置语言配置（TypeScript、JavaScript、Python、Markdown、YAML 等）注册到 LanguageRegistry，建立扩展名/文件名到语言配置的索引映射。",
+      "tags": ["注册", "语言配置", "索引"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/languages/language-registry.ts",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:language-identification-config-loading:match-language",
+      "type": "step",
+      "name": "按文件路径匹配语言",
+      "summary": "LanguageRegistry 根据文件扩展名或文件名（如 Dockerfile）自动匹配对应的语言配置，返回 LanguageConfig 或 undefined。",
+      "tags": ["匹配", "扩展名", "文件名"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/languages/language-registry.ts",
+      "lineRange": [82, 130]
+    },
+    {
+      "id": "step:language-identification-config-loading:load-treesitter",
+      "type": "step",
+      "name": "加载 Tree-sitter 解析器",
+      "summary": "对于配置了 treeSitter 字段的语言（TypeScript、JavaScript、Python），加载对应的 WASM 解析器文件，为 AST 遍历做准备。",
+      "tags": ["Tree-sitter", "WASM", "解析器"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/tree-sitter-plugin.ts",
+      "lineRange": [1, 60]
+    },
+
+    {
+      "id": "step:code-structure-extraction:traverse-ast",
+      "type": "step",
+      "name": "遍历 AST 节点",
+      "summary": "使用 Tree-sitter 解析源代码生成 AST，递归遍历节点树，根据节点类型（function_declaration、class_declaration 等）分类处理。",
+      "tags": ["AST", "遍历", "Tree-sitter"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/base-extractor.ts",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:code-structure-extraction:extract-functions-classes",
+      "type": "step",
+      "name": "提取函数与类声明",
+      "summary": "从 AST 中提取函数声明（含类型注解、默认参数、装饰器）和类声明（含方法、属性、装饰器），记录名称、行范围和修饰信息。",
+      "tags": ["函数", "类", "声明"],
+      "complexity": "complex",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/typescript-extractor.ts",
+      "lineRange": [1, 120]
+    },
+    {
+      "id": "step:code-structure-extraction:extract-imports-exports",
+      "type": "step",
+      "name": "提取导入导出关系",
+      "summary": "提取 import 语句（含命名导入、默认导入、副作用导入）和 export 语句（含命名导出、默认导出、重导出），解析导入路径映射到项目内部文件。",
+      "tags": ["导入", "导出", "依赖"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/typescript-extractor.ts",
+      "lineRange": [120, 220]
+    },
+    {
+      "id": "step:code-structure-extraction:build-call-graph",
+      "type": "step",
+      "name": "构建调用图",
+      "summary": "分析函数体内的调用表达式，建立函数到函数的调用关系图，记录调用者和被调用者的映射关系。",
+      "tags": ["调用图", "函数调用", "关系"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/typescript-extractor.ts",
+      "lineRange": [220, 300]
+    },
+
+    {
+      "id": "step:non-code-file-parsing:select-parser",
+      "type": "step",
+      "name": "选择对应解析器",
+      "summary": "PluginRegistry 根据文件语言将非代码文件路由到对应的解析器实例（MarkdownParser、YAMLConfigParser、JSONConfigParser 等）。",
+      "tags": ["路由", "解析器", "插件注册表"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/registry.ts",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:non-code-file-parsing:extract-sections",
+      "type": "step",
+      "name": "提取结构化分区",
+      "summary": "各解析器按文件格式提取结构化分区信息：Markdown 提取 ATX 标题、YAML 提取顶层键、JSON 提取顶层键和 $ref 引用、Dockerfile 提取多阶段构建信息等。",
+      "tags": ["分区", "标题", "键"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/markdown-parser.ts",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:non-code-file-parsing:return-analysis",
+      "type": "step",
+      "name": "返回结构分析结果",
+      "summary": "将解析结果统一封装为 StructuralAnalysis 数据结构，包含 sections（分区信息）和 imports（文件引用），供 GraphBuilder 消费。",
+      "tags": ["结果", "StructuralAnalysis", "统一格式"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/index.ts",
+      "lineRange": [1, 40]
+    },
+
+    {
+      "id": "step:framework-detection:scan-keywords",
+      "type": "step",
+      "name": "扫描清单文件关键词",
+      "summary": "FrameworkRegistry 扫描项目 package.json 等清单文件中的 dependencies/devDependencies 关键词，匹配框架配置中定义的检测关键词列表。",
+      "tags": ["关键词", "扫描", "依赖"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/languages/framework-registry.ts",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:framework-detection:match-framework",
+      "type": "step",
+      "name": "匹配框架配置",
+      "summary": "将检测到的关键词与内置框架配置（React、Vue、Next.js、Express、Django、FastAPI、Flask）匹配，返回识别到的框架列表及其目录层级映射提示。",
+      "tags": ["匹配", "框架", "层级映射"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/languages/framework-registry.ts",
+      "lineRange": [60, 120]
+    },
+
+    {
+      "id": "step:graph-construction:create-file-nodes",
+      "type": "step",
+      "name": "创建文件节点",
+      "summary": "GraphBuilder 为每个文件创建 file 类型节点，自动检测语言并设置 languageNotes，填充摘要、标签和复杂度元数据。",
+      "tags": ["文件节点", "创建", "元数据"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.ts",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:graph-construction:add-child-nodes",
+      "type": "step",
+      "name": "添加函数/类子节点",
+      "summary": "为代码文件添加 function/class 类型子节点，建立 contains 边连接文件节点与子节点；为非代码文件添加 definition/service/endpoint/step/resource 子节点。",
+      "tags": ["子节点", "contains边", "层级"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.ts",
+      "lineRange": [80, 180]
+    },
+    {
+      "id": "step:graph-construction:build-edges",
+      "type": "step",
+      "name": "建立 import/call 边",
+      "summary": "根据结构分析结果中的导入和调用关系，创建 import 和 call 类型边，连接源文件/函数与目标文件/函数。",
+      "tags": ["import边", "call边", "关系"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.ts",
+      "lineRange": [180, 260]
+    },
+    {
+      "id": "step:graph-construction:set-metadata",
+      "type": "step",
+      "name": "设置项目元数据",
+      "summary": "设置知识图谱的项目级元数据，包括项目名称、语言列表、框架列表、描述、分析时间和 Git 提交哈希。",
+      "tags": ["元数据", "项目信息", "Git"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.ts",
+      "lineRange": [260, 300]
+    },
+
+    {
+      "id": "step:graph-validation-repair:sanitize",
+      "type": "step",
+      "name": "清洗图谱数据",
+      "summary": "sanitizeGraph 移除空节点、空边、重复节点，确保基本数据完整性。",
+      "tags": ["清洗", "去重", "完整性"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/schema.ts",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:graph-validation-repair:auto-fix",
+      "type": "step",
+      "name": "自动修复已知问题",
+      "summary": "autoFixGraph 执行节点/边类型别名归一化、权重范围修正（clamp 到 0-1）、悬空边删除和 tested_by 链接修复。",
+      "tags": ["自动修复", "别名", "权重"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/schema.ts",
+      "lineRange": [60, 160]
+    },
+    {
+      "id": "step:graph-validation-repair:strict-validate",
+      "type": "step",
+      "name": "执行严格校验",
+      "summary": "validateGraph 使用 Zod Schema 对节点和边进行严格类型校验，检查引用完整性（所有边的 source/target 必须存在对应节点），返回校验结果和问题列表。",
+      "tags": ["校验", "Zod", "引用完整性"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/schema.ts",
+      "lineRange": [160, 260]
+    },
+
+    {
+      "id": "step:graph-normalization:normalize-ids",
+      "type": "step",
+      "name": "规范化节点 ID",
+      "summary": "normalizeNodeId 处理双前缀（如 file:file:xxx）、项目名前缀（如 project:file:xxx）和裸路径，统一为标准格式 type:path。",
+      "tags": ["ID规范化", "前缀", "格式"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/normalize-graph.ts",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:graph-normalization:normalize-complexity",
+      "type": "step",
+      "name": "归一化复杂度",
+      "summary": "normalizeComplexity 将字符串别名（如 high/medium/low）和数值映射为标准的 simple/moderate/complex 三级复杂度标签。",
+      "tags": ["复杂度", "归一化", "映射"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/normalize-graph.ts",
+      "lineRange": [80, 130]
+    },
+    {
+      "id": "step:graph-normalization:deduplicate-cleanup",
+      "type": "step",
+      "name": "去重与悬空清理",
+      "summary": "normalizeBatchOutput 对批次输出执行节点去重、悬空边删除（source 或 target 不存在的边）和边引用重写（将旧 ID 替换为规范化后的新 ID）。",
+      "tags": ["去重", "悬空边", "引用重写"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/normalize-graph.ts",
+      "lineRange": [130, 250]
+    },
+
+    {
+      "id": "step:search-retrieval:build-index",
+      "type": "step",
+      "name": "构建搜索索引",
+      "summary": "SearchEngine 使用 Fuse.js 构建模糊搜索索引，配置名称、标签、摘要的加权搜索；SemanticSearchEngine 预计算节点嵌入向量。",
+      "tags": ["索引", "Fuse.js", "嵌入"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/search.ts",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:search-retrieval:fuzzy-search",
+      "type": "step",
+      "name": "执行模糊搜索",
+      "summary": "基于 Fuse.js 执行模糊搜索，按名称（权重最高）、标签和摘要加权匹配，支持类型过滤和结果数量限制。",
+      "tags": ["模糊搜索", "加权", "过滤"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/search.ts",
+      "lineRange": [60, 120]
+    },
+    {
+      "id": "step:search-retrieval:semantic-search",
+      "type": "step",
+      "name": "执行语义搜索",
+      "summary": "SemanticSearchEngine 基于预计算的向量嵌入，使用余弦相似度进行语义搜索，支持类型过滤和结果数量限制。",
+      "tags": ["语义搜索", "余弦相似度", "向量"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/embedding-search.ts",
+      "lineRange": [1, 80]
+    },
+
+    {
+      "id": "step:graph-view-rendering:compute-layer-stats",
+      "type": "step",
+      "name": "计算层聚合统计",
+      "summary": "computeLayerStats 为每个架构层计算聚合复杂度（基于 30% 阈值判定 simple/moderate/complex）和文件数量，供概览视图的 LayerClusterNode 展示。",
+      "tags": ["层统计", "聚合", "复杂度"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/utils/layerStats.ts",
+      "lineRange": [1, 50]
+    },
+    {
+      "id": "step:graph-view-rendering:aggregate-edges",
+      "type": "step",
+      "name": "聚合层间边与计算 Portal",
+      "summary": "aggregateLayerEdges 将层内文件间边聚合为层间边，computePortals 计算跨层连接的 Portal 入口节点，findCrossLayerFileNodes 查找跨层文件节点。",
+      "tags": ["边聚合", "Portal", "跨层"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/utils/edgeAggregation.ts",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:graph-view-rendering:elk-layout",
+      "type": "step",
+      "name": "执行 ELK 自动布局",
+      "summary": "applyElkLayout 将节点和边转换为 ELK 输入格式，执行输入修复管道（维度补全、ID 去重、孤立引用移除、包含环检测），然后异步计算布局位置。",
+      "tags": ["ELK", "布局", "自动"],
+      "complexity": "complex",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/utils/elk-layout.ts",
+      "lineRange": [1, 100]
+    },
+    {
+      "id": "step:graph-view-rendering:render-nodes",
+      "type": "step",
+      "name": "渲染层集群与容器节点",
+      "summary": "概览视图渲染 LayerClusterNode（可点击的层卡片），层详情视图渲染 ContainerNode（可折叠的文件分组容器）和 PortalNode（跨层入口节点）。",
+      "tags": ["渲染", "集群节点", "容器节点"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/components/GraphView.tsx",
+      "lineRange": [1, 80]
+    },
+
+    {
+      "id": "step:domain-graph-view:load-data",
+      "type": "step",
+      "name": "加载域图谱数据",
+      "summary": "从远端加载 domain-graph.json，解析 domain/flow/step 节点和 contains_flow/flow_step/cross_domain 边。",
+      "tags": ["加载", "域图谱", "JSON"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/App.tsx",
+      "lineRange": [97, 140]
+    },
+    {
+      "id": "step:domain-graph-view:register-custom-nodes",
+      "type": "step",
+      "name": "注册自定义节点类型",
+      "summary": "向 React Flow 注册 DomainClusterNode、FlowNode、StepNode 三种自定义节点类型，分别渲染域聚类、流程和步骤。",
+      "tags": ["自定义节点", "注册", "React Flow"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/components/DomainGraphView.tsx",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:domain-graph-view:compute-layout",
+      "type": "step",
+      "name": "计算域图谱布局",
+      "summary": "使用 ELK 算法对域图谱进行自动布局，将节点和边转换为 ELK 输入格式，计算位置后合并回节点数据。",
+      "tags": ["布局", "ELK", "位置计算"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/components/DomainGraphView.tsx",
+      "lineRange": [60, 140]
+    },
+    {
+      "id": "step:domain-graph-view:render-domain-nodes",
+      "type": "step",
+      "name": "渲染域/流程/步骤节点",
+      "summary": "DomainClusterNode 展示域实体列表和流程计数，FlowNode 展示入口点信息和步骤计数，StepNode 展示序号和关联文件路径。",
+      "tags": ["渲染", "域节点", "流程节点"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/components/DomainClusterNode.tsx",
+      "lineRange": [1, 60]
+    },
+
+    {
+      "id": "step:interaction-navigation:node-selection",
+      "type": "step",
+      "name": "节点选中与详情展示",
+      "summary": "用户点击节点时，NodeInfo 侧边栏展示选中节点的摘要、标签、连接关系、子节点列表和导航历史。",
+      "tags": ["选中", "详情", "侧边栏"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/components/NodeInfo.tsx",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:interaction-navigation:search-filter",
+      "type": "step",
+      "name": "搜索与筛选",
+      "summary": "SearchBar 支持模糊搜索和语义搜索两种模式，FilterPanel 提供节点类型、复杂度、架构层、边类别四维筛选。",
+      "tags": ["搜索", "筛选", "过滤"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/components/SearchBar.tsx",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:interaction-navigation:path-finding",
+      "type": "step",
+      "name": "路径查找与导航",
+      "summary": "PathFinderModal 使用 BFS 算法在知识图谱中查找两个节点之间的最短路径，支持可视化路径展示。",
+      "tags": ["路径查找", "BFS", "导航"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/components/PathFinderModal.tsx",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:interaction-navigation:export",
+      "type": "step",
+      "name": "导出图谱",
+      "summary": "ExportMenu 支持将知识图谱导出为 SVG（直接序列化 DOM）、PNG（Canvas 渲染）和 JSON（原始数据下载）三种格式。",
+      "tags": ["导出", "SVG", "PNG"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/components/ExportMenu.tsx",
+      "lineRange": [22, 120]
+    },
+
+    {
+      "id": "step:theme-i18n-system:apply-theme",
+      "type": "step",
+      "name": "应用主题配置",
+      "summary": "ThemeProvider 管理主题配置的状态持久化与切换，theme-engine 将 ThemeConfig 解析为 CSS 自定义属性并应用到 document 根元素。",
+      "tags": ["主题", "CSS变量", "持久化"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/themes/theme-engine.ts",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:theme-i18n-system:switch-locale",
+      "type": "step",
+      "name": "切换语言包",
+      "summary": "I18nContext 根据语言标识解析对应的 locale 对象（中/英文），通过 React Context 分发给子组件，实现 UI 文案的国际化。",
+      "tags": ["国际化", "语言包", "Context"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/dashboard/src/contexts/I18nContext.tsx",
+      "lineRange": [1, 40]
+    },
+
+    {
+      "id": "step:project-scanning-batching:scan-files",
+      "type": "step",
+      "name": "枚举项目文件与语言检测",
+      "summary": "scan-project.mjs 使用 git ls-files 优先或递归遍历兜底枚举文件，通过 .understandignore 过滤，检测语言和类别，统计行数和估算复杂度。",
+      "tags": ["文件枚举", "git", "语言检测"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/skills/understand/scan-project.mjs",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:project-scanning-batching:extract-imports",
+      "type": "step",
+      "name": "提取导入映射",
+      "summary": "extract-import-map.mjs 使用 TreeSitter 提取原始导入路径，按语言特定规则（TS/JS tsconfig paths、Python 相对导入等）映射到项目内部文件路径。",
+      "tags": ["导入映射", "路径解析", "TreeSitter"],
+      "complexity": "complex",
+      "filePath": "understand-anything-trae-plugin/skills/understand/extract-import-map.mjs",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:project-scanning-batching:run-louvain",
+      "type": "step",
+      "name": "运行 Louvain 社区检测",
+      "summary": "compute-batches.mjs 基于导入图运行 Louvain 社区检测算法，将文件聚类为语义化的批次，控制批次大小上限，并对非代码文件执行特殊分组策略。",
+      "tags": ["Louvain", "社区检测", "聚类"],
+      "complexity": "complex",
+      "filePath": "understand-anything-trae-plugin/skills/understand/compute-batches.mjs",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:project-scanning-batching:merge-batches",
+      "type": "step",
+      "name": "合并小批次与特殊分组",
+      "summary": "mergeSmallBatches 将孤立文件和小批次合并为杂项批次，buildNonCodeBatches 对 Dockerfile 集群、CI 配置、SQL 迁移等非代码文件执行特殊分组。",
+      "tags": ["批次合并", "非代码", "分组"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/skills/understand/compute-batches.mjs",
+      "lineRange": [80, 180]
+    },
+
+    {
+      "id": "step:file-analysis-assembly:extract-structure",
+      "type": "step",
+      "name": "运行确定性结构提取",
+      "summary": "extract-structure.mjs 使用 PluginRegistry（TreeSitter + 非代码解析器）提取函数、类、导出、节等结构信息及调用图，替代 LLM 生成的临时正则脚本。",
+      "tags": ["结构提取", "确定性", "PluginRegistry"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/skills/understand/extract-structure.mjs",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:file-analysis-assembly:llm-analysis",
+      "type": "step",
+      "name": "LLM 分析文件摘要",
+      "summary": "file-analyzer Agent 基于 LLM 为每个文件生成摘要、标签、复杂度评估，以及函数和类的摘要，补充确定性提取无法提供的语义信息。",
+      "tags": ["LLM", "摘要", "语义"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/llm-analyzer.ts",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:file-analysis-assembly:merge-graphs",
+      "type": "step",
+      "name": "合并批次图谱",
+      "summary": "merge-batch-graphs.py 合并所有 batch-*.json 为单一组装图，执行 ID 规范化、复杂度标准化、边去重与悬空清理、tested_by 链接修复。",
+      "tags": ["合并", "规范化", "去重"],
+      "complexity": "complex",
+      "filePath": "understand-anything-trae-plugin/skills/understand/merge-batch-graphs.py",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:file-analysis-assembly:recover-imports",
+      "type": "step",
+      "name": "恢复遗漏导入边",
+      "summary": "merge-batch-graphs.py 的 recover_imports_from_scan 函数从 scan-result.json 中恢复跨批次遗漏的导入边，补充合并过程中可能丢失的文件间依赖关系。",
+      "tags": ["导入恢复", "跨批次", "依赖"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/skills/understand/merge-batch-graphs.py",
+      "lineRange": [80, 160]
+    },
+
+    {
+      "id": "step:architecture-tour-generation:heuristic-layers",
+      "type": "step",
+      "name": "启发式层级检测",
+      "summary": "detectLayers 使用目录模式匹配（routes→API、controllers→Service 等 10 种模式）将文件初步分配到架构层。",
+      "tags": ["层级检测", "启发式", "目录模式"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/layer-detector.ts",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:architecture-tour-generation:llm-architecture",
+      "type": "step",
+      "name": "LLM 辅助架构分析",
+      "summary": "architecture-analyzer Agent 基于文件结构、摘要和导入关系，使用 LLM 识别逻辑架构层并将每个文件分配到对应层中，补充启发式检测无法覆盖的场景。",
+      "tags": ["LLM", "架构", "层级分配"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/layer-detector.ts",
+      "lineRange": [80, 180]
+    },
+    {
+      "id": "step:architecture-tour-generation:generate-tour",
+      "type": "step",
+      "name": "生成引导式导览",
+      "summary": "tour-builder Agent 基于图拓扑（扇入扇出排名、入口点候选、BFS 遍历）设计 5-15 步引导式学习路径，帮助新用户逐步理解代码库。",
+      "tags": ["导览", "拓扑", "学习路径"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/tour-generator.ts",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:architecture-tour-generation:review-graph",
+      "type": "step",
+      "name": "图谱审查与验证",
+      "summary": "graph-reviewer Agent 对组装后的知识图谱执行 9 项系统性验证（模式校验、引用完整性、完整性检查、层级覆盖、唯一性和质量检查），输出批准或拒绝的审查决定。",
+      "tags": ["审查", "验证", "质量"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/schema.ts",
+      "lineRange": [160, 260]
+    },
+
+    {
+      "id": "step:diff-impact-analysis:map-changes",
+      "type": "step",
+      "name": "映射变更到图谱节点",
+      "summary": "buildDiffContext 将变更文件列表映射到知识图谱中的 file 类型节点，识别直接变更的节点集合。",
+      "tags": ["变更映射", "节点识别", "Diff"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/src/diff-analyzer.ts",
+      "lineRange": [1, 60]
+    },
+    {
+      "id": "step:diff-impact-analysis:detect-ripple",
+      "type": "step",
+      "name": "检测涟漪效应",
+      "summary": "通过 1-hop 遍历识别受影响的邻居节点、受影响的架构层和受影响的边，评估变更的传播范围。",
+      "tags": ["涟漪效应", "1-hop", "影响范围"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/src/diff-analyzer.ts",
+      "lineRange": [60, 140]
+    },
+    {
+      "id": "step:diff-impact-analysis:format-report",
+      "type": "step",
+      "name": "格式化差异报告",
+      "summary": "formatDiffAnalysis 将 DiffContext 格式化为 Markdown 报告，包含变更节点列表、受影响节点列表和受影响层列表。",
+      "tags": ["格式化", "Markdown", "报告"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/src/diff-analyzer.ts",
+      "lineRange": [140, 200]
+    },
+
+    {
+      "id": "step:fingerprint-computation:compute-hash",
+      "type": "step",
+      "name": "计算内容哈希",
+      "summary": "contentHash 使用 SHA-256 算法为文件内容生成唯一哈希值，用于快速判断文件是否发生任何变更。",
+      "tags": ["SHA-256", "哈希", "内容"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/fingerprint.ts",
+      "lineRange": [1, 40]
+    },
+    {
+      "id": "step:fingerprint-computation:extract-signature",
+      "type": "step",
+      "name": "提取结构签名",
+      "summary": "extractFileFingerprint 提取文件的结构签名，包含函数列表、类列表、导入列表和导出列表，用于区分外观变更和结构变更。",
+      "tags": ["结构签名", "函数列表", "类列表"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/fingerprint.ts",
+      "lineRange": [40, 120]
+    },
+    {
+      "id": "step:fingerprint-computation:compare-fingerprints",
+      "type": "step",
+      "name": "对比指纹判定变更级别",
+      "summary": "compareFingerprints 对比新旧指纹，判定变更级别：NONE（哈希相同）、COSMETIC（哈希不同但结构签名相同）、STRUCTURAL（结构签名不同）。",
+      "tags": ["对比", "变更级别", "判定"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/fingerprint.ts",
+      "lineRange": [120, 180]
+    },
+
+    {
+      "id": "step:change-classification-update:analyze-changes",
+      "type": "step",
+      "name": "分析变更文件列表",
+      "summary": "analyzeChanges 汇总文件变更分析结果，统计变更文件数量、新文件、删除文件、结构变更文件和外观变更文件。",
+      "tags": ["变更分析", "统计", "分类"],
+      "complexity": "simple",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/fingerprint.ts",
+      "lineRange": [180, 240]
+    },
+    {
+      "id": "step:change-classification-update:classify-strategy",
+      "type": "step",
+      "name": "分类更新策略",
+      "summary": "classifyUpdate 根据变更分析结果决定更新策略：SKIP（无变更）、PARTIAL_UPDATE（少量外观变更）、ARCHITECTURE_UPDATE（目录结构变化）、FULL_UPDATE（大量结构变更）。",
+      "tags": ["策略", "分类", "决策"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/change-classifier.ts",
+      "lineRange": [1, 80]
+    },
+    {
+      "id": "step:change-classification-update:incremental-merge",
+      "type": "step",
+      "name": "执行增量图谱合并",
+      "summary": "mergeGraphUpdate 将变更文件的节点替换为新版本，清理关联的旧边，更新时间戳，保留未变更部分的图谱数据。",
+      "tags": ["增量合并", "节点替换", "边清理"],
+      "complexity": "moderate",
+      "filePath": "understand-anything-trae-plugin/packages/core/src/staleness.ts",
+      "lineRange": [1, 80]
+    }
+  ],
+  "edges": [
+    {
+      "source": "domain:code-parsing-structure-extraction",
+      "target": "flow:language-identification-config-loading",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:code-parsing-structure-extraction",
+      "target": "flow:code-structure-extraction",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:code-parsing-structure-extraction",
+      "target": "flow:non-code-file-parsing",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:code-parsing-structure-extraction",
+      "target": "flow:framework-detection",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+
+    {
+      "source": "domain:knowledge-graph-construction",
+      "target": "flow:graph-construction",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:knowledge-graph-construction",
+      "target": "flow:graph-validation-repair",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:knowledge-graph-construction",
+      "target": "flow:graph-normalization",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:knowledge-graph-construction",
+      "target": "flow:search-retrieval",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+
+    {
+      "source": "domain:visualization-dashboard",
+      "target": "flow:graph-view-rendering",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:visualization-dashboard",
+      "target": "flow:domain-graph-view",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:visualization-dashboard",
+      "target": "flow:interaction-navigation",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:visualization-dashboard",
+      "target": "flow:theme-i18n-system",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+
+    {
+      "source": "domain:multi-agent-pipeline",
+      "target": "flow:project-scanning-batching",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:multi-agent-pipeline",
+      "target": "flow:file-analysis-assembly",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:multi-agent-pipeline",
+      "target": "flow:architecture-tour-generation",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:multi-agent-pipeline",
+      "target": "flow:diff-impact-analysis",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+
+    {
+      "source": "domain:incremental-update",
+      "target": "flow:fingerprint-computation",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "domain:incremental-update",
+      "target": "flow:change-classification-update",
+      "type": "contains_flow",
+      "direction": "forward",
+      "weight": 1.0
+    },
+
+    {
+      "source": "flow:language-identification-config-loading",
+      "target": "step:language-identification-config-loading:register-configs",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.15
+    },
+    {
+      "source": "flow:language-identification-config-loading",
+      "target": "step:language-identification-config-loading:match-language",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:language-identification-config-loading",
+      "target": "step:language-identification-config-loading:load-treesitter",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.85
+    },
+
+    {
+      "source": "flow:code-structure-extraction",
+      "target": "step:code-structure-extraction:traverse-ast",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:code-structure-extraction",
+      "target": "step:code-structure-extraction:extract-functions-classes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.35
+    },
+    {
+      "source": "flow:code-structure-extraction",
+      "target": "step:code-structure-extraction:extract-imports-exports",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "flow:code-structure-extraction",
+      "target": "step:code-structure-extraction:build-call-graph",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.85
+    },
+
+    {
+      "source": "flow:non-code-file-parsing",
+      "target": "step:non-code-file-parsing:select-parser",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.15
+    },
+    {
+      "source": "flow:non-code-file-parsing",
+      "target": "step:non-code-file-parsing:extract-sections",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.55
+    },
+    {
+      "source": "flow:non-code-file-parsing",
+      "target": "step:non-code-file-parsing:return-analysis",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:framework-detection",
+      "target": "step:framework-detection:scan-keywords",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.2
+    },
+    {
+      "source": "flow:framework-detection",
+      "target": "step:framework-detection:match-framework",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+
+    {
+      "source": "flow:graph-construction",
+      "target": "step:graph-construction:create-file-nodes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:graph-construction",
+      "target": "step:graph-construction:add-child-nodes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.35
+    },
+    {
+      "source": "flow:graph-construction",
+      "target": "step:graph-construction:build-edges",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.65
+    },
+    {
+      "source": "flow:graph-construction",
+      "target": "step:graph-construction:set-metadata",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:graph-validation-repair",
+      "target": "step:graph-validation-repair:sanitize",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.15
+    },
+    {
+      "source": "flow:graph-validation-repair",
+      "target": "step:graph-validation-repair:auto-fix",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:graph-validation-repair",
+      "target": "step:graph-validation-repair:strict-validate",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.85
+    },
+
+    {
+      "source": "flow:graph-normalization",
+      "target": "step:graph-normalization:normalize-ids",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.15
+    },
+    {
+      "source": "flow:graph-normalization",
+      "target": "step:graph-normalization:normalize-complexity",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:graph-normalization",
+      "target": "step:graph-normalization:deduplicate-cleanup",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.85
+    },
+
+    {
+      "source": "flow:search-retrieval",
+      "target": "step:search-retrieval:build-index",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.15
+    },
+    {
+      "source": "flow:search-retrieval",
+      "target": "step:search-retrieval:fuzzy-search",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "flow:search-retrieval",
+      "target": "step:search-retrieval:semantic-search",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.85
+    },
+
+    {
+      "source": "flow:graph-view-rendering",
+      "target": "step:graph-view-rendering:compute-layer-stats",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:graph-view-rendering",
+      "target": "step:graph-view-rendering:aggregate-edges",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.35
+    },
+    {
+      "source": "flow:graph-view-rendering",
+      "target": "step:graph-view-rendering:elk-layout",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.65
+    },
+    {
+      "source": "flow:graph-view-rendering",
+      "target": "step:graph-view-rendering:render-nodes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:domain-graph-view",
+      "target": "step:domain-graph-view:load-data",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:domain-graph-view",
+      "target": "step:domain-graph-view:register-custom-nodes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.35
+    },
+    {
+      "source": "flow:domain-graph-view",
+      "target": "step:domain-graph-view:compute-layout",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.65
+    },
+    {
+      "source": "flow:domain-graph-view",
+      "target": "step:domain-graph-view:render-domain-nodes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:interaction-navigation",
+      "target": "step:interaction-navigation:node-selection",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:interaction-navigation",
+      "target": "step:interaction-navigation:search-filter",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.35
+    },
+    {
+      "source": "flow:interaction-navigation",
+      "target": "step:interaction-navigation:path-finding",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.65
+    },
+    {
+      "source": "flow:interaction-navigation",
+      "target": "step:interaction-navigation:export",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:theme-i18n-system",
+      "target": "step:theme-i18n-system:apply-theme",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.3
+    },
+    {
+      "source": "flow:theme-i18n-system",
+      "target": "step:theme-i18n-system:switch-locale",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.7
+    },
+
+    {
+      "source": "flow:project-scanning-batching",
+      "target": "step:project-scanning-batching:scan-files",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:project-scanning-batching",
+      "target": "step:project-scanning-batching:extract-imports",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.35
+    },
+    {
+      "source": "flow:project-scanning-batching",
+      "target": "step:project-scanning-batching:run-louvain",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.65
+    },
+    {
+      "source": "flow:project-scanning-batching",
+      "target": "step:project-scanning-batching:merge-batches",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:file-analysis-assembly",
+      "target": "step:file-analysis-assembly:extract-structure",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:file-analysis-assembly",
+      "target": "step:file-analysis-assembly:llm-analysis",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.35
+    },
+    {
+      "source": "flow:file-analysis-assembly",
+      "target": "step:file-analysis-assembly:merge-graphs",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.65
+    },
+    {
+      "source": "flow:file-analysis-assembly",
+      "target": "step:file-analysis-assembly:recover-imports",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:architecture-tour-generation",
+      "target": "step:architecture-tour-generation:heuristic-layers",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.1
+    },
+    {
+      "source": "flow:architecture-tour-generation",
+      "target": "step:architecture-tour-generation:llm-architecture",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.35
+    },
+    {
+      "source": "flow:architecture-tour-generation",
+      "target": "step:architecture-tour-generation:generate-tour",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.65
+    },
+    {
+      "source": "flow:architecture-tour-generation",
+      "target": "step:architecture-tour-generation:review-graph",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:diff-impact-analysis",
+      "target": "step:diff-impact-analysis:map-changes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.15
+    },
+    {
+      "source": "flow:diff-impact-analysis",
+      "target": "step:diff-impact-analysis:detect-ripple",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.55
+    },
+    {
+      "source": "flow:diff-impact-analysis",
+      "target": "step:diff-impact-analysis:format-report",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:fingerprint-computation",
+      "target": "step:fingerprint-computation:compute-hash",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.15
+    },
+    {
+      "source": "flow:fingerprint-computation",
+      "target": "step:fingerprint-computation:extract-signature",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.55
+    },
+    {
+      "source": "flow:fingerprint-computation",
+      "target": "step:fingerprint-computation:compare-fingerprints",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "flow:change-classification-update",
+      "target": "step:change-classification-update:analyze-changes",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.15
+    },
+    {
+      "source": "flow:change-classification-update",
+      "target": "step:change-classification-update:classify-strategy",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.55
+    },
+    {
+      "source": "flow:change-classification-update",
+      "target": "step:change-classification-update:incremental-merge",
+      "type": "flow_step",
+      "direction": "forward",
+      "weight": 0.9
+    },
+
+    {
+      "source": "domain:code-parsing-structure-extraction",
+      "target": "domain:knowledge-graph-construction",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "代码解析产出的结构分析结果（StructuralAnalysis）作为图谱构建的输入，驱动节点和边的创建",
+      "weight": 0.9
+    },
+    {
+      "source": "domain:knowledge-graph-construction",
+      "target": "domain:visualization-dashboard",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "构建完成的知识图谱数据（KnowledgeGraph JSON）作为仪表盘的数据源，驱动图谱视图和域图谱视图的渲染",
+      "weight": 0.8
+    },
+    {
+      "source": "domain:multi-agent-pipeline",
+      "target": "domain:code-parsing-structure-extraction",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "流水线编排脚本调用核心引擎的解析器和提取器，执行确定性的结构提取步骤",
+      "weight": 0.7
+    },
+    {
+      "source": "domain:multi-agent-pipeline",
+      "target": "domain:knowledge-graph-construction",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "流水线的图谱组装阶段调用 GraphBuilder 和 Schema 校验模块，将分析结果组装为完整知识图谱",
+      "weight": 0.8
+    },
+    {
+      "source": "domain:incremental-update",
+      "target": "domain:multi-agent-pipeline",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "增量更新检测到结构变更后，触发多智能体流水线的部分或全量重新分析",
+      "weight": 0.6
+    },
+    {
+      "source": "domain:incremental-update",
+      "target": "domain:knowledge-graph-construction",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "增量合并直接操作知识图谱数据，替换变更节点和清理关联边",
+      "weight": 0.7
+    },
+    {
+      "source": "domain:multi-agent-pipeline",
+      "target": "domain:incremental-update",
+      "type": "cross_domain",
+      "direction": "forward",
+      "description": "全量分析完成后构建指纹基线（fingerprints.json），为后续增量更新提供对比基准",
+      "weight": 0.5
+    }
+  ],
+  "layers": [],
+  "tour": []
+}

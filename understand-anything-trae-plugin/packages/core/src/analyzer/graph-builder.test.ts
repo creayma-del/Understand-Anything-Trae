@@ -205,12 +205,12 @@ describe("GraphBuilder", () => {
   it("should detect languages from file extensions", () => {
     const builder = new GraphBuilder("polyglot", "hash123");
 
-    builder.addFile("main.go", { summary: "", tags: [], complexity: "simple" });
-    builder.addFile("lib.rs", { summary: "", tags: [], complexity: "simple" });
     builder.addFile("app.js", { summary: "", tags: [], complexity: "simple" });
+    builder.addFile("index.ts", { summary: "", tags: [], complexity: "simple" });
+    builder.addFile("App.vue", { summary: "", tags: [], complexity: "simple" });
 
     const graph = builder.build();
-    expect(graph.project.languages).toEqual(["go", "javascript", "rust"]);
+    expect(graph.project.languages).toEqual(["javascript", "typescript", "vue-sfc"]);
   });
 
   describe("Non-code file support", () => {

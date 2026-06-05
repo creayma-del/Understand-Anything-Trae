@@ -158,6 +158,33 @@ export interface ResourceInfo {
   lineRange: [number, number];
 }
 
+// HTML structural data
+export interface HtmlElementInfo {
+  tag: string;                           // 标签名，如 "div", "script", "link"
+  lineRange: [number, number];           // 元素在文件中的行范围
+  attributes: Record<string, string>;    // 属性键值对，如 { src: "./app.js", defer: "" }
+  isSelfClosing: boolean;                // 是否自闭合标签，如 <meta />, <link />
+}
+
+/**
+ * CSS/SCSS 规则信息，用于 StructuralAnalysis.cssRules 字段。
+ * 涵盖普通规则、at-rule、mixin、function 和变量定义。
+ */
+export interface CssRuleInfo {
+  /** CSS 选择器或 at-rule 标识符（如 ".button"、"@media (min-width: 768px)"） */
+  selector: string;
+  /** 规则在文件中的行范围 [起始行, 结束行] */
+  lineRange: [number, number];
+  /** 规则内包含的声明属性名列表（如 ["color", "font-size"]）。
+   *  对于 type: 'variable'，此字段为空数组 []，变量名存储在 selector 中，
+   *  以保持与其他类型（存储属性名）的语义一致性。 */
+  declarations: string[];
+  /** 规则类型 */
+  type: 'rule' | 'at-rule' | 'mixin' | 'function' | 'variable';
+  /** 语义标签列表（如 "scoped-style"、"css-modules"），由 VueSfcPlugin/SveltePlugin 合并时添加 */
+  tags?: string[];
+}
+
 export interface ReferenceResolution {
   source: string;
   target: string;
@@ -167,9 +194,9 @@ export interface ReferenceResolution {
 
 // Plugin interfaces
 export interface StructuralAnalysis {
-  functions: Array<{ name: string; lineRange: [number, number]; params: string[]; returnType?: string }>;
-  classes: Array<{ name: string; lineRange: [number, number]; methods: string[]; properties: string[] }>;
-  imports: Array<{ source: string; specifiers: string[]; lineNumber: number }>;
+  functions: Array<{ name: string; lineRange: [number, number]; params: string[]; returnType?: string; tags?: string[] }>;
+  classes: Array<{ name: string; lineRange: [number, number]; methods: string[]; properties: string[]; tags?: string[] }>;
+  imports: Array<{ source: string; specifiers: string[]; lineNumber: number; importKind?: 'module' | 'component' | 'hook' | 'context' | 'hoc' | 'css-in-js' }>;
   exports: Array<{ name: string; lineNumber: number; isDefault?: boolean }>;
   // Non-code structural data (all optional for backward compat)
   sections?: SectionInfo[];
@@ -178,18 +205,29 @@ export interface StructuralAnalysis {
   endpoints?: EndpointInfo[];
   steps?: StepInfo[];
   resources?: ResourceInfo[];
+  // HTML structural data (optional for backward compat)
+  htmlElements?: HtmlElementInfo[];
+  // CSS/SCSS structural data (optional for backward compat)
+  cssRules?: CssRuleInfo[];
 }
 
 export interface ImportResolution {
   source: string;
   resolvedPath: string;
   specifiers: string[];
+  /** resolvedPath 是否经过文件系统存在性验证。
+   *  CssPlugin 的 resolveImports() 无法直接访问文件系统，
+   *  因此始终返回 isVerified: false；
+   *  实际验证由 extract-import-map.mjs 中的 resolveCssImport() 完成。 */
+  isVerified?: boolean;
 }
 
 export interface CallGraphEntry {
   caller: string;
   callee: string;
   lineNumber: number;
+  /** P1.4 新增: 关系类型，默认 'call' */
+  relationType?: 'call' | 'contains' | 'depends_on';
 }
 
 export interface AnalyzerPlugin {

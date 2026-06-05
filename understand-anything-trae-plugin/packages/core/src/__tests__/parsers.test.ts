@@ -521,10 +521,10 @@ describe("EnvParser edge cases", () => {
 });
 
 describe("registerAllParsers", () => {
-  it("registers all 10 parsers with a PluginRegistry", () => {
+  it("registers all 12 parsers with a PluginRegistry", () => {
     const registry = new PluginRegistry();
     registerAllParsers(registry);
-    expect(registry.getPlugins()).toHaveLength(10);
+    expect(registry.getPlugins()).toHaveLength(12);
     expect(registry.getSupportedLanguages()).toContain("markdown");
     expect(registry.getSupportedLanguages()).toContain("yaml");
     expect(registry.getSupportedLanguages()).toContain("json");
@@ -535,5 +535,7 @@ describe("registerAllParsers", () => {
     expect(registry.getSupportedLanguages()).toContain("graphql");
     expect(registry.getSupportedLanguages()).toContain("makefile");
     expect(registry.getSupportedLanguages()).toContain("shell");
+    expect(registry.getSupportedLanguages()).toContain("html");
+    expect(registry.getSupportedLanguages()).toContain("css");
   });
 });

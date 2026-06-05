@@ -1,5 +1,8 @@
 import type { LanguageConfig } from "../types.js";
 
+// CSS/SCSS 结构化提取由 CssPlugin（PostCSS + postcss-scss）承担
+// 不设 treeSitter 字段 — CSS/SCSS 不使用 tree-sitter 解析
+
 export const cssConfig = {
   id: "css",
   displayName: "CSS",

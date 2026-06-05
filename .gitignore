@@ -41,7 +41,7 @@ __pycache__/
 venv/
 
 # Project-specific
-.understand-anything-trae/
+# .understand-anything-trae/
 .claude/
 .worktrees/
 .private/

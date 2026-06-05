@@ -48,6 +48,7 @@ const {
   PluginRegistry,
   builtinLanguageConfigs,
   registerAllParsers,
+  CssPlugin,
   buildFingerprintStore,
   saveFingerprints,
 } = core;
@@ -78,7 +79,8 @@ async function main() {
 
   const registry = new PluginRegistry();
   registry.register(tsPlugin);
-  registerAllParsers(registry, tsPlugin);
+  const cssPlugin = new CssPlugin();
+  registerAllParsers(registry, tsPlugin, cssPlugin);
 
   const store = buildFingerprintStore(projectRoot, sourceFilePaths, registry, gitCommitHash);
   saveFingerprints(projectRoot, store);

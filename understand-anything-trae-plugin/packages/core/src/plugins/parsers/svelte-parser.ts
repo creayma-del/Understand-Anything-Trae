@@ -1,6 +1,7 @@
 import type { AnalyzerPlugin, StructuralAnalysis, ImportResolution, CallGraphEntry } from "../../types.js";
 import { parse as parseSvelte } from "svelte/compiler";
 import type { TreeSitterPlugin } from "../tree-sitter-plugin.js";
+import type { CssPlugin } from "./css-parser.js";
 
 /**
  * Template component reference extracted from the Svelte template AST.
@@ -21,6 +22,14 @@ interface ScriptBlock {
 }
 
 /**
+ * Style 块元信息，用于标记 scoped/module。
+ */
+interface StyleBlockMeta {
+  scoped: boolean;
+  module: boolean;
+}
+
+/**
  * Svelte parser plugin.
  *
  * Uses svelte/compiler to parse .svelte files, then delegates script
@@ -33,22 +42,28 @@ export class SveltePlugin implements AnalyzerPlugin {
 
   // Dependencies injected via init()
   private tsPlugin: TreeSitterPlugin | null = null;
+  private cssPlugin: CssPlugin | null = null;
 
   /**
    * Initialize with a reference to the TreeSitterPlugin for
-   * TypeScript grammar access.
+   * TypeScript grammar access, and optionally CssPlugin for
+   * style block analysis.
    */
-  init(tsPlugin: TreeSitterPlugin): void {
+  init(tsPlugin: TreeSitterPlugin, cssPlugin?: CssPlugin): void {
     this.tsPlugin = tsPlugin;
+    this.cssPlugin = cssPlugin ?? null;
   }
 
   analyzeFile(filePath: string, content: string): StructuralAnalysis {
-    const { scriptBlocks, templateComponents } =
+    const { scriptBlocks, templateComponents, ast } =
       parseSvelteSfc(content, filePath);
+
+    // 构建基础结果：script + template 分析
+    let result: StructuralAnalysis;
 
     // 如果没有 script 块，仅返回 template 组件引用
     if (scriptBlocks.length === 0) {
-      return {
+      result = {
         functions: [],
         classes: [],
         imports: templateComponents.map(comp => ({
@@ -58,11 +73,9 @@ export class SveltePlugin implements AnalyzerPlugin {
         })),
         exports: [],
       };
-    }
-
-    // [降级守卫] tsPlugin 未初始化时返回空分析 + template 组件引用
-    if (!this.tsPlugin) {
-      return {
+    } else if (!this.tsPlugin) {
+      // [降级守卫] tsPlugin 未初始化时返回空分析 + template 组件引用
+      result = {
         functions: [],
         classes: [],
         imports: templateComponents.map(comp => ({
@@ -72,59 +85,83 @@ export class SveltePlugin implements AnalyzerPlugin {
         })),
         exports: [],
       };
+    } else {
+      // 合并所有 script 块的分析结果
+      // Svelte 可以同时有 instance script 和 module script
+      const isTs = detectTypeScriptScript(content);
+      const allFunctions: StructuralAnalysis["functions"] = [];
+      const allClasses: StructuralAnalysis["classes"] = [];
+      const allImports: StructuralAnalysis["imports"] = [];
+      const allExports: StructuralAnalysis["exports"] = [];
+
+      for (const block of scriptBlocks) {
+        const tsAnalysis = this.tsPlugin.analyzeFile(
+          isTs ? "virtual.ts" : "virtual.js",
+          block.content,
+        );
+
+        // 行号偏移修正
+        const lineOffset = block.startLine - 1;
+        allFunctions.push(...tsAnalysis.functions.map(fn => ({
+          ...fn,
+          lineRange: [fn.lineRange[0] + lineOffset, fn.lineRange[1] + lineOffset] as [number, number],
+        })));
+        allClasses.push(...tsAnalysis.classes.map(cls => ({
+          ...cls,
+          lineRange: [cls.lineRange[0] + lineOffset, cls.lineRange[1] + lineOffset] as [number, number],
+        })));
+        allImports.push(...tsAnalysis.imports.map(imp => ({
+          ...imp,
+          lineNumber: imp.lineNumber + lineOffset,
+        })));
+        allExports.push(...tsAnalysis.exports.map(exp => ({
+          ...exp,
+          lineNumber: exp.lineNumber + lineOffset,
+        })));
+      }
+
+      // 合并 template 组件引用到 imports
+      // 去重：检查组件名是否已出现在 import specifiers 中
+      const importedSpecifiers = new Set(allImports.flatMap(i => i.specifiers));
+      const templateImports = templateComponents
+        .filter(comp => !importedSpecifiers.has(comp.name))
+        .map(comp => ({
+          source: comp.name,
+          specifiers: [comp.name],
+          lineNumber: comp.lineNumber,
+        }));
+
+      result = {
+        functions: allFunctions,
+        classes: allClasses,
+        imports: [...allImports, ...templateImports],
+        exports: allExports,
+      };
     }
 
-    // 合并所有 script 块的分析结果
-    // Svelte 可以同时有 instance script 和 module script
-    const isTs = detectTypeScriptScript(content);
-    const allFunctions: StructuralAnalysis["functions"] = [];
-    const allClasses: StructuralAnalysis["classes"] = [];
-    const allImports: StructuralAnalysis["imports"] = [];
-    const allExports: StructuralAnalysis["exports"] = [];
-
-    for (const block of scriptBlocks) {
-      const tsAnalysis = this.tsPlugin.analyzeFile(
-        isTs ? "virtual.ts" : "virtual.js",
-        block.content,
+    // style 块分析：委托 CssPlugin
+    if (this.cssPlugin && ast.css) {
+      // Svelte 的 ast.css 不直接提供 content 字符串，
+      // 需要从原始文件内容中提取
+      const styleContent = extractStyleContent(content, ast.css);
+      const styleResult = this.cssPlugin.analyzeFile(
+        `${filePath}#style`,
+        styleContent,
       );
 
-      // 行号偏移修正
-      const lineOffset = block.startLine - 1;
-      allFunctions.push(...tsAnalysis.functions.map(fn => ({
-        ...fn,
-        lineRange: [fn.lineRange[0] + lineOffset, fn.lineRange[1] + lineOffset] as [number, number],
-      })));
-      allClasses.push(...tsAnalysis.classes.map(cls => ({
-        ...cls,
-        lineRange: [cls.lineRange[0] + lineOffset, cls.lineRange[1] + lineOffset] as [number, number],
-      })));
-      allImports.push(...tsAnalysis.imports.map(imp => ({
-        ...imp,
-        lineNumber: imp.lineNumber + lineOffset,
-      })));
-      allExports.push(...tsAnalysis.exports.map(exp => ({
-        ...exp,
-        lineNumber: exp.lineNumber + lineOffset,
-      })));
+      // 字符偏移转行号
+      // ast.css.start 是 <style> 标签的字符偏移位置
+      // 偏移量 = <style> 标签所在行号（1-based），与 Vue 的 styleOffset 语义一致
+      const styleOffset = content.slice(0, ast.css.start).split('\n').length;
+
+      // Svelte <style> 始终 scoped
+      this.mergeStyleAnalysis(result, styleResult, styleOffset, {
+        scoped: true,
+        module: false,
+      });
     }
 
-    // 合并 template 组件引用到 imports
-    // 去重：检查组件名是否已出现在 import specifiers 中
-    const importedSpecifiers = new Set(allImports.flatMap(i => i.specifiers));
-    const templateImports = templateComponents
-      .filter(comp => !importedSpecifiers.has(comp.name))
-      .map(comp => ({
-        source: comp.name,
-        specifiers: [comp.name],
-        lineNumber: comp.lineNumber,
-      }));
-
-    return {
-      functions: allFunctions,
-      classes: allClasses,
-      imports: [...allImports, ...templateImports],
-      exports: allExports,
-    };
+    return result;
   }
 
   resolveImports(filePath: string, content: string): ImportResolution[] {
@@ -158,6 +195,58 @@ export class SveltePlugin implements AnalyzerPlugin {
     }
 
     return allCallGraph;
+  }
+
+  /**
+   * 将 CssPlugin 对 style 块的分析结果合并到主 StructuralAnalysis 中。
+   *
+   * 处理：
+   * 1. cssRules 行号偏移修正 + scoped/module 标记
+   * 2. imports 行号偏移修正
+   * 3. exports 行号偏移修正
+   */
+  private mergeStyleAnalysis(
+    result: StructuralAnalysis,
+    styleResult: StructuralAnalysis,
+    lineOffset: number,
+    meta: StyleBlockMeta,
+  ): void {
+    // 确保 cssRules 数组存在
+    if (!result.cssRules) {
+      result.cssRules = [];
+    }
+
+    // 1. 合并 cssRules（行号偏移 + 标签标记）
+    for (const rule of styleResult.cssRules ?? []) {
+      const tags: string[] = [...(rule.tags ?? [])];
+      if (meta.scoped) tags.push("scoped-style");
+      if (meta.module) tags.push("css-modules");
+
+      result.cssRules.push({
+        ...rule,
+        lineRange: [
+          rule.lineRange[0] + lineOffset,
+          rule.lineRange[1] + lineOffset,
+        ] as [number, number],
+        tags,
+      });
+    }
+
+    // 2. 合并 imports（行号偏移）
+    for (const imp of styleResult.imports) {
+      result.imports.push({
+        ...imp,
+        lineNumber: imp.lineNumber + lineOffset,
+      });
+    }
+
+    // 3. 合并 exports（行号偏移）
+    for (const exp of styleResult.exports) {
+      result.exports.push({
+        ...exp,
+        lineNumber: exp.lineNumber + lineOffset,
+      });
+    }
   }
 }
 
@@ -224,6 +313,26 @@ function extractScriptContent(
   scriptBlock: { start: number; end: number },
 ): string {
   return fileContent.slice(scriptBlock.start, scriptBlock.end);
+}
+
+/**
+ * 从原始文件内容中提取 Svelte style 块的纯文本。
+ *
+ * Svelte 5 的 ast.css 不直接提供 content 字符串，
+ * 需要从原始内容中按 start/end 偏移量提取。
+ * ast.css.start/end 覆盖整个 <style> 元素（含标签），
+ * 需要跳过 <style...> 开始标签和 </style> 结束标签。
+ */
+function extractStyleContent(
+  fileContent: string,
+  cssBlock: { start: number; end: number },
+): string {
+  // 提取整个 <style>...</style> 块
+  const rawBlock = fileContent.slice(cssBlock.start, cssBlock.end);
+
+  // 去除 <style> 开始标签和 </style> 结束标签
+  const contentMatch = rawBlock.match(/^<style[^>]*>\n?([\s\S]*?)\n?<\/style>$/);
+  return contentMatch ? contentMatch[1] : rawBlock;
 }
 
 /**
