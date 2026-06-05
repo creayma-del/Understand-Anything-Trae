@@ -63,7 +63,7 @@ Understand Anything Trae 是一个 Trae 插件，通过多智能体（multi-agen
     </td>
     <td width="50%" valign="top">
       <h3>📚 语言概念</h3>
-      <p>12 种编程模式（泛型、闭包、装饰器等）将在上下文中逐一解释。</p>
+      <p>86 种语言特定概念（泛型、闭包、响应式存储、SFC 模式等）将在上下文中逐一解释。</p>
     </td>
   </tr>
 </table>

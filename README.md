@@ -64,7 +64,7 @@ Switch to the domain view and see how your code maps to real business processes 
     </td>
     <td width="50%" valign="top">
       <h3>📚 Language Concepts</h3>
-      <p>12 programming patterns (generics, closures, decorators, etc.) explained in context wherever they appear.</p>
+      <p>86 language-specific concepts (generics, closures, reactive stores, SFC patterns, etc.) explained in context wherever they appear.</p>
     </td>
   </tr>
 </table>
