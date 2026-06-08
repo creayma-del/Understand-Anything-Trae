@@ -12,6 +12,7 @@ export { VueSfcPlugin } from "./vue-sfc-parser.js";
 export { SveltePlugin } from "./svelte-parser.js";
 export { CssPlugin } from "./css-parser.js";
 export { HtmlPlugin } from "./html-parser.js";
+export { mergeStyleAnalysis, type StyleBlockMeta } from "./sfc-utils.js";
 
 import type { PluginRegistry } from "../registry.js";
 import type { TreeSitterPlugin } from "../tree-sitter-plugin.js";

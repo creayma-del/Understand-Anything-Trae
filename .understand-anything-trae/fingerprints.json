@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "gitCommitHash": "f5a4a7a244de22ab23e7190d9c82005327d1ccb2",
-  "generatedAt": "2026-06-05T03:03:33.941Z",
+  "gitCommitHash": "e045f6fb64ef07a6107be0089053bd6444955605",
+  "generatedAt": "2026-06-08T04:22:57.993Z",
   "files": {
     ".github/FUNDING.yml": {
       "filePath": ".github/FUNDING.yml",
@@ -165,77 +165,37 @@
     },
     ".understand-anything-trae/fingerprints.json": {
       "filePath": ".understand-anything-trae/fingerprints.json",
-      "contentHash": "69b0350a5cf9d7797639672deba79b53c9415b98ed1a39ce15ffc5be319e1bf6",
+      "contentHash": "96ea71e073d2091ea048bcf9c71783580c5a6595c621b5d8174a5dd09e140241",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 10795,
-      "hasStructuralAnalysis": true
-    },
-    ".understand-anything-trae/intermediate/domain-analysis.json": {
-      "filePath": ".understand-anything-trae/intermediate/domain-analysis.json",
-      "contentHash": "56eb2b96a0eb723cc926e7b7c903ed5c231f515d11d9b666a5ac47d13d55ed2b",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 1448,
-      "hasStructuralAnalysis": true
-    },
-    ".understand-anything-trae/intermediate/domain-compact.json": {
-      "filePath": ".understand-anything-trae/intermediate/domain-compact.json",
-      "contentHash": "3a7614811cda72093f439b1f82752c35092526fee6af3ee2b3df2350f213d468",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 1806,
-      "hasStructuralAnalysis": true
-    },
-    ".understand-anything-trae/intermediate/domain-context-from-graph.json": {
-      "filePath": ".understand-anything-trae/intermediate/domain-context-from-graph.json",
-      "contentHash": "4767c47c3aaff2213aeb3d9b0680c180a2bf37e0a61fdb6b4cecf1c39fa2b98d",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 5760,
-      "hasStructuralAnalysis": true
-    },
-    ".understand-anything-trae/intermediate/domain-context.json": {
-      "filePath": ".understand-anything-trae/intermediate/domain-context.json",
-      "contentHash": "c3e5f9163b693d9ec5986db9a4304e935642d6d70518073a7ec4277b4a6da10b",
-      "functions": [],
-      "classes": [],
-      "imports": [],
-      "exports": [],
-      "totalLines": 697,
+      "totalLines": 10108,
       "hasStructuralAnalysis": true
     },
     ".understand-anything-trae/intermediate/scan-result.json": {
       "filePath": ".understand-anything-trae/intermediate/scan-result.json",
-      "contentHash": "32c1eed7d67e1244a83c160a244eca22c4abc9a7152992f589695edeb8749f86",
+      "contentHash": "f018f0d6e5ce2b55f89f9e026eb691550635d6d6cda0162410dcbdafac14a279",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 2091,
+      "totalLines": 1862,
       "hasStructuralAnalysis": true
     },
     ".understand-anything-trae/knowledge-graph.json": {
       "filePath": ".understand-anything-trae/knowledge-graph.json",
-      "contentHash": "0a9fba7ca66ac0fd20ec4ce46eb01094eb8e6dfeb9cba94b636eab433dfb4f9b",
+      "contentHash": "3a2d2949d57e2f6decca4ca6c32df57b69aa38e2a4ca4c684eb9bf6f9cf976b1",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 14461,
+      "totalLines": 11490,
       "hasStructuralAnalysis": true
     },
     ".understand-anything-trae/meta.json": {
       "filePath": ".understand-anything-trae/meta.json",
-      "contentHash": "08676bbb2a1dc2befbdd2d8bff2b6495cb1d7d5a510b298a8d3835a49e9f9654",
+      "contentHash": "200d78f57d19e783dbf22c3b30abc32d6452fe1f445f033548dacadf49fdbfff",
       "functions": [],
       "classes": [],
       "imports": [],
@@ -331,6 +291,186 @@
       "imports": [],
       "exports": [],
       "totalLines": 471,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1-frontend-ecosystem-deepening.md": {
+      "filePath": "docs/specs/p1-frontend-ecosystem-deepening.md",
+      "contentHash": "46eb9f75b6f72eadab4f9ddd735a26661cb373b91909d55034c4e8e21f655b12",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 750,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1-implementation-plan.md": {
+      "filePath": "docs/specs/p1-implementation-plan.md",
+      "contentHash": "e27fab43cdacb36bcadfde67282cc05d180beb6ce27791be1bbaf1c30e9167e8",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 620,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1.1-css-scss-parser.md": {
+      "filePath": "docs/specs/p1.1-css-scss-parser.md",
+      "contentHash": "ed4b1cc1954b938c46c95985a98efa43904aac6a71ed01ccaec903773111ae7c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 793,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1.2-html-parser.md": {
+      "filePath": "docs/specs/p1.2-html-parser.md",
+      "contentHash": "a18c01303665beceefa8c0ef68e6f853cde6aea34723ec8cf785cca6557a2509",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 765,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1.3-vue-svelte-test-coverage.md": {
+      "filePath": "docs/specs/p1.3-vue-svelte-test-coverage.md",
+      "contentHash": "f8af76d37d9e1ed013421e21a36ba35b3575891ab1bf03c5120e7c28dc0a0ff9",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 441,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1.4-react-jsx-extractor.md": {
+      "filePath": "docs/specs/p1.4-react-jsx-extractor.md",
+      "contentHash": "5fc6ddca5efc3a5ef0bbf4bdf348a51b91138eb26529be3882a27d6344dc611a",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1073,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1.5-nuxt-framework.md": {
+      "filePath": "docs/specs/p1.5-nuxt-framework.md",
+      "contentHash": "579316f877266abc33abe4722ecf121bd768a28629b1233ff6867e9827c89bc3",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 503,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1.6-sveltekit-framework.md": {
+      "filePath": "docs/specs/p1.6-sveltekit-framework.md",
+      "contentHash": "d6d6104a3662097a5f9d443bf76a0776d6d726756b4fdc7a16439aba8f500e83",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 413,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1.7-vue-svelte-style-block.md": {
+      "filePath": "docs/specs/p1.7-vue-svelte-style-block.md",
+      "contentHash": "7f541474b08b61a401e35a6b77011e853662a8772d9292473a5f8ec1bfcf57ce",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 818,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p1.8-css-in-js-support.md": {
+      "filePath": "docs/specs/p1.8-css-in-js-support.md",
+      "contentHash": "c46f69544ce197f97f5c29d789e4e5af65713157c6efc74b8e7ec3dc33a6abfa",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 1036,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p2-implementation-plan.md": {
+      "filePath": "docs/specs/p2-implementation-plan.md",
+      "contentHash": "63697f7a6df7da5ac0afc226b4d6fcda068a80db0818844bef03ed60953019b0",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 433,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p2-performance-optimization.md": {
+      "filePath": "docs/specs/p2-performance-optimization.md",
+      "contentHash": "c22b960818e8048808b37ec742f572445beeb8e3c4565790d18f0ec280fa59c1",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 673,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p2.1-batch-parameter-tuning.md": {
+      "filePath": "docs/specs/p2.1-batch-parameter-tuning.md",
+      "contentHash": "8dfe2231c5e381439a3adb6cd1b121325143a718a4db9914a4cc96218825ddec",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 671,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p2.2-deterministic-imports-edges.md": {
+      "filePath": "docs/specs/p2.2-deterministic-imports-edges.md",
+      "contentHash": "a6fdbd4b2a6ecc06e92a3a8ad319b06108187430f15096a02b1eb530afdc08ee",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 600,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p2.3-structure-pre-extraction.md": {
+      "filePath": "docs/specs/p2.3-structure-pre-extraction.md",
+      "contentHash": "7aaa32946fba20d28a9e53642d09856d0afb91cac97acb9f8e0ef85ca6ab8624",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 814,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p2.4-unified-analysis-pipeline.md": {
+      "filePath": "docs/specs/p2.4-unified-analysis-pipeline.md",
+      "contentHash": "535589f1928e816f004a1ed22533490cb226e1215cf734e804316da97476f622",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 976,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p2.5-deterministic-metadata-extraction.md": {
+      "filePath": "docs/specs/p2.5-deterministic-metadata-extraction.md",
+      "contentHash": "236eb454f86be283d7fb51cf27f48c19a64f934bdfe1c3b2365ad990b091f16d",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 660,
+      "hasStructuralAnalysis": true
+    },
+    "docs/specs/p2.6-deterministic-assembly-validation.md": {
+      "filePath": "docs/specs/p2.6-deterministic-assembly-validation.md",
+      "contentHash": "da5c33181c658f6de368888bbc33bab67dc1894eb5db27f3cdf6ea75c92889db",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 914,
       "hasStructuralAnalysis": true
     },
     "eslint.config.mjs": {
@@ -607,6 +747,12 @@
           ],
           "exported": false,
           "lineCount": 35
+        },
+        {
+          "name": "nodes",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
         }
       ],
       "classes": [],
@@ -671,12 +817,12 @@
     },
     "tests/skill/understand/fixtures/scan-result-non-code.json": {
       "filePath": "tests/skill/understand/fixtures/scan-result-non-code.json",
-      "contentHash": "8ed9a2d8a5dbafeb3b6de973b4b419bf925bc7120663a3293d51f2ba2c6db26f",
+      "contentHash": "fee8316180b4148d56efe481133d86939cce77b3cf962c1fe95957a8f4139ec6",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 37,
+      "totalLines": 41,
       "hasStructuralAnalysis": true
     },
     "tests/skill/understand/fixtures/scan-result-singletons.json": {
@@ -689,9 +835,92 @@
       "totalLines": 716,
       "hasStructuralAnalysis": true
     },
+    "tests/skill/understand/test_analyze_project.test.mjs": {
+      "filePath": "tests/skill/understand/test_analyze_project.test.mjs",
+      "contentHash": "c3796a056278b1079a7153b1ee38ede1157b0087d2ebd9ce2e64755fd70e0050",
+      "functions": [
+        {
+          "name": "setupTree",
+          "params": [
+            "files"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "runScript",
+          "params": [
+            "projectRoot",
+            "outputDir"
+          ],
+          "exported": false,
+          "lineCount": 23
+        },
+        {
+          "name": "writeScanResult",
+          "params": [
+            "outputDir",
+            "files"
+          ],
+          "exported": false,
+          "lineCount": 11
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "afterEach"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "mkdtempSync",
+            "mkdirSync",
+            "writeFileSync",
+            "readFileSync",
+            "rmSync"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join",
+            "dirname",
+            "resolve"
+          ]
+        },
+        {
+          "source": "node:child_process",
+          "specifiers": [
+            "spawnSync"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 262,
+      "hasStructuralAnalysis": true
+    },
     "tests/skill/understand/test_compute_batches.test.mjs": {
       "filePath": "tests/skill/understand/test_compute_batches.test.mjs",
-      "contentHash": "efcf17ff137b498948e18cbad22842137416b28f172fc26a2be46eff15d9ee3e",
+      "contentHash": "2d9b94d1115f186d3e16d0af60b0f437bf94f1bcec391e4518120db2683b6667",
       "functions": [
         {
           "name": "runScript",
@@ -716,6 +945,12 @@
           ],
           "exported": false,
           "lineCount": 4
+        },
+        {
+          "name": "fixturePath",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
         }
       ],
       "classes": [],
@@ -773,7 +1008,7 @@
         }
       ],
       "exports": [],
-      "totalLines": 603,
+      "totalLines": 912,
       "hasStructuralAnalysis": true
     },
     "tests/skill/understand/test_extract_import_map.test.mjs": {
@@ -850,19 +1085,93 @@
       "totalLines": 673,
       "hasStructuralAnalysis": true
     },
+    "tests/skill/understand/test_extract_metadata.test.mjs": {
+      "filePath": "tests/skill/understand/test_extract_metadata.test.mjs",
+      "contentHash": "a9766263d3a260db1692155634d15e0731fad40670d8ecc599fd3efd68058902",
+      "functions": [
+        {
+          "name": "setupTree",
+          "params": [
+            "files"
+          ],
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "runScript",
+          "params": [
+            "projectRoot"
+          ],
+          "exported": false,
+          "lineCount": 15
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "afterEach"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "mkdtempSync",
+            "mkdirSync",
+            "writeFileSync",
+            "readFileSync",
+            "rmSync"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join",
+            "dirname",
+            "resolve",
+            "basename"
+          ]
+        },
+        {
+          "source": "node:child_process",
+          "specifiers": [
+            "spawnSync"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 469,
+      "hasStructuralAnalysis": true
+    },
     "tests/skill/understand/test_merge_batch_graphs.py": {
       "filePath": "tests/skill/understand/test_merge_batch_graphs.py",
-      "contentHash": "fb056f2825528ab26c2e1780f7887da46d99dc5400e4074206daa08bf733ec7b",
+      "contentHash": "b10973876067c1333ded1220c3694ff6e4619e2d128404887a403830ad852de0",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 1041,
+      "totalLines": 1290,
       "hasStructuralAnalysis": false
     },
     "tests/skill/understand/test_scan_project.test.mjs": {
       "filePath": "tests/skill/understand/test_scan_project.test.mjs",
-      "contentHash": "581f52d42754c7153fce41fc3a0f798e29239928fbf6527ade88f47f59e30644",
+      "contentHash": "2adc70460a843a71e26f59dcf5b0ccc951c5f10ec66eb34815521e404908eaef",
       "functions": [
         {
           "name": "setupTree",
@@ -944,6 +1253,102 @@
       "totalLines": 709,
       "hasStructuralAnalysis": true
     },
+    "tests/skill/understand/test_validate_assembly.test.mjs": {
+      "filePath": "tests/skill/understand/test_validate_assembly.test.mjs",
+      "contentHash": "fa5691e10f3aeed382a968ee28fe7a87587989780aef0111e223140c5b357390",
+      "functions": [
+        {
+          "name": "makeGraph",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "makeNode",
+          "params": [],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "makeEdge",
+          "params": [],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "makeImportMap",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "runValidate",
+          "params": [
+            "graphPath",
+            "importMapPath",
+            "outputPath"
+          ],
+          "exported": false,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "beforeEach",
+            "afterEach"
+          ]
+        },
+        {
+          "source": "node:child_process",
+          "specifiers": [
+            "spawnSync"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "mkdtempSync",
+            "rmSync",
+            "writeFileSync",
+            "readFileSync"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "dirname",
+            "resolve"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 282,
+      "hasStructuralAnalysis": true
+    },
     "tsconfig.json": {
       "filePath": "tsconfig.json",
       "contentHash": "b3a11d3a2362abe4644a9547ef6d20a36d04d2f5c64d6b884b90d7997447b0da",
@@ -986,12 +1391,12 @@
     },
     "understand-anything-trae-plugin/agents/file-analyzer.md": {
       "filePath": "understand-anything-trae-plugin/agents/file-analyzer.md",
-      "contentHash": "8f0598227bff3818d0b6a6ed52545776eaf4c33f5dc803727eba1d597116a8f9",
+      "contentHash": "c3c6b0c89769f8b5575dc99a48f7eff19af0b86b2e678051f034a110a52fa658",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 511,
+      "totalLines": 467,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/agents/graph-reviewer.md": {
@@ -1016,12 +1421,12 @@
     },
     "understand-anything-trae-plugin/agents/project-scanner.md": {
       "filePath": "understand-anything-trae-plugin/agents/project-scanner.md",
-      "contentHash": "611db04c41f0285e0957ac2a635d8b0221b8144950affec0db46913ddd6b7056",
+      "contentHash": "2dd88b468a1522b30501d8034c22919c976b0fb985cecb073cc4c56d5c0a3788",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 230,
+      "totalLines": 236,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/agents/tour-builder.md": {
@@ -1056,7 +1461,7 @@
     },
     "understand-anything-trae-plugin/package.json": {
       "filePath": "understand-anything-trae-plugin/package.json",
-      "contentHash": "e156a56d311aa5c0b2afc29668d7b48c056bb123a9c562de7b5c310eebbdf5e7",
+      "contentHash": "45a4ac1e15551dcd1d8fa82d7ee32bfa9bbd79aba66fa9ed27eb1d4054fce595",
       "functions": [],
       "classes": [],
       "imports": [],
@@ -1066,12 +1471,12 @@
     },
     "understand-anything-trae-plugin/packages/core/package.json": {
       "filePath": "understand-anything-trae-plugin/packages/core/package.json",
-      "contentHash": "1bb37e2592fc17fd85d3afeaac7d0ccd394bc91455cde6c2bd9649a5efbd2e4d",
+      "contentHash": "3587cd64d9ccf7d2f1edf21ae6baa00e59af04a2945d80ec47ea0e75040c56bf",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 51,
+      "totalLines": 54,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/change-classifier.test.ts": {
@@ -1304,7 +1709,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/framework-registry.test.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/__tests__/framework-registry.test.ts",
-      "contentHash": "73ec39b6da9dcff2d77db0abf1bd2c36ae44c3d98b2dd4f9c75acbad765ba9f9",
+      "contentHash": "1932158cc10816dd17c4ab034aa71f30652baaf7e6cc26b41f94f913b8601693",
       "functions": [],
       "classes": [],
       "imports": [
@@ -1333,10 +1738,22 @@
           "specifiers": [
             "reactConfig"
           ]
+        },
+        {
+          "source": "../languages/frameworks/nuxt.js",
+          "specifiers": [
+            "nuxtConfig"
+          ]
+        },
+        {
+          "source": "../languages/frameworks/sveltekit.js",
+          "specifiers": [
+            "sveltekitConfig"
+          ]
         }
       ],
       "exports": [],
-      "totalLines": 120,
+      "totalLines": 242,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/ignore-filter.test.ts": {
@@ -1476,7 +1893,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/language-registry.test.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/__tests__/language-registry.test.ts",
-      "contentHash": "9ad6eecb52ffa5b16db8ac5660a157836cfb0f2a55de6baab806f44a5cbcec7b",
+      "contentHash": "1ea52598d28995f761eb58ff78f2d9415d5bd8c86f3f404774061cf44052f531",
       "functions": [],
       "classes": [],
       "imports": [
@@ -1514,7 +1931,7 @@
         }
       ],
       "exports": [],
-      "totalLines": 186,
+      "totalLines": 184,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/layer-detector.test.ts": {
@@ -1606,7 +2023,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/parsers.test.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/__tests__/parsers.test.ts",
-      "contentHash": "df486ed7506bc8bcf16b20fc786f6fcdff18094c2af2ee91082267c417fc39a1",
+      "contentHash": "d97e3ca2afc76f8466030b5b0a04aed49e45ad133c372c6111faefaaec9ace5e",
       "functions": [],
       "classes": [],
       "imports": [
@@ -1693,7 +2110,7 @@
         }
       ],
       "exports": [],
-      "totalLines": 540,
+      "totalLines": 542,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-discovery.test.ts": {
@@ -1726,7 +2143,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-registry.test.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-registry.test.ts",
-      "contentHash": "82214a9019a2641f391b77dd444f69c1d3d22c94763ccd6c8d700a87c84b75ea",
+      "contentHash": "0fcb79b16eb37eddfef303c4ce68ab9d858c2b46d378e6733c6fd186e58c68fe",
       "functions": [
         {
           "name": "createMockPlugin",
@@ -1771,7 +2188,7 @@
         }
       ],
       "exports": [],
-      "totalLines": 228,
+      "totalLines": 226,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/__tests__/schema.test.ts": {
@@ -1956,7 +2373,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.test.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.test.ts",
-      "contentHash": "15f2b74cb5747684eec5db003a7e41483b15721bf1b190f8a3e281c03b9d6831",
+      "contentHash": "19b2ee81eb8d244d03d6cf96bb824021453a0792dbc2bfd8204f9679d65e29c7",
       "functions": [],
       "classes": [],
       "imports": [
@@ -2402,6 +2819,18 @@
           "returnType": "TourStep[]",
           "exported": true,
           "lineCount": 159
+        },
+        {
+          "name": "nodeSummaries",
+          "params": [],
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "nodeSummaries",
+          "params": [],
+          "exported": false,
+          "lineCount": 4
         }
       ],
       "classes": [],
@@ -2751,7 +3180,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/index.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/index.ts",
-      "contentHash": "afd7f2d69481c67debf3b736dba14160a260fb7154daa048d9b9fb9fc956db89",
+      "contentHash": "853eeb0f11f34df4089c5d35c5eb729c6541053b10a29e3dad69cafd070f4c7f",
       "functions": [],
       "classes": [],
       "imports": [],
@@ -2845,18 +3274,20 @@
         "ShellParser",
         "VueSfcPlugin",
         "SveltePlugin",
+        "CssPlugin",
+        "HtmlPlugin",
         "registerAllParsers",
         "createIgnoreFilter",
         "DEFAULT_IGNORE_PATTERNS",
         "IgnoreFilter",
         "generateStarterIgnoreFile"
       ],
-      "totalLines": 125,
+      "totalLines": 127,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/languages/configs/css.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/languages/configs/css.ts",
-      "contentHash": "4595ba2f6fc01ed3416790276493a27da6ed7e9c4e8ba791fd1cb048623097bd",
+      "contentHash": "3c0bf727b2c260ace36469912c6cd24753f47836ce3a1ad29aa7e21360ca948d",
       "functions": [],
       "classes": [],
       "imports": [
@@ -2870,7 +3301,7 @@
       "exports": [
         "cssConfig"
       ],
-      "totalLines": 75,
+      "totalLines": 78,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/languages/configs/dockerfile.ts": {
@@ -3411,7 +3842,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/languages/frameworks/index.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/index.ts",
-      "contentHash": "e9c2eb09e1a717d2388faf4c51b972773558ea6c10636e34214ee3555cf939c6",
+      "contentHash": "f763140e2e1c9594d0fdfe303950a1797268037d16df1b2345c8d62bf9f0d685",
       "functions": [],
       "classes": [],
       "imports": [
@@ -3434,6 +3865,12 @@
           ]
         },
         {
+          "source": "./nuxt.js",
+          "specifiers": [
+            "nuxtConfig"
+          ]
+        },
+        {
           "source": "./express.js",
           "specifiers": [
             "expressConfig"
@@ -3444,16 +3881,24 @@
           "specifiers": [
             "vueConfig"
           ]
+        },
+        {
+          "source": "./sveltekit.js",
+          "specifiers": [
+            "sveltekitConfig"
+          ]
         }
       ],
       "exports": [
         "builtinFrameworkConfigs",
         "reactConfig",
         "nextjsConfig",
+        "nuxtConfig",
         "expressConfig",
-        "vueConfig"
+        "vueConfig",
+        "sveltekitConfig"
       ],
-      "totalLines": 21,
+      "totalLines": 30,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nextjs.ts": {
@@ -3475,6 +3920,25 @@
       "totalLines": 24,
       "hasStructuralAnalysis": true
     },
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nuxt.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nuxt.ts",
+      "contentHash": "1cb1c37400d11bae99b89e162c491134039272dfce810df597945ce996ad3bad",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../types.js",
+          "specifiers": [
+            "FrameworkConfig"
+          ]
+        }
+      ],
+      "exports": [
+        "nuxtConfig"
+      ],
+      "totalLines": 34,
+      "hasStructuralAnalysis": true
+    },
     "understand-anything-trae-plugin/packages/core/src/languages/frameworks/react.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/react.ts",
       "contentHash": "39b6d264f8cc35185529b9f6ee2906082f4642f3dde94acc54ab2f1b25bfa3f9",
@@ -3494,9 +3958,28 @@
       "totalLines": 20,
       "hasStructuralAnalysis": true
     },
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/sveltekit.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/sveltekit.ts",
+      "contentHash": "1eac18d83f45036b1d14e843366ef0ca36fb57054fdceb20ca499081a49c7e05",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../types.js",
+          "specifiers": [
+            "FrameworkConfig"
+          ]
+        }
+      ],
+      "exports": [
+        "sveltekitConfig"
+      ],
+      "totalLines": 25,
+      "hasStructuralAnalysis": true
+    },
     "understand-anything-trae-plugin/packages/core/src/languages/frameworks/vue.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/vue.ts",
-      "contentHash": "d1722fe520b9a23093a603348d5644b989ca94c8054273db49f0c4de8926c766",
+      "contentHash": "0f20718933e5b498700632e9b972b1d739481b20a1a8121e6f63a59ea635714c",
       "functions": [],
       "classes": [],
       "imports": [
@@ -3728,6 +4211,42 @@
           "returnType": "KnowledgeGraph | null",
           "exported": true,
           "lineCount": 21
+        },
+        {
+          "name": "dir",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "filePath",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "filePath",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "filePath",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "filePath",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "filePath",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
         }
       ],
       "classes": [],
@@ -3899,6 +4418,38 @@
       "totalLines": 69,
       "hasStructuralAnalysis": true
     },
+    "understand-anything-trae-plugin/packages/core/src/plugins/extractors/__tests__/react-extractor.test.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/__tests__/react-extractor.test.ts",
+      "contentHash": "4be0b94749b7760a78bef462c62a81d4eb50054d2cdd995b585fc061ca8dc27a",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "beforeAll"
+          ]
+        },
+        {
+          "source": "../../tree-sitter-plugin.js",
+          "specifiers": [
+            "TreeSitterPlugin"
+          ]
+        },
+        {
+          "source": "../react-extractor.js",
+          "specifiers": [
+            "ReactExtractor"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 491,
+      "hasStructuralAnalysis": true
+    },
     "understand-anything-trae-plugin/packages/core/src/plugins/extractors/base-extractor.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/base-extractor.ts",
       "contentHash": "8eafac3b46058365ef317b7427f09befc570ed420fc3629f0ae6bdba7725d689",
@@ -3974,7 +4525,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/plugins/extractors/index.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/index.ts",
-      "contentHash": "35ee1735bb25927cd4517bb94821b360da7bcde19bb20c3c9aaa8d7b1965c570",
+      "contentHash": "b37d853d4d6aafd8c2ea84124bb6d37ca352c6cebde33eff9b92723c9c2b6670",
       "functions": [],
       "classes": [],
       "imports": [
@@ -3985,9 +4536,9 @@
           ]
         },
         {
-          "source": "./typescript-extractor.js",
+          "source": "./react-extractor.js",
           "specifiers": [
-            "TypeScriptExtractor"
+            "ReactExtractor"
           ]
         }
       ],
@@ -4000,9 +4551,89 @@
         "findChildren",
         "hasChildOfType",
         "TypeScriptExtractor",
+        "ReactExtractor",
         "builtinExtractors"
       ],
-      "totalLines": 11,
+      "totalLines": 12,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/packages/core/src/plugins/extractors/react-extractor.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/react-extractor.ts",
+      "contentHash": "e5f7b399f804d10a6a83da9e57be642c723a0327a0debc84656bfbb4036364e0",
+      "functions": [],
+      "classes": [
+        {
+          "name": "ReactExtractor",
+          "methods": [
+            "extractStructure",
+            "extractCallGraph",
+            "identifyHooks",
+            "identifyComponents",
+            "identifyJsxComposition",
+            "identifyContextRelations",
+            "identifyHocPatterns",
+            "addContainsEdges",
+            "addDependsOnEdges",
+            "collectReactImports",
+            "functionReturnsJsx",
+            "hasReactFcAnnotation",
+            "identifyForwardRefComponents",
+            "classExtendsReactComponent",
+            "findCreateContextCalls",
+            "findUseContextCalls",
+            "findHocPatterns",
+            "findJsxComponentRefs",
+            "findHocVariableDeclaration",
+            "identifyCssInJs",
+            "detectCssInJsLibraries",
+            "findCssInJsDefinitions",
+            "findStyledPatterns",
+            "findEmotionCssPatterns",
+            "findStyledJsxPatterns",
+            "findJssMuiPatterns",
+            "markCssInJsImports"
+          ],
+          "properties": [
+            "languageIds"
+          ],
+          "exported": true,
+          "lineCount": 1065
+        }
+      ],
+      "imports": [
+        {
+          "source": "../../types.js",
+          "specifiers": [
+            "StructuralAnalysis",
+            "CallGraphEntry"
+          ]
+        },
+        {
+          "source": "./types.js",
+          "specifiers": [
+            "LanguageExtractor",
+            "TreeSitterNode"
+          ]
+        },
+        {
+          "source": "./typescript-extractor.js",
+          "specifiers": [
+            "TypeScriptExtractor"
+          ]
+        },
+        {
+          "source": "./base-extractor.js",
+          "specifiers": [
+            "traverse",
+            "findChild",
+            "findChildren"
+          ]
+        }
+      ],
+      "exports": [
+        "ReactExtractor"
+      ],
+      "totalLines": 1122,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/plugins/extractors/types.ts": {
@@ -4101,6 +4732,314 @@
         "TypeScriptExtractor"
       ],
       "totalLines": 495,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/css-parser.test.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/css-parser.test.ts",
+      "contentHash": "57b6696c250ca7f8a521a56c6e7da5b5a736ffa09efe56cf338c4ab252951a36",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect"
+          ]
+        },
+        {
+          "source": "../css-parser.js",
+          "specifiers": [
+            "CssPlugin"
+          ]
+        },
+        {
+          "source": "../../registry.js",
+          "specifiers": [
+            "PluginRegistry"
+          ]
+        },
+        {
+          "source": "../index.js",
+          "specifiers": [
+            "registerAllParsers"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 262,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/html-parser.test.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/html-parser.test.ts",
+      "contentHash": "6d0eeb1b7316cc44628c92701e9eb872d53bce3990e9107d9615bf29c30378af",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect"
+          ]
+        },
+        {
+          "source": "../html-parser.js",
+          "specifiers": [
+            "HtmlPlugin"
+          ]
+        },
+        {
+          "source": "../index.js",
+          "specifiers": [
+            "registerAllParsers"
+          ]
+        },
+        {
+          "source": "../../registry.js",
+          "specifiers": [
+            "PluginRegistry"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 456,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/svelte-parser.test.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/svelte-parser.test.ts",
+      "contentHash": "4199531cef5be987447cbd5a06508ab4664d16b93928ac45269935d0e581ec6d",
+      "functions": [
+        {
+          "name": "createMockTsPlugin",
+          "params": [
+            "options"
+          ],
+          "returnType": "TreeSitterPlugin",
+          "exported": false,
+          "lineCount": 36
+        },
+        {
+          "name": "createMockCssPlugin",
+          "params": [
+            "analyzeResult"
+          ],
+          "returnType": "CssPlugin",
+          "exported": false,
+          "lineCount": 15
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "vi",
+            "beforeEach"
+          ]
+        },
+        {
+          "source": "../svelte-parser.js",
+          "specifiers": [
+            "SveltePlugin"
+          ]
+        },
+        {
+          "source": "../../tree-sitter-plugin.js",
+          "specifiers": [
+            "TreeSitterPlugin"
+          ]
+        },
+        {
+          "source": "../css-parser.js",
+          "specifiers": [
+            "CssPlugin"
+          ]
+        },
+        {
+          "source": "../../../types.js",
+          "specifiers": [
+            "StructuralAnalysis",
+            "CallGraphEntry"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 444,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/vue-sfc-parser.test.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/vue-sfc-parser.test.ts",
+      "contentHash": "90675373a00f060bfc1c81edc343bc5862ce92819741f3285e90fcbfd4d87e4b",
+      "functions": [
+        {
+          "name": "createMockTsPlugin",
+          "params": [
+            "analyzeResult",
+            "callGraphResult"
+          ],
+          "returnType": "TreeSitterPlugin",
+          "exported": false,
+          "lineCount": 16
+        },
+        {
+          "name": "createMockCssPlugin",
+          "params": [
+            "analyzeResult"
+          ],
+          "returnType": "CssPlugin",
+          "exported": false,
+          "lineCount": 15
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "vi",
+            "beforeEach"
+          ]
+        },
+        {
+          "source": "../vue-sfc-parser.js",
+          "specifiers": [
+            "VueSfcPlugin"
+          ]
+        },
+        {
+          "source": "../../tree-sitter-plugin.js",
+          "specifiers": [
+            "TreeSitterPlugin"
+          ]
+        },
+        {
+          "source": "../css-parser.js",
+          "specifiers": [
+            "CssPlugin"
+          ]
+        },
+        {
+          "source": "../../../types.js",
+          "specifiers": [
+            "StructuralAnalysis",
+            "CallGraphEntry"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 555,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/css-parser.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/css-parser.ts",
+      "contentHash": "e2c902b1be446370f56bef88813fccfbb20285130e97a28d67ecc10d4dac541c",
+      "functions": [
+        {
+          "name": "extractDeclarations",
+          "params": [
+            "node"
+          ],
+          "returnType": "string[]",
+          "exported": false,
+          "lineCount": 11
+        },
+        {
+          "name": "extractMixinName",
+          "params": [
+            "node"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "extractFunctionName",
+          "params": [
+            "node"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "stripQuotes",
+          "params": [
+            "str"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "parseUseDirective",
+          "params": [
+            "params"
+          ],
+          "returnType": "{ path: string; namespace: string | null }",
+          "exported": false,
+          "lineCount": 6
+        },
+        {
+          "name": "resolveScssPartialPaths",
+          "params": [
+            "rawPath"
+          ],
+          "returnType": "string[]",
+          "exported": false,
+          "lineCount": 39
+        }
+      ],
+      "classes": [
+        {
+          "name": "CssPlugin",
+          "methods": [
+            "analyzeFile",
+            "resolveImports"
+          ],
+          "properties": [
+            "name",
+            "languages"
+          ],
+          "exported": true,
+          "lineCount": 165
+        }
+      ],
+      "imports": [
+        {
+          "source": "../../types.js",
+          "specifiers": [
+            "AnalyzerPlugin",
+            "StructuralAnalysis",
+            "ImportResolution",
+            "CssRuleInfo"
+          ]
+        },
+        {
+          "source": "postcss",
+          "specifiers": [
+            "postcss"
+          ]
+        },
+        {
+          "source": "postcss-scss",
+          "specifiers": [
+            "scss"
+          ]
+        }
+      ],
+      "exports": [
+        "CssPlugin"
+      ],
+      "totalLines": 288,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/plugins/parsers/dockerfile-parser.ts": {
@@ -4213,19 +5152,132 @@
       "totalLines": 123,
       "hasStructuralAnalysis": true
     },
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/html-parser.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/html-parser.ts",
+      "contentHash": "861bfc010ba81922abe291c13bdbb10474709b681cbb739c963185ef60618a4f",
+      "functions": [
+        {
+          "name": "isVoidElement",
+          "params": [
+            "tag"
+          ],
+          "returnType": "boolean",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "isExternalUrl",
+          "params": [
+            "url"
+          ],
+          "returnType": "boolean",
+          "exported": false,
+          "lineCount": 4
+        },
+        {
+          "name": "semanticTagLevel",
+          "params": [
+            "tag"
+          ],
+          "returnType": "number",
+          "exported": false,
+          "lineCount": 15
+        },
+        {
+          "name": "buildLineMap",
+          "params": [
+            "content"
+          ],
+          "returnType": "Uint32Array",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "computeLineRange",
+          "params": [
+            "content",
+            "node",
+            "lineMap"
+          ],
+          "returnType": "[number, number]",
+          "exported": false,
+          "lineCount": 17
+        },
+        {
+          "name": "fallbackLineRange",
+          "params": [
+            "content",
+            "node"
+          ],
+          "returnType": "[number, number]",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "resolveRelativePath",
+          "params": [
+            "dir",
+            "relative"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 13
+        }
+      ],
+      "classes": [
+        {
+          "name": "HtmlPlugin",
+          "methods": [
+            "analyzeFile",
+            "resolveImports"
+          ],
+          "properties": [
+            "name",
+            "languages"
+          ],
+          "exported": true,
+          "lineCount": 169
+        }
+      ],
+      "imports": [
+        {
+          "source": "node-html-parser",
+          "specifiers": [
+            "parseHtml",
+            "HTMLElement"
+          ]
+        },
+        {
+          "source": "../../types.js",
+          "specifiers": [
+            "AnalyzerPlugin",
+            "StructuralAnalysis",
+            "ImportResolution",
+            "HtmlElementInfo",
+            "SectionInfo"
+          ]
+        }
+      ],
+      "exports": [
+        "HtmlPlugin"
+      ],
+      "totalLines": 298,
+      "hasStructuralAnalysis": true
+    },
     "understand-anything-trae-plugin/packages/core/src/plugins/parsers/index.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/index.ts",
-      "contentHash": "61135e43697935726d82c033492553450550a70abe1b21ebc9ba69002b4588be",
+      "contentHash": "afb3feed02a740ea8aa5fc4e152c04d10460b42e2f9a309354b60f6a47f23a40",
       "functions": [
         {
           "name": "registerAllParsers",
           "params": [
             "registry",
-            "tsPlugin"
+            "tsPlugin",
+            "cssPlugin"
           ],
           "returnType": "void",
           "exported": true,
-          "lineCount": 26
+          "lineCount": 32
         }
       ],
       "classes": [],
@@ -4313,6 +5365,18 @@
           "specifiers": [
             "SveltePlugin"
           ]
+        },
+        {
+          "source": "./css-parser.js",
+          "specifiers": [
+            "CssPlugin"
+          ]
+        },
+        {
+          "source": "./html-parser.js",
+          "specifiers": [
+            "HtmlPlugin"
+          ]
         }
       ],
       "exports": [
@@ -4328,9 +5392,13 @@
         "ShellParser",
         "VueSfcPlugin",
         "SveltePlugin",
+        "CssPlugin",
+        "HtmlPlugin",
+        "mergeStyleAnalysis",
+        "StyleBlockMeta",
         "registerAllParsers"
       ],
-      "totalLines": 60,
+      "totalLines": 72,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/plugins/parsers/json-parser.ts": {
@@ -4453,6 +5521,38 @@
       "totalLines": 79,
       "hasStructuralAnalysis": true
     },
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/sfc-utils.ts": {
+      "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/sfc-utils.ts",
+      "contentHash": "361a35984b5b0afda3e317accf40acd60686971f3e12f04bbc599353407d255c",
+      "functions": [
+        {
+          "name": "mergeStyleAnalysis",
+          "params": [
+            "result",
+            "styleResult",
+            "lineOffset",
+            "meta"
+          ],
+          "returnType": "void",
+          "exported": true,
+          "lineCount": 43
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "../../types.js",
+          "specifiers": [
+            "StructuralAnalysis"
+          ]
+        }
+      ],
+      "exports": [
+        "mergeStyleAnalysis"
+      ],
+      "totalLines": 67,
+      "hasStructuralAnalysis": true
+    },
     "understand-anything-trae-plugin/packages/core/src/plugins/parsers/shell-parser.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/shell-parser.ts",
       "contentHash": "37388034f01814377d975f04d2ea50d5792bd9ac5f5bb153c888b98c9a947607",
@@ -4527,7 +5627,7 @@
     },
     "understand-anything-trae-plugin/packages/core/src/plugins/parsers/svelte-parser.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/svelte-parser.ts",
-      "contentHash": "39cab50c9bee1949de993fbe0aa741364cf179f1f98eeee28f296747e26477b2",
+      "contentHash": "e0c29545ab01ade6928decd113c1b6f78ef133e05923dbf2f83ff8e4b7711571",
       "functions": [
         {
           "name": "parseSvelteSfc",
@@ -4558,6 +5658,16 @@
           "lineCount": 6
         },
         {
+          "name": "extractStyleContent",
+          "params": [
+            "fileContent",
+            "cssBlock"
+          ],
+          "returnType": "string",
+          "exported": false,
+          "lineCount": 11
+        },
+        {
           "name": "extractTemplateComponents",
           "params": [
             "html",
@@ -4580,10 +5690,11 @@
           "properties": [
             "name",
             "languages",
-            "tsPlugin"
+            "tsPlugin",
+            "cssPlugin"
           ],
           "exported": true,
-          "lineCount": 133
+          "lineCount": 162
         }
       ],
       "imports": [
@@ -4607,12 +5718,24 @@
           "specifiers": [
             "TreeSitterPlugin"
           ]
+        },
+        {
+          "source": "./css-parser.js",
+          "specifiers": [
+            "CssPlugin"
+          ]
+        },
+        {
+          "source": "./sfc-utils.js",
+          "specifiers": [
+            "mergeStyleAnalysis"
+          ]
         }
       ],
       "exports": [
         "SveltePlugin"
       ],
-      "totalLines": 278,
+      "totalLines": 331,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/plugins/parsers/toml-parser.ts": {
@@ -4652,8 +5775,18 @@
     },
     "understand-anything-trae-plugin/packages/core/src/plugins/parsers/vue-sfc-parser.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/vue-sfc-parser.ts",
-      "contentHash": "0fb26c4dcd4800c8c5fe587a0a76378f62544c04727720739fa1f57ff107282d",
+      "contentHash": "405ee6d24b6fb12fb0ea7f9ee88125ba9f5a48a694f66622eebac0ee164a6e47",
       "functions": [
+        {
+          "name": "extractVBindReferences",
+          "params": [
+            "styleContent",
+            "styleOffset"
+          ],
+          "returnType": "Array<{ variable: string; lineNumber: number }>",
+          "exported": false,
+          "lineCount": 22
+        },
         {
           "name": "parseVueSfc",
           "params": [
@@ -4685,10 +5818,11 @@
           "properties": [
             "name",
             "languages",
-            "tsPlugin"
+            "tsPlugin",
+            "cssPlugin"
           ],
           "exported": true,
-          "lineCount": 118
+          "lineCount": 157
         }
       ],
       "imports": [
@@ -4713,12 +5847,24 @@
           "specifiers": [
             "TreeSitterPlugin"
           ]
+        },
+        {
+          "source": "./css-parser.js",
+          "specifiers": [
+            "CssPlugin"
+          ]
+        },
+        {
+          "source": "./sfc-utils.js",
+          "specifiers": [
+            "mergeStyleAnalysis"
+          ]
         }
       ],
       "exports": [
         "VueSfcPlugin"
       ],
-      "totalLines": 206,
+      "totalLines": 277,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/src/plugins/parsers/yaml-parser.ts": {
@@ -5149,12 +6295,12 @@
     },
     "understand-anything-trae-plugin/packages/core/src/types.ts": {
       "filePath": "understand-anything-trae-plugin/packages/core/src/types.ts",
-      "contentHash": "dd9e12879b2a40382bda11795457b77d981dc1a5aa5de1c30a11fa926e812ea5",
+      "contentHash": "936ff6741c670b84705bdc4b994a090ced7402519e76ad714118113ba966ff6d",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 203,
+      "totalLines": 241,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/core/tsconfig.json": {
@@ -5189,10 +6335,17 @@
       "contentHash": "406cf319a7f5ea98eb2b0e85fde724b2c161dc25de69f84a4f7c14535c6f2dac",
       "functions": [],
       "classes": [],
-      "imports": [],
+      "imports": [
+        {
+          "source": "/src/main.tsx",
+          "specifiers": [
+            "script"
+          ]
+        }
+      ],
       "exports": [],
       "totalLines": 20,
-      "hasStructuralAnalysis": false
+      "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/dashboard/package.json": {
       "filePath": "understand-anything-trae-plugin/packages/dashboard/package.json",
@@ -5652,6 +6805,18 @@
           ],
           "exported": false,
           "lineCount": 76
+        },
+        {
+          "name": "ContainerNode",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "ContainerNode",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
         }
       ],
       "classes": [],
@@ -5691,6 +6856,18 @@
           ],
           "exported": false,
           "lineCount": 104
+        },
+        {
+          "name": "CustomNode",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "CustomNode",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
         }
       ],
       "classes": [],
@@ -7499,10 +8676,15 @@
       "contentHash": "744a73a949df21e547a908af475bb9c1c7cc06662f46814ec1261817beb48bf7",
       "functions": [],
       "classes": [],
-      "imports": [],
+      "imports": [
+        {
+          "source": "tailwindcss",
+          "specifiers": []
+        }
+      ],
       "exports": [],
       "totalLines": 266,
-      "hasStructuralAnalysis": false
+      "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/packages/dashboard/src/locales/en.ts": {
       "filePath": "understand-anything-trae-plugin/packages/dashboard/src/locales/en.ts",
@@ -7868,6 +9050,12 @@
           "returnType": "ThemeContextValue",
           "exported": true,
           "lineCount": 5
+        },
+        {
+          "name": "raw",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
         }
       ],
       "classes": [],
@@ -8964,15 +10152,83 @@
       "totalLines": 131,
       "hasStructuralAnalysis": true
     },
-    "understand-anything-trae-plugin/skills/understand/build-fingerprints.mjs": {
-      "filePath": "understand-anything-trae-plugin/skills/understand/build-fingerprints.mjs",
-      "contentHash": "8aa88a4fe86e1c4288bcb922d95b139878601578245f3afa90f3a47925125328",
+    "understand-anything-trae-plugin/skills/understand/analyze-project.mjs": {
+      "filePath": "understand-anything-trae-plugin/skills/understand/analyze-project.mjs",
+      "contentHash": "faeee64b4a4a0d2db557b129f77c81f03407b3d279a48bf2c689a10abf5780c3",
       "functions": [
         {
           "name": "main",
           "params": [],
           "exported": false,
-          "lineCount": 34
+          "lineCount": 203
+        },
+        {
+          "name": "isCliEntry",
+          "params": [],
+          "exported": false,
+          "lineCount": 10
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:module",
+          "specifiers": [
+            "createRequire"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "dirname",
+            "resolve",
+            "join"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath",
+            "pathToFileURL"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync",
+            "readFileSync",
+            "realpathSync",
+            "writeFileSync"
+          ]
+        },
+        {
+          "source": "./shared/import-resolution.mjs",
+          "specifiers": [
+            "toPosix",
+            "buildResolutionContext",
+            "resolveImports"
+          ]
+        },
+        {
+          "source": "./extract-structure.mjs",
+          "specifiers": [
+            "buildResult"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 288,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/skills/understand/build-fingerprints.mjs": {
+      "filePath": "understand-anything-trae-plugin/skills/understand/build-fingerprints.mjs",
+      "contentHash": "d20afbb78a407a4728362fdfffc0fac46587f0558f48b78e596d8b393001ab2c",
+      "functions": [
+        {
+          "name": "main",
+          "params": [],
+          "exported": false,
+          "lineCount": 35
         }
       ],
       "classes": [],
@@ -9005,12 +10261,12 @@
         }
       ],
       "exports": [],
-      "totalLines": 91,
+      "totalLines": 93,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/skills/understand/compute-batches.mjs": {
       "filePath": "understand-anything-trae-plugin/skills/understand/compute-batches.mjs",
-      "contentHash": "c0dce7726e4529f793161122b523a442679460fc1760953e3600f1210beb1b49",
+      "contentHash": "d3b845e3ef012a84e38962b99d7d0498e45d5b4534e062b796585dae0b32029d",
       "functions": [
         {
           "name": "extractExports",
@@ -9019,7 +10275,7 @@
             "codeFiles"
           ],
           "exported": false,
-          "lineCount": 47
+          "lineCount": 84
         },
         {
           "name": "buildNonCodeBatches",
@@ -9027,7 +10283,7 @@
             "nonCodeFiles"
           ],
           "exported": false,
-          "lineCount": 84
+          "lineCount": 86
         },
         {
           "name": "buildBatchOfMap",
@@ -9073,6 +10329,18 @@
           "params": [],
           "exported": false,
           "lineCount": 10
+        },
+        {
+          "name": "require",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        },
+        {
+          "name": "lines",
+          "params": [],
+          "exported": false,
+          "lineCount": 4
         }
       ],
       "classes": [],
@@ -9121,150 +10389,18 @@
         }
       ],
       "exports": [],
-      "totalLines": 555,
+      "totalLines": 594,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/skills/understand/extract-import-map.mjs": {
       "filePath": "understand-anything-trae-plugin/skills/understand/extract-import-map.mjs",
-      "contentHash": "4c5ea6ee5fbbe366f295a5c64eb6de5436141a6fa4e9513b09a497a3bf93921b",
+      "contentHash": "faa7fcafec948f503317c32f0d692db6adca673223e2434fd76763c1e7f6b21f",
       "functions": [
-        {
-          "name": "toPosix",
-          "params": [
-            "p"
-          ],
-          "exported": false,
-          "lineCount": 3
-        },
-        {
-          "name": "resolveRelative",
-          "params": [
-            "dir",
-            "rel"
-          ],
-          "exported": false,
-          "lineCount": 16
-        },
-        {
-          "name": "dirOf",
-          "params": [
-            "p"
-          ],
-          "exported": false,
-          "lineCount": 4
-        },
-        {
-          "name": "parseTsConfigText",
-          "params": [
-            "raw"
-          ],
-          "exported": false,
-          "lineCount": 29
-        },
-        {
-          "name": "loadTsConfigs",
-          "params": [
-            "projectRoot",
-            "files"
-          ],
-          "exported": false,
-          "lineCount": 32
-        },
-        {
-          "name": "findNearestConfigDir",
-          "params": [
-            "startDir",
-            "configMap"
-          ],
-          "exported": false,
-          "lineCount": 12
-        },
-        {
-          "name": "buildResolutionContext",
-          "params": [
-            "projectRoot",
-            "files"
-          ],
-          "exported": false,
-          "lineCount": 10
-        },
-        {
-          "name": "probeWithExtensions",
-          "params": [
-            "basePath",
-            "fileSet"
-          ],
-          "exported": false,
-          "lineCount": 10
-        },
-        {
-          "name": "resolveTsJsImport",
-          "params": [
-            "rawImport",
-            "file",
-            "ctx"
-          ],
-          "exported": true,
-          "lineCount": 58
-        },
-        {
-          "name": "matchTsAlias",
-          "params": [
-            "alias",
-            "src"
-          ],
-          "exported": false,
-          "lineCount": 13
-        },
-        {
-          "name": "applyTsAlias",
-          "params": [
-            "target",
-            "wildcard"
-          ],
-          "exported": false,
-          "lineCount": 5
-        },
-        {
-          "name": "stripJsLikeComments",
-          "params": [
-            "content"
-          ],
-          "exported": false,
-          "lineCount": 5
-        },
-        {
-          "name": "extractRequireSources",
-          "params": [
-            "content"
-          ],
-          "exported": false,
-          "lineCount": 10
-        },
-        {
-          "name": "resolveImport",
-          "params": [
-            "imp",
-            "file",
-            "ctx"
-          ],
-          "exported": false,
-          "lineCount": 9
-        },
-        {
-          "name": "extractExtraImportSources",
-          "params": [
-            "file",
-            "content"
-          ],
-          "exported": false,
-          "lineCount": 6
-        },
         {
           "name": "main",
           "params": [],
           "exported": false,
-          "lineCount": 144
+          "lineCount": 114
         },
         {
           "name": "isCliEntry",
@@ -9286,8 +10422,7 @@
           "specifiers": [
             "dirname",
             "resolve",
-            "join",
-            "posix"
+            "join"
           ]
         },
         {
@@ -9305,23 +10440,112 @@
             "realpathSync",
             "writeFileSync"
           ]
+        },
+        {
+          "source": "./shared/import-resolution.mjs",
+          "specifiers": [
+            "toPosix",
+            "buildResolutionContext",
+            "resolveImports"
+          ]
         }
       ],
-      "exports": [
-        "resolveTsJsImport"
+      "exports": [],
+      "totalLines": 211,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/skills/understand/extract-metadata.mjs": {
+      "filePath": "understand-anything-trae-plugin/skills/understand/extract-metadata.mjs",
+      "contentHash": "cc1513b95affc93b93fb4c0e1c41e08214bd9fb615ff162a2b9683daf77a8bdf",
+      "functions": [
+        {
+          "name": "extractReadmeHead",
+          "params": [
+            "projectRoot"
+          ],
+          "exported": false,
+          "lineCount": 19
+        },
+        {
+          "name": "synthesizeDescription",
+          "params": [
+            "rawDescription",
+            "readmeHead"
+          ],
+          "exported": false,
+          "lineCount": 32
+        },
+        {
+          "name": "detectDockerfile",
+          "params": [
+            "projectRoot"
+          ],
+          "exported": false,
+          "lineCount": 15
+        },
+        {
+          "name": "detectGitHubActions",
+          "params": [
+            "projectRoot"
+          ],
+          "exported": false,
+          "lineCount": 13
+        },
+        {
+          "name": "detectGitLabCI",
+          "params": [
+            "projectRoot"
+          ],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "extractLanguages",
+          "params": [
+            "scanResultPath"
+          ],
+          "exported": false,
+          "lineCount": 14
+        },
+        {
+          "name": "main",
+          "params": [],
+          "exported": false,
+          "lineCount": 69
+        }
       ],
-      "totalLines": 656,
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "readFileSync",
+            "writeFileSync",
+            "existsSync",
+            "readdirSync"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join",
+            "basename"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 289,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/skills/understand/extract-structure.mjs": {
       "filePath": "understand-anything-trae-plugin/skills/understand/extract-structure.mjs",
-      "contentHash": "eaa007c3f5d88546c2781101e83ac679d2bcb5eac634be9d3cd079faf65fb435",
+      "contentHash": "545f75951206a4eae41339c00d628a40f15fd47f577b96fdfb8abda7a08014c9",
       "functions": [
         {
           "name": "main",
           "params": [],
           "exported": false,
-          "lineCount": 92
+          "lineCount": 93
         },
         {
           "name": "buildResult",
@@ -9379,7 +10603,7 @@
       "exports": [
         "buildResult"
       ],
-      "totalLines": 335,
+      "totalLines": 336,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/skills/understand/frameworks/express.md": {
@@ -9412,6 +10636,16 @@
       "totalLines": 60,
       "hasStructuralAnalysis": true
     },
+    "understand-anything-trae-plugin/skills/understand/frameworks/nuxt.md": {
+      "filePath": "understand-anything-trae-plugin/skills/understand/frameworks/nuxt.md",
+      "contentHash": "4e3337024a5b4f29a476ae92bc14fdb5c2011fee87e5bd6b869a41402e43d486",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 70,
+      "hasStructuralAnalysis": true
+    },
     "understand-anything-trae-plugin/skills/understand/frameworks/rails.md": {
       "filePath": "understand-anything-trae-plugin/skills/understand/frameworks/rails.md",
       "contentHash": "f5fb1fb05a32c9e71ba44e93d205252fd4e58b71a6cce9d62cd4ee20d14adc36",
@@ -9442,6 +10676,16 @@
       "totalLines": 60,
       "hasStructuralAnalysis": true
     },
+    "understand-anything-trae-plugin/skills/understand/frameworks/sveltekit.md": {
+      "filePath": "understand-anything-trae-plugin/skills/understand/frameworks/sveltekit.md",
+      "contentHash": "cb8a652cbf573b62a515514b54bf90b325abba6c21101f768df8aacacb0edc3c",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 84,
+      "hasStructuralAnalysis": true
+    },
     "understand-anything-trae-plugin/skills/understand/frameworks/vue.md": {
       "filePath": "understand-anything-trae-plugin/skills/understand/frameworks/vue.md",
       "contentHash": "49a432fe59c8b0759632bd1745b4acc7ddcaef4343a270d97698d9bede69e5db",
@@ -9450,6 +10694,16 @@
       "imports": [],
       "exports": [],
       "totalLines": 60,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/skills/understand/languages/css-in-js.md": {
+      "filePath": "understand-anything-trae-plugin/skills/understand/languages/css-in-js.md",
+      "contentHash": "2526ec2ba4d4cb7e5c8e2f92b5cd23cab9330ac9500b9fd9edb7bbc149e9cf24",
+      "functions": [],
+      "classes": [],
+      "imports": [],
+      "exports": [],
+      "totalLines": 42,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/skills/understand/languages/css.md": {
@@ -9604,12 +10858,12 @@
     },
     "understand-anything-trae-plugin/skills/understand/merge-batch-graphs.py": {
       "filePath": "understand-anything-trae-plugin/skills/understand/merge-batch-graphs.py",
-      "contentHash": "648ddb7d04cf449f2bb8d55bd80c3434ecdc3928b81a479c699c096922e03422",
+      "contentHash": "5e0e237a8cc675c2f7ce297e3bab6258abf6658679b20327da0fbdd26065e3c8",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 1033,
+      "totalLines": 1041,
       "hasStructuralAnalysis": false
     },
     "understand-anything-trae-plugin/skills/understand/merge-subdomain-graphs.py": {
@@ -9624,7 +10878,7 @@
     },
     "understand-anything-trae-plugin/skills/understand/scan-project.mjs": {
       "filePath": "understand-anything-trae-plugin/skills/understand/scan-project.mjs",
-      "contentHash": "dab9ddb44fbdd628fb8618f8a7a02e995774d793dd47a107bbce891f3b101dc6",
+      "contentHash": "51693bbb5dbf5fc84e12a3a1ff7dcf88595e195e987dccd9abdbd9a74770e2c8",
       "functions": [
         {
           "name": "detectLanguage",
@@ -9776,17 +11030,280 @@
         "detectCategory",
         "estimateComplexity"
       ],
-      "totalLines": 742,
+      "totalLines": 743,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/skills/understand/shared/import-resolution.mjs": {
+      "filePath": "understand-anything-trae-plugin/skills/understand/shared/import-resolution.mjs",
+      "contentHash": "99ad77ca793b989884d0231e6027471d267e3fc3ebb2056595e6f5da7077265b",
+      "functions": [
+        {
+          "name": "toPosix",
+          "params": [
+            "p"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "resolveRelative",
+          "params": [
+            "dir",
+            "rel"
+          ],
+          "exported": true,
+          "lineCount": 16
+        },
+        {
+          "name": "dirOf",
+          "params": [
+            "p"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "parseTsConfigText",
+          "params": [
+            "raw"
+          ],
+          "exported": true,
+          "lineCount": 26
+        },
+        {
+          "name": "loadTsConfigs",
+          "params": [
+            "projectRoot",
+            "files"
+          ],
+          "exported": true,
+          "lineCount": 32
+        },
+        {
+          "name": "findNearestConfigDir",
+          "params": [
+            "startDir",
+            "configMap"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "buildResolutionContext",
+          "params": [
+            "projectRoot",
+            "files"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "probeWithExtensions",
+          "params": [
+            "basePath",
+            "fileSet"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "resolveTsJsImport",
+          "params": [
+            "rawImport",
+            "file",
+            "ctx"
+          ],
+          "exported": true,
+          "lineCount": 46
+        },
+        {
+          "name": "matchTsAlias",
+          "params": [
+            "alias",
+            "src"
+          ],
+          "exported": true,
+          "lineCount": 12
+        },
+        {
+          "name": "applyTsAlias",
+          "params": [
+            "target",
+            "wildcard"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "stripJsLikeComments",
+          "params": [
+            "content"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "extractRequireSources",
+          "params": [
+            "content"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "resolveCssImport",
+          "params": [
+            "rawImport",
+            "file",
+            "ctx"
+          ],
+          "exported": true,
+          "lineCount": 43
+        },
+        {
+          "name": "isExternalUrl",
+          "params": [
+            "url"
+          ],
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "resolveHtmlImport",
+          "params": [
+            "rawImport",
+            "file",
+            "ctx"
+          ],
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "resolveImport",
+          "params": [
+            "imp",
+            "file",
+            "ctx"
+          ],
+          "exported": true,
+          "lineCount": 17
+        },
+        {
+          "name": "extractExtraImportSources",
+          "params": [
+            "file",
+            "content"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "resolveImports",
+          "params": [
+            "registry",
+            "file",
+            "content",
+            "ctx"
+          ],
+          "exported": true,
+          "lineCount": 34
+        },
+        {
+          "name": "parts",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "parts",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join",
+            "posix"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "existsSync",
+            "readFileSync"
+          ]
+        }
+      ],
+      "exports": [
+        "toPosix",
+        "resolveRelative",
+        "dirOf",
+        "parseTsConfigText",
+        "loadTsConfigs",
+        "findNearestConfigDir",
+        "buildResolutionContext",
+        "probeWithExtensions",
+        "resolveTsJsImport",
+        "matchTsAlias",
+        "applyTsAlias",
+        "stripJsLikeComments",
+        "extractRequireSources",
+        "resolveCssImport",
+        "isExternalUrl",
+        "resolveHtmlImport",
+        "TS_JS_LANGS",
+        "CSS_LANGS",
+        "HTML_LANGS",
+        "resolveImport",
+        "extractExtraImportSources",
+        "resolveImports"
+      ],
+      "totalLines": 479,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/skills/understand/SKILL.md": {
       "filePath": "understand-anything-trae-plugin/skills/understand/SKILL.md",
-      "contentHash": "d7d58e0e65ead0de252543254a45059e802e76dad4a92a05f20e2e497fbc7521",
+      "contentHash": "3499998e13e333d09adf8a91e8868e3ed3ec3790fb8ee4725f5ecb1b022c446b",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 841,
+      "totalLines": 886,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/skills/understand/validate-assembly.mjs": {
+      "filePath": "understand-anything-trae-plugin/skills/understand/validate-assembly.mjs",
+      "contentHash": "6fb1956562efd5275d70bac876dbd3718f6e2fe0665104358bf8746386c4e2fc",
+      "functions": [
+        {
+          "name": "nodeIds",
+          "params": [],
+          "exported": false,
+          "lineCount": 1
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "readFileSync",
+            "writeFileSync"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "resolve"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 252,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/src/__tests__/diff-analyzer.test.ts": {
@@ -9861,7 +11378,7 @@
     },
     "understand-anything-trae-plugin/src/__tests__/merge-recover-imports.test.mjs": {
       "filePath": "understand-anything-trae-plugin/src/__tests__/merge-recover-imports.test.mjs",
-      "contentHash": "0975da0bc2366077e72d3a921eadf2a4ced577f0ed814409ede596377eda0324",
+      "contentHash": "9d8c6c7f49ca9e228cc0aab3d4235c1e38dd3549ea87d093e5aeaee1ad93a5bb",
       "functions": [
         {
           "name": "runMerge",
@@ -9942,7 +11459,103 @@
         }
       ],
       "exports": [],
-      "totalLines": 188,
+      "totalLines": 193,
+      "hasStructuralAnalysis": true
+    },
+    "understand-anything-trae-plugin/src/__tests__/validate-assembly.test.mjs": {
+      "filePath": "understand-anything-trae-plugin/src/__tests__/validate-assembly.test.mjs",
+      "contentHash": "14079938edac312adf0ed3960c883b5f2bb82c4d51910cea854b421c0eede046",
+      "functions": [
+        {
+          "name": "makeGraph",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "makeNode",
+          "params": [],
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "makeEdge",
+          "params": [],
+          "exported": false,
+          "lineCount": 10
+        },
+        {
+          "name": "makeImportMap",
+          "params": [],
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "runValidate",
+          "params": [
+            "graphPath",
+            "importMapPath",
+            "outputPath"
+          ],
+          "exported": false,
+          "lineCount": 12
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "vitest",
+          "specifiers": [
+            "describe",
+            "it",
+            "expect",
+            "beforeEach",
+            "afterEach"
+          ]
+        },
+        {
+          "source": "node:child_process",
+          "specifiers": [
+            "spawnSync"
+          ]
+        },
+        {
+          "source": "node:fs",
+          "specifiers": [
+            "mkdtempSync",
+            "rmSync",
+            "writeFileSync",
+            "readFileSync"
+          ]
+        },
+        {
+          "source": "node:os",
+          "specifiers": [
+            "tmpdir"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "join"
+          ]
+        },
+        {
+          "source": "node:url",
+          "specifiers": [
+            "fileURLToPath"
+          ]
+        },
+        {
+          "source": "node:path",
+          "specifiers": [
+            "dirname",
+            "resolve"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 288,
       "hasStructuralAnalysis": true
     },
     "understand-anything-trae-plugin/src/__tests__/worktree-redirect.test.mjs": {
@@ -10072,7 +11685,7 @@
     },
     "understand-anything-trae-plugin/vitest.config.ts": {
       "filePath": "understand-anything-trae-plugin/vitest.config.ts",
-      "contentHash": "f4221ce7c260301c10ba7f5e26b1b4ead1dedd8933000ef29eed6d0970181505",
+      "contentHash": "b79895c26e94327b229ea37d5e401fceb5afd5a0d3e5e9bd246b43fec818557c",
       "functions": [],
       "classes": [],
       "imports": [
@@ -10084,7 +11697,7 @@
         }
       ],
       "exports": [],
-      "totalLines": 15,
+      "totalLines": 13,
       "hasStructuralAnalysis": true
     },
     "vitest.config.ts": {

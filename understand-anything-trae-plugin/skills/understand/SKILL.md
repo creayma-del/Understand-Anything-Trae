@@ -254,6 +254,14 @@ After the subagent completes, read `$PROJECT_ROOT/.understand-anything-trae/inte
 - Complexity estimate
 - Import map (`importMap`): pre-resolved project-internal imports per file (non-code files have empty arrays)
 
+**Deterministic metadata extraction (alternative to LLM Step A):** The metadata extraction in the subagent's Step A can alternatively be performed deterministically by running:
+
+```bash
+node <SKILL_DIR>/extract-metadata.mjs $PROJECT_ROOT $PROJECT_ROOT/.understand-anything-trae/intermediate/metadata.json
+```
+
+This produces equivalent results without an LLM call and takes <1 second. When the full Phase 1 restructuring (removing the project-scanner subagent) is complete, this script will replace the LLM Step A entirely. For now, it can be used alongside the existing flow to validate and cross-check the subagent's output.
+
 Store `importMap` in memory as `$IMPORT_MAP` for use in Phase 2 batch construction.
 Store the file list as `$FILE_LIST` with `fileCategory` metadata for use in Phase 2 batch construction.
 
@@ -281,15 +289,34 @@ If the script exits non-zero, the failure is hard — relay the full stderr to t
 
 ---
 
+## Phase 1.7 — STRUCTURE PRE-EXTRACT
+
+Report: `[Phase 1.7/7] Pre-extracting file structures...`
+
+Run the unified analysis script:
+```bash
+node <SKILL_DIR>/analyze-project.mjs $PROJECT_ROOT $PROJECT_ROOT/.understand-anything-trae/intermediate
+```
+
+Reads `scan-result.json`, writes `import-map.json` + `structure-results.json` + `exports-map.json` to the intermediate directory.
+
+Capture stderr. Append any line starting with `Warning:` to `$PHASE_WARNINGS`.
+
+If the script exits non-zero, the failure is hard — relay the full stderr to the user as a Phase 1.7 failure. Do not attempt to recover; the script's internal error handling already degrades gracefully for individual file failures. A non-zero exit means a fundamental problem (missing scan-result.json, tree-sitter initialization failure, etc.).
+
+After the script completes, store `import-map.json`'s `importMap` field as `$IMPORT_MAP` for use in Phase 2 batch construction.
+
+---
+
 ## Phase 2 — ANALYZE
 
 ### Full analysis path
 
 Load `.understand-anything-trae/intermediate/batches.json` (produced by Phase 1.5). Iterate the `batches[]` array.
 
-Report: `[Phase 2/7] Analyzing files — <totalFiles> files in <totalBatches> batches (up to 5 concurrent)...`
+Report: `[Phase 2/7] Analyzing files — <totalFiles> files in <totalBatches> batches (up to 8 concurrent)...`
 
-For each batch, dispatch a subagent using the `file-analyzer` agent definition (at `agents/file-analyzer.md`). Run up to **5 subagents concurrently**. Append the following additional context:
+For each batch, dispatch a subagent using the `file-analyzer` agent definition (at `agents/file-analyzer.md`). Run up to **8 subagents concurrently**. Append the following additional context:
 
 > **Additional context from main session:**
 >
@@ -308,7 +335,7 @@ Dispatch prompt template (fill in batch-specific values from `batches.json[i]`):
 > Skill directory (for bundled scripts): `<SKILL_DIR>`
 > Output: write to `$PROJECT_ROOT/.understand-anything-trae/intermediate/batch-<batchIndex>.json` (single-file mode) OR `batch-<batchIndex>-part-<k>.json` (split mode, per Step B of your output protocol).
 >
-> Pre-resolved import data for this batch (use directly — do NOT re-resolve imports from source):
+> Pre-resolved import data for this batch (provided for context understanding only — do NOT emit `imports` edges; they are generated deterministically by the merge script):
 > ```json
 > <batchImportData JSON from batches.json[i].batchImportData>
 > ```
@@ -316,6 +343,11 @@ Dispatch prompt template (fill in batch-specific values from `batches.json[i]`):
 > Cross-batch neighbors with their exported symbols (confidence boost for cross-batch edges):
 > ```json
 > <neighborMap JSON from batches.json[i].neighborMap>
+> ```
+>
+> Pre-extracted structure data for this batch (use directly — do NOT re-run extract-structure.mjs):
+> ```json
+> <filtered structure results for batch files from structure-results.json>
 > ```
 >
 > Files to analyze in this batch (every entry MUST be passed through to `batchFiles` with all four fields — `path`, `language`, `sizeLines`, `fileCategory`):
@@ -342,6 +374,8 @@ This script reads all `batch-*.json` files (including `batch-<i>-part-<k>.json` 
 - Logs all corrections and dropped items to stderr
 
 The merge script also runs a `tested_by` linker that canonicalizes test-coverage edges in two passes. **Pass 1** walks LLM-emitted `tested_by` edges and flips inverted ones in place; semantically broken edges (test↔test, prod↔prod, orphan endpoints) are dropped. **Pass 2** supplements with path-convention pairings. Production nodes that end up sourcing any `tested_by` edge get a `"tested"` tag. All resulting edges run `production → test`.
+
+The merge script also generates all `imports` edges deterministically from the project-scanner's `importMap`. Any `imports` edges that the LLM may have produced are kept; the script only adds missing ones. This ensures 100% coverage of resolved internal imports.
 
 Output: `$PROJECT_ROOT/.understand-anything-trae/intermediate/assembled-graph.json`
 
@@ -399,6 +433,17 @@ Pass these parameters in the dispatch prompt:
 > ```
 
 After the subagent completes, read `$PROJECT_ROOT/.understand-anything-trae/intermediate/assemble-review.json` and add any notes to `$PHASE_WARNINGS`.
+
+Alternatively, run the deterministic validation script:
+
+```bash
+node <SKILL_DIR>/validate-assembly.mjs \
+  $PROJECT_ROOT/.understand-anything-trae/intermediate/assembled-graph.json \
+  $PROJECT_ROOT/.understand-anything-trae/intermediate/import-map.json \
+  $PROJECT_ROOT/.understand-anything-trae/intermediate/assemble-review.json
+```
+
+Read the validation output at `$PROJECT_ROOT/.understand-anything-trae/intermediate/assemble-review.json`. Add any `issues[]` and `warnings[]` entries to `$PHASE_WARNINGS`.
 
 ---
 

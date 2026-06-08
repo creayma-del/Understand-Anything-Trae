@@ -776,94 +776,92 @@ def merge_and_normalize(batches: list[dict[str, Any]]) -> tuple[dict[str, Any], 
     return assembled, report
 
 
-# ── Imports-edge recovery from importMap ──────────────────────────────────
+# ── Deterministic imports-edge generation from importMap ────────────────────
 
-def recover_imports_from_scan(
+def generate_imports_from_scan(
     assembled: dict[str, Any],
     scan_result_path: Path,
-) -> tuple[int, list[str]]:
-    """Re-emit any `imports` edges that exist in `scan-result.json#importMap`
-    but never made it into a batch's output. The project-scanner's importMap
-    is the deterministic source of truth for resolved internal imports;
-    file-analyzer agents are expected to transcribe those into edges 1:1
-    but in practice drop ~25% of them on real projects (orchestrator-side
-    batch construction loses entries, agent-side enumeration drops more).
+) -> list[dict[str, Any]]:
+    """Generate ALL imports edges deterministically from importMap.
 
-    Returns (recovered_count, report_lines).
+    Iterates every (source_path, [target_paths]) entry in the project-scanner's
+    importMap, resolves each path to a node ID, and emits imports edges.
+    Paths not present in the node set are skipped (no dangling edges).
+    Deduplicates against any imports edges already in assembled["edges"]
+    (e.g. from LLM-generated batch output), keeping existing edges and
+    only adding missing ones.
+
+    Returns the list of newly added imports edges.
     """
-    if not scan_result_path.is_file():
-        return 0, [f"  importMap recovery skipped — {scan_result_path.name} not found"]
+    nodes = assembled.get("nodes", [])
+    existing_edges = assembled.get("edges", [])
 
-    try:
-        scan = json.loads(scan_result_path.read_text(encoding="utf-8"))
-    except (OSError, json.JSONDecodeError) as e:
-        return 0, [f"  importMap recovery skipped — could not parse {scan_result_path.name}: {e}"]
+    # Read importMap — try scan-result.json first, then import-map.json
+    import_map: dict[str, list[str]] = {}
+    if scan_result_path.is_file():
+        try:
+            scan = json.loads(scan_result_path.read_text(encoding="utf-8"))
+            if isinstance(scan.get("importMap"), dict):
+                import_map = scan["importMap"]
+        except (OSError, json.JSONDecodeError):
+            pass
 
-    import_map = scan.get("importMap")
-    if not isinstance(import_map, dict):
-        return 0, [f"  importMap recovery skipped — no importMap field in {scan_result_path.name}"]
+    # Fallback: try import-map.json (produced by analyze-project.mjs in P2 pipeline)
+    if not import_map:
+        import_map_path = scan_result_path.parent / "import-map.json"
+        if import_map_path.is_file():
+            try:
+                im = json.loads(import_map_path.read_text(encoding="utf-8"))
+                if isinstance(im.get("importMap"), dict):
+                    import_map = im["importMap"]
+            except (OSError, json.JSONDecodeError):
+                pass
 
-    # Build the set of file: node ids actually present in the assembled graph.
-    file_node_ids: set[str] = set()
-    for node in assembled["nodes"]:
-        if node.get("type") == "file":
-            file_node_ids.add(node.get("id", ""))
+    # Build filePath → nodeId mapping (only file nodes, excluding
+    # function/class sub-nodes that may share the same filePath)
+    file_path_to_id: dict[str, str] = {}
+    for n in nodes:
+        if n.get("type") == "file":
+            fp = n.get("filePath")
+            if fp:
+                file_path_to_id[fp] = n["id"]
 
-    # Build the set of (source, target) imports edges already present.
-    existing: set[tuple[str, str]] = set()
-    for edge in assembled["edges"]:
-        if edge.get("type") == "imports":
-            existing.add((edge.get("source", ""), edge.get("target", "")))
-
-    recovered = 0
-    skipped_no_src_node = 0
-    skipped_no_tgt_node = 0
-    for src_path, targets in import_map.items():
+    # Generate all candidate imports edges from importMap
+    imports_edges: list[dict[str, Any]] = []
+    for source_path, targets in import_map.items():
+        source_id = file_path_to_id.get(source_path)
+        if not source_id:
+            continue
         if not isinstance(targets, list):
             continue
-        src_id = f"file:{src_path}"
-        if src_id not in file_node_ids:
-            if targets:
-                skipped_no_src_node += 1
-            continue
-        for tgt_path in targets:
-            if not isinstance(tgt_path, str) or not tgt_path:
+        for target_path in targets:
+            if not isinstance(target_path, str) or not target_path:
                 continue
-            tgt_id = f"file:{tgt_path}"
-            if tgt_id not in file_node_ids:
-                skipped_no_tgt_node += 1
+            target_id = file_path_to_id.get(target_path)
+            if not target_id:
                 continue
-            if src_id == tgt_id:
+            if source_id == target_id:
                 continue
-            if (src_id, tgt_id) in existing:
-                continue
-            assembled["edges"].append({
-                "source": src_id,
-                "target": tgt_id,
+            imports_edges.append({
+                "source": source_id,
+                "target": target_id,
                 "type": "imports",
                 "direction": "forward",
                 "weight": 0.7,
-                "recoveredFromImportMap": True,
             })
-            existing.add((src_id, tgt_id))
-            recovered += 1
 
-    lines: list[str] = []
-    lines.append(
-        f"  Recovered {recovered} `imports` edges from importMap "
-        f"({len(import_map)} entries scanned)"
-    )
-    if skipped_no_src_node:
-        lines.append(
-            f"  Skipped {skipped_no_src_node} importMap source files "
-            f"with no `file:` node in graph"
-        )
-    if skipped_no_tgt_node:
-        lines.append(
-            f"  Skipped {skipped_no_tgt_node} importMap target paths "
-            f"with no `file:` node in graph"
-        )
-    return recovered, lines
+    # Deduplicate: remove edges already present in existing_edges
+    existing_imports = {
+        (e["source"], e["target"])
+        for e in existing_edges
+        if e.get("type") == "imports"
+    }
+    new_edges = [
+        e for e in imports_edges
+        if (e["source"], e["target"]) not in existing_imports
+    ]
+
+    return new_edges
 
 
 # ── Main ──────────────────────────────────────────────────────────────────
@@ -1005,15 +1003,25 @@ def main() -> None:
             f"files was excluded from the final graph)"
         )
 
-    # Recover any imports edges file-analyzer batches dropped despite
-    # `batchImportData` containing them. The project-scanner's importMap
-    # is the deterministic source of truth.
+    # Deterministic imports edge generation from importMap.
+    # The project-scanner's importMap is the authoritative source of truth
+    # for resolved internal imports; LLM-generated imports edges are
+    # supplemented (not replaced) — any imports edges the LLM produced
+    # are kept, and only missing ones are added.
     scan_result_path = intermediate_dir / "scan-result.json"
-    recovered, recovery_report = recover_imports_from_scan(assembled, scan_result_path)
-    if recovery_report:
+    new_imports = generate_imports_from_scan(assembled, scan_result_path)
+    assembled["edges"].extend(new_imports)
+
+    # Report
+    if new_imports:
         report.append("")
-        report.append("Imports edge recovery:")
-        report.extend(recovery_report)
+        report.append("Imports edge generation (deterministic):")
+        report.append(
+            f"  Generated {len(new_imports)} `imports` edges from importMap"
+        )
+    else:
+        report.append("")
+        report.append("Imports edge generation: no new edges generated")
 
     # Print report
     print("", file=sys.stderr)

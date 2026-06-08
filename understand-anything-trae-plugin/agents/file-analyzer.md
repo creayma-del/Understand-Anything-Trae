@@ -24,32 +24,45 @@ Use natural, native-level phrasing. Keep technical terms in English when no stan
 
 ---
 
-## Phase 1 -- Structural Extraction (Bundled Script)
+## Phase 1 -- Structural Data (Pre-extracted)
 
-Execute the pre-built structural extraction script bundled with the Understand-Anything-Trae plugin. This script uses tree-sitter for code files and specialized parsers for non-code files, providing deterministic, high-quality structural extraction without writing any ad-hoc scripts.
+The structure data for your batch was pre-extracted by the main pipeline and provided in your dispatch prompt. Do NOT run extract-structure.mjs yourself.
 
-### Step 1 — Prepare the input JSON
+### Step 1 — Read the pre-extracted structure data
 
-Create the input file with the batch data. **IMPORTANT:** Use the batch index in ALL temp file paths to avoid collisions when multiple file-analyzer agents run concurrently.
+Read the "Pre-extracted structure data for this batch" section from your dispatch prompt. The data format is a JSON array of result objects (only files in your batch, not the full envelope):
 
-Each entry in `batchFiles` MUST be an object with these four fields, copied verbatim from the dispatch prompt's batch list:
-
-- `path` (string) — project-relative file path
-- `language` (string) — language id from the project scanner (e.g. `"typescript"`, `"vue-sfc"`); never null
-- `sizeLines` (integer) — line count
-- `fileCategory` (string) — `code`, `config`, `docs`, `infra`, `data`, `script`, or `markup`
-
-```bash
-cat > $PROJECT_ROOT/.understand-anything-trae/tmp/ua-file-analyzer-input-<batchIndex>.json << 'ENDJSON'
-{
-  "projectRoot": "<project-root>",
-  "batchFiles": [
-    {"path": "<path>", "language": "<language>", "sizeLines": <sizeLines>, "fileCategory": "<fileCategory>"}
-  ],
-  "batchImportData": <batchImportData JSON object — provided in your dispatch prompt>
-}
-ENDJSON
+```json
+[
+  {
+    "path": "src/index.ts",
+    "language": "typescript",
+    "fileCategory": "code",
+    "totalLines": 150,
+    "nonEmptyLines": 120,
+    "functions": [
+      {"name": "main", "startLine": 10, "endLine": 45, "params": ["config", "options"]}
+    ],
+    "classes": [
+      {"name": "App", "startLine": 50, "endLine": 140, "methods": ["init", "run"], "properties": ["config", "logger"]}
+    ],
+    "exports": [
+      {"name": "App", "line": 50, "isDefault": false}
+    ],
+    "callGraph": [
+      {"caller": "main", "callee": "initApp", "lineNumber": 15}
+    ],
+    "metrics": {
+      "importCount": 5,
+      "exportCount": 3,
+      "functionCount": 4,
+      "classCount": 1
+    }
+  }
+]
 ```
+
+Note: The dispatch prompt provides a filtered array of results (only files in your batch), not the full `{ scriptCompleted, filesAnalyzed, filesSkipped, results }` envelope. Iterate the array directly.
 
 ### Cross-batch context (neighborMap)
 
@@ -65,56 +78,11 @@ The merge script's dangling-edge dropper is the safety net for genuinely unresol
 
 ### Step 2 — Execute the bundled extraction script
 
-Run the bundled `extract-structure.mjs` script. The `<SKILL_DIR>` path is provided in your dispatch prompt.
-
-```bash
-node <SKILL_DIR>/extract-structure.mjs \
-  $PROJECT_ROOT/.understand-anything-trae/tmp/ua-file-analyzer-input-<batchIndex>.json \
-  $PROJECT_ROOT/.understand-anything-trae/tmp/ua-file-extract-results-<batchIndex>.json
-```
-
-If the script exits non-zero, read stderr and report the error. Do NOT attempt to write a manual extraction script as fallback — the bundled script is the sole extraction path.
-
-After the script returns, verify the output file exists and is non-empty (e.g. `test -s $PROJECT_ROOT/.understand-anything-trae/tmp/ua-file-extract-results-<batchIndex>.json`). Exit 0 with a missing output file means the bundled script silently no-opped — report this as a hard failure rather than proceeding to Step 3.
+**SKIPPED** — Structure data is already pre-extracted and provided in your dispatch prompt. Do NOT run extract-structure.mjs.
 
 ### Step 3 — Read the extraction results
 
-Read `$PROJECT_ROOT/.understand-anything-trae/tmp/ua-file-extract-results-<batchIndex>.json`. The output format is:
-
-```json
-{
-  "scriptCompleted": true,
-  "filesAnalyzed": 5,
-  "filesSkipped": ["path/to/binary.wasm"],
-  "results": [
-    {
-      "path": "src/index.ts",
-      "language": "typescript",
-      "fileCategory": "code",
-      "totalLines": 150,
-      "nonEmptyLines": 120,
-      "functions": [
-        {"name": "main", "startLine": 10, "endLine": 45, "params": ["config", "options"]}
-      ],
-      "classes": [
-        {"name": "App", "startLine": 50, "endLine": 140, "methods": ["init", "run"], "properties": ["config", "logger"]}
-      ],
-      "exports": [
-        {"name": "App", "line": 50, "isDefault": false}
-      ],
-      "callGraph": [
-        {"caller": "main", "callee": "initApp", "lineNumber": 15}
-      ],
-      "metrics": {
-        "importCount": 5,
-        "exportCount": 3,
-        "functionCount": 4,
-        "classCount": 1
-      }
-    }
-  ]
-}
-```
+**SKIPPED** — Use the pre-extracted structure data from your dispatch prompt (Phase 1, Step 1) instead.
 
 **Non-code structural fields.** For `config`, `docs`, `data`, `infra`, and `markup` files, the script may also populate any of the following arrays. Treat each entry as a potential sub-file node and emit a corresponding `<prefix>:<path>:<name>` node in your output if it meets the significance filter:
 
@@ -140,9 +108,7 @@ Treat these the same as tree-sitter-derived functions for node creation (Step 2 
 
 ## Phase 2 -- Semantic Analysis
 
-After the script completes, read `$PROJECT_ROOT/.understand-anything-trae/tmp/ua-file-extract-results-<batchIndex>.json`. Use these structured results as the foundation for your analysis. Do NOT re-read the source files unless the script skipped a file or you need to understand a specific pattern that the script could not capture.
-
-For each file in the script's `results` array, produce `GraphNode` and `GraphEdge` objects by combining the script's structural data with your expert judgment.
+Using the pre-extracted structure data from your dispatch prompt (Phase 1), produce GraphNode and GraphEdge objects by combining the structural data with your expert judgment. Do NOT re-read the source files unless the pre-extracted data is missing for a file or you need to understand a specific pattern that the data could not capture.
 
 ### Step 1 -- Create File Node
 
@@ -248,7 +214,7 @@ Using the script's structural data and file categories, create edges:
 | Edge Type | When to Create | Weight | Direction |
 |---|---|---|---|
 | `contains` | File contains a function or class node you created (use for ALL function/class nodes) | `1.0` | `forward` |
-| `imports` | File imports from another project file (use `batchImportData[filePath]` from input JSON — external imports already filtered out) | `0.7` | `forward` |
+| `imports` | Generated deterministically by merge script. Do NOT emit in batch output. | `0.7` | `forward` |
 | `calls` | A function in this file calls a function in another file (infer from imports + function names when confident) | `0.8` | `forward` |
 | `inherits` | A class extends another class in the project | `0.9` | `forward` |
 | `implements` | A class implements an interface in the project | `0.9` | `forward` |
@@ -274,17 +240,7 @@ Using the script's structural data and file categories, create edges:
 | `related` | Non-code file is topically related to another file without a specific structural relationship | `0.5` | `forward` |
 | `depends_on` | Non-code file depends on another file (e.g., CI workflow depends on Makefile targets) | `0.6` | `forward` |
 
-**Import edge creation rule for code files (1:1 emission, NO aggregation):**
-
-For every code file in this batch:
-
-1. Read its `batchImportData[filePath]` array (provided in the input JSON).
-2. For EACH path in that array, emit ONE `imports` edge object: `{ "source": "file:<filePath>", "target": "file:<resolvedPath>", "type": "imports", "direction": "forward", "weight": 0.7 }`.
-3. The output edge count for this file MUST equal `batchImportData[filePath].length`. Not 90% of it. Not "the meaningful ones". All of them.
-
-The `batchImportData` values contain only resolved project-internal paths — external packages have already been filtered out, so every path is safe to emit. Do NOT attempt to re-resolve imports from source. Do NOT skip imports because the target lives in another batch (cross-batch references are explicitly allowed for `imports` edges, since the project-scanner already verified the path exists).
-
-**Self-check before writing the batch JSON:** sum `batchImportData[file].length` across every code file in your batch. The number of `imports` edges in your output MUST equal that sum. If it doesn't, you dropped some during enumeration — go back and add them. (A deterministic post-processing pass in `merge-batch-graphs.py` will recover anything you still miss, but it is your job to get this right at emission time so the recovery report stays empty.)
+**Imports edges**: Imports edges are generated deterministically by the merge script (`merge-batch-graphs.py`) from the project's importMap. You do NOT need to create `imports` edges. The `batchImportData` provided in your dispatch prompt is for context understanding only — use it to understand which files depend on which, but do not emit `imports` edges.
 
 **Non-code edge creation guidance:**
 - **Config files:** Look at the config file's purpose. `tsconfig.json` configures all `.ts` files; `package.json` configures the build. Create `configures` edges to the most relevant entry points or directories.
@@ -460,7 +416,7 @@ Use these hints for common edge patterns:
 - NEVER create edges to nodes that do not exist. Only create import edges for paths listed in `batchImportData` — these are already verified project-internal paths. For non-code edges (configures, documents, deploys, etc.), only target nodes that exist in your batch or that you know exist from other batches.
 - ALWAYS create a node for EVERY file in your batch, even if the file is trivial. Use the appropriate node type based on fileCategory.
 - For code files, check the script output for functions and classes that meet the significance filter (Step 2). If any exist, you MUST create `function:` and `class:` nodes for them — do not skip this step.
-- For import edges, use `batchImportData[filePath]` directly from the input JSON. Do NOT attempt to resolve import paths yourself -- the project scanner already did this deterministically.
+- Do NOT emit `imports` edges. Imports edges are generated deterministically by the merge script from the project's importMap. The `batchImportData` in your dispatch prompt is provided for context understanding only.
 - NEVER produce duplicate node IDs within your batch.
 - NEVER create self-referencing edges (where source equals target).
 - Trust the script's structural extraction. Do NOT re-read source files to re-extract functions, classes, or imports that the script already captured. Only re-read a file if you need deeper understanding for writing a summary.

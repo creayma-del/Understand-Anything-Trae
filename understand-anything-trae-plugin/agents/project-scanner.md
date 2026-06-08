@@ -44,6 +44,12 @@ From these, synthesize:
 
 If the manifest is missing or malformed, leave the corresponding field empty rather than guessing.
 
+> **Optimization note**: The metadata extraction in Step A can alternatively be performed deterministically by running:
+> ```bash
+> node $PLUGIN_ROOT/skills/understand/extract-metadata.mjs $PROJECT_ROOT $PROJECT_ROOT/.understand-anything-trae/intermediate/metadata.json
+> ```
+> This produces equivalent results without an LLM call and takes <1 second.
+
 ### Step B (bundled `scan-project.mjs`) -- File enumeration + language + category + lines
 
 Invoke the bundled scan script. It walks the project (preferring `git ls-files`, falling back to a recursive walk for non-git directories), applies `.understandignore` filtering (defaults + user patterns), assigns `language` and `fileCategory` per the canonical tables, counts lines, and writes deterministic JSON. You do not see or maintain those tables — they live in the script.

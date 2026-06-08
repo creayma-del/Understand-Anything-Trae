@@ -41,24 +41,19 @@ describe('compute-batches.mjs — Louvain basic', () => {
     if (projectRoot) rmSync(projectRoot, { recursive: true, force: true });
   });
 
-  it('produces 3 batches for 3 disjoint cliques', () => {
+  it('produces merged batches for 3 small cliques (each < MIN_BATCH_SIZE=5)', () => {
     const result = runScript(projectRoot);
     expect(result.status).toBe(0);
 
     const batches = readBatches(projectRoot);
     expect(batches.algorithm).toBe('louvain');
     expect(batches.totalFiles).toBe(9);
-    expect(batches.batches.length).toBe(3);
+    // Each clique has 3 files < MIN_BATCH_SIZE=5 → all merged into 1 misc batch
+    expect(batches.batches.length).toBe(1);
+    expect(batches.batches[0].files.length).toBe(9);
     expect(batches.schemaVersion).toBe(1);
-    expect(batches.totalBatches).toBe(3);
-    expect(batches.batches.map(b => b.batchIndex)).toEqual([1, 2, 3]);
-
-    // Each batch should contain exactly one clique (3 files)
-    for (const b of batches.batches) {
-      expect(b.files.length).toBe(3);
-      const dirs = new Set(b.files.map(f => f.path.split('/')[1]));
-      expect(dirs.size).toBe(1); // all files in the batch share src/<dir>/
-    }
+    expect(batches.totalBatches).toBe(1);
+    expect(batches.batches.map(b => b.batchIndex)).toEqual([1]);
   });
 
   it('produces deterministic output across runs', () => {
@@ -91,20 +86,18 @@ describe('compute-batches.mjs — size enforcement', () => {
     if (projectRoot) rmSync(projectRoot, { recursive: true, force: true });
   });
 
-  it('splits a 40-node clique into batches ≤ 35', () => {
+  it('splits a 40-node clique into a single batch (≤ 60)', () => {
     const result = runScript(projectRoot);
     expect(result.status).toBe(0);
 
     const batches = readBatches(projectRoot);
     expect(batches.algorithm).toBe('louvain');  // confirm fallback didn't fire
     expect(batches.totalFiles).toBe(40);
-    expect(batches.batches.length).toBe(2);
-    expect(batches.batches.map(b => b.files.length).sort()).toEqual([20, 20]);
-    // Sum of all batch file counts equals total files
-    const sum = batches.batches.reduce((acc, b) => acc + b.files.length, 0);
-    expect(sum).toBe(40);
-    // Warning was emitted to stderr
-    expect(result.stderr).toMatch(/Warning: compute-batches: community size 40 > max 35/);
+    // 40 ≤ MAX_COMMUNITY_SIZE=60, so no split — one batch
+    expect(batches.batches.length).toBe(1);
+    expect(batches.batches[0].files.length).toBe(40);
+    // No Warning about community size exceeding max
+    expect(result.stderr).not.toMatch(/Warning: compute-batches: community size/);
   });
 });
 
@@ -263,7 +256,7 @@ describe('compute-batches.mjs — Group E MAX_E split', () => {
     if (root) rmSync(root, { recursive: true, force: true });
   });
 
-  it('splits 25 .md files under docs/ into [20, 5]', () => {
+  it('fits 25 .md files under docs/ into a single batch (≤ 35)', () => {
     root = mkdtempSync(join(tmpdir(), 'ua-cb-maxe-'));
     mkdirSync(join(root, '.understand-anything-trae', 'intermediate'), { recursive: true });
 
@@ -288,12 +281,11 @@ describe('compute-batches.mjs — Group E MAX_E split', () => {
     expect(result.status).toBe(0);
 
     const batches = readBatches(root);
-    // All 25 docs/ files go through Group E with MAX_E = 20, split into [20, 5].
+    // All 25 docs/ files go through Group E with MAX_E = 35, fit in one batch.
     const docsBatches = batches.batches.filter(b =>
       b.files.every(f => f.path.startsWith('docs/')));
-    expect(docsBatches.length).toBe(2);
-    const sizes = docsBatches.map(b => b.files.length).sort((a, b) => b - a);
-    expect(sizes).toEqual([20, 5]);
+    expect(docsBatches.length).toBe(1);
+    expect(docsBatches[0].files.length).toBe(25);
   });
 });
 
@@ -351,42 +343,60 @@ describe('compute-batches.mjs — neighborMap + batchImportData', () => {
     mkdirSync(join(root, 'src', 'a'), { recursive: true });
     mkdirSync(join(root, 'src', 'b'), { recursive: true });
 
-    // Cluster A: 3 tightly-imported files. a/core.ts exports symbols.
+    // Cluster A: 5 tightly-imported files (≥ MIN_BATCH_SIZE=5 to survive merge).
+    // a/core.ts exports symbols.
     writeFileSync(join(root, 'src', 'a', 'core.ts'),
       'export function findUser(id: string) { return null; }\nexport class User {}\n');
     writeFileSync(join(root, 'src', 'a', 'helper1.ts'),
       'import { findUser } from "./core";\nexport const h1 = () => findUser("x");\n');
     writeFileSync(join(root, 'src', 'a', 'helper2.ts'),
       'import { User } from "./core";\nimport { h1 } from "./helper1";\nexport const h2 = () => h1();\n');
+    writeFileSync(join(root, 'src', 'a', 'util1.ts'),
+      'import { findUser } from "./core";\nexport const u1 = () => findUser("a");\n');
+    writeFileSync(join(root, 'src', 'a', 'util2.ts'),
+      'import { u1 } from "./util1";\nexport const u2 = () => u1();\n');
 
-    // Cluster B: 3 tightly-imported files. b/entry.ts has ONE cross-cluster import to a/core.ts.
+    // Cluster B: 5 tightly-imported files (≥ MIN_BATCH_SIZE=5 to survive merge).
+    // b/entry.ts has ONE cross-cluster import to a/core.ts.
     writeFileSync(join(root, 'src', 'b', 'entry.ts'),
       'import { findUser } from "../a/core";\nexport const entry = () => findUser("y");\n');
     writeFileSync(join(root, 'src', 'b', 'middle.ts'),
       'import { entry } from "./entry";\nexport const middle = () => entry();\n');
     writeFileSync(join(root, 'src', 'b', 'leaf.ts'),
       'import { middle } from "./middle";\nexport const leaf = () => middle();\n');
+    writeFileSync(join(root, 'src', 'b', 'svc1.ts'),
+      'import { entry } from "./entry";\nexport const s1 = () => entry();\n');
+    writeFileSync(join(root, 'src', 'b', 'svc2.ts'),
+      'import { s1 } from "./svc1";\nexport const s2 = () => s1();\n');
 
     const files = [
       { path: 'src/a/core.ts',    language: 'typescript', sizeLines: 2, fileCategory: 'code' },
       { path: 'src/a/helper1.ts', language: 'typescript', sizeLines: 2, fileCategory: 'code' },
       { path: 'src/a/helper2.ts', language: 'typescript', sizeLines: 3, fileCategory: 'code' },
+      { path: 'src/a/util1.ts',   language: 'typescript', sizeLines: 2, fileCategory: 'code' },
+      { path: 'src/a/util2.ts',   language: 'typescript', sizeLines: 2, fileCategory: 'code' },
       { path: 'src/b/entry.ts',   language: 'typescript', sizeLines: 2, fileCategory: 'code' },
       { path: 'src/b/middle.ts',  language: 'typescript', sizeLines: 2, fileCategory: 'code' },
       { path: 'src/b/leaf.ts',    language: 'typescript', sizeLines: 2, fileCategory: 'code' },
+      { path: 'src/b/svc1.ts',    language: 'typescript', sizeLines: 2, fileCategory: 'code' },
+      { path: 'src/b/svc2.ts',    language: 'typescript', sizeLines: 2, fileCategory: 'code' },
     ];
     const scan = {
       name: 't', description: '',
       languages: ['typescript'], frameworks: [],
       files,
-      totalFiles: 6, filteredByIgnore: 0, estimatedComplexity: 'small',
+      totalFiles: 10, filteredByIgnore: 0, estimatedComplexity: 'small',
       importMap: {
         'src/a/core.ts': [],
         'src/a/helper1.ts': ['src/a/core.ts'],
         'src/a/helper2.ts': ['src/a/core.ts', 'src/a/helper1.ts'],
+        'src/a/util1.ts': ['src/a/core.ts'],
+        'src/a/util2.ts': ['src/a/util1.ts'],
         'src/b/entry.ts': ['src/a/core.ts'],  // CROSS-CLUSTER
         'src/b/middle.ts': ['src/b/entry.ts'],
         'src/b/leaf.ts': ['src/b/middle.ts'],
+        'src/b/svc1.ts': ['src/b/entry.ts'],
+        'src/b/svc2.ts': ['src/b/svc1.ts'],
       },
     };
     writeFileSync(
@@ -474,11 +484,11 @@ describe('compute-batches.mjs — fallback', () => {
     );
     expect(result.status).toBe(0);
     expect(result.stderr).toMatch(
-      /Warning: compute-batches: Louvain failed.*falling back to count-based grouping/);
+      /Warning: compute-batches: Louvain failed.*falling back to count-based grouping \(25 files\/batch\)/);
     const out = readBatches(root);
     expect(out.algorithm).toBe('count-fallback');
     expect(out.totalFiles).toBe(9);
-    // Count-based: 12 files per batch → all 9 fit in one batch
+    // Count-based: 25 files per batch → all 9 fit in one batch
     const codeBatchFileCount = out.batches
       .filter(b => b.files.every(f => f.fileCategory === 'code'))
       .reduce((sum, b) => sum + b.files.length, 0);
@@ -504,24 +514,16 @@ describe('compute-batches.mjs — merge-small', () => {
     const batches = readBatches(projectRoot);
     expect(batches.totalFiles).toBe(100);
 
-    // Without merge: 100 singletons → 100 batches.
-    // With merge-small (MAX_MERGE_TARGET=25): ceil(100 / 25) = exactly 4 misc
-    // batches. Pin the exact count — a loose >=4 && <=8 would mask off-by-one
-    // regressions in the slice math (e.g., a stride miscalculation that
-    // splintered the pool into 5-7 underfull buckets).
-    expect(batches.batches.length).toBe(4);
+    // With merge-small (MAX_MERGE_TARGET=40): ceil(100 / 40) = 3 misc batches.
+    expect(batches.batches.length).toBe(3);
 
     // All files accounted for
     const totalAssigned = batches.batches.reduce((sum, b) => sum + b.files.length, 0);
     expect(totalAssigned).toBe(100);
 
-    // Bucket-fullness check: 100 singletons evenly divisible by
-    // MAX_MERGE_TARGET=25, so every bucket must be exactly 25 — not just
-    // ≤ 25. Drift toward [25, 25, 25, 24, 1] etc. would slip past a
-    // ≤25 bound while indicating a stride bug.
-    for (const b of batches.batches) {
-      expect(b.files.length).toBe(25);
-    }
+    // Bucket-fullness check: 100 / 40 = 2 remainder 20, so [40, 40, 20].
+    const sizes = batches.batches.map(b => b.files.length).sort((a, b) => b - a);
+    expect(sizes).toEqual([40, 40, 20]);
 
     // Info: (not Warning:) — merge-small is a routine optimization, not a
     // fallback path. See compute-batches.mjs mergeSmallBatches WHY comment.
@@ -578,10 +580,35 @@ describe('compute-batches.mjs — --changed-files', () => {
   });
 
   it('emits only batches containing changed files', () => {
-    root = setupProject('scan-result-3-cliques.json');
+    root = mkdtempSync(join(tmpdir(), 'ua-cb-changed-'));
+    mkdirSync(join(root, '.understand-anything-trae', 'intermediate'), { recursive: true });
+
+    // Create 3 cliques of 5 files each (≥ MIN_BATCH_SIZE=5 to survive merge)
+    const files = [];
+    const importMap = {};
+    for (const dir of ['auth', 'api', 'db']) {
+      for (let i = 0; i < 5; i++) {
+        const p = `src/${dir}/f${i}.ts`;
+        files.push({ path: p, language: 'typescript', sizeLines: 10, fileCategory: 'code' });
+        importMap[p] = [];
+        for (let j = 0; j < 5; j++) {
+          if (j !== i) importMap[p].push(`src/${dir}/f${j}.ts`);
+        }
+      }
+    }
+    const scan = {
+      name: 'changed-test', description: '',
+      languages: ['typescript'], frameworks: [],
+      files, totalFiles: 15, filteredByIgnore: 0,
+      estimatedComplexity: 'small', importMap,
+    };
+    writeFileSync(
+      join(root, '.understand-anything-trae', 'intermediate', 'scan-result.json'),
+      JSON.stringify(scan));
+
     const changedPath = join(root, 'changed.txt');
     // Only the auth clique is changed
-    writeFileSync(changedPath, ['src/auth/login.ts', 'src/auth/tokens.ts'].join('\n'));
+    writeFileSync(changedPath, ['src/auth/f0.ts', 'src/auth/f2.ts'].join('\n'));
 
     const result = runScript(root, [`--changed-files=${changedPath}`]);
     expect(result.status).toBe(0);
@@ -589,14 +616,296 @@ describe('compute-batches.mjs — --changed-files', () => {
     const out = readBatches(root);
     // Auth files are in batches; other cliques' batches must be omitted
     const allPaths = out.batches.flatMap(b => b.files.map(f => f.path));
-    expect(allPaths).toContain('src/auth/login.ts');
-    expect(allPaths).toContain('src/auth/tokens.ts');
-    expect(allPaths).not.toContain('src/api/handlers.ts');
-    expect(allPaths).not.toContain('src/db/users.ts');
+    expect(allPaths).toContain('src/auth/f0.ts');
+    expect(allPaths).toContain('src/auth/f2.ts');
+    expect(allPaths).not.toContain('src/api/f0.ts');
+    expect(allPaths).not.toContain('src/db/f0.ts');
 
     // neighborMap may still reference unchanged files (with their full-graph batchIndex)
     const loginBatch = out.batches.find(b =>
-      b.files.some(f => f.path === 'src/auth/login.ts'));
+      b.files.some(f => f.path === 'src/auth/f0.ts'));
     expect(loginBatch).toBeDefined();
+  });
+});
+
+describe('compute-batches.mjs — CB-001: large community splitting (new threshold 60)', () => {
+  let root;
+
+  afterEach(() => {
+    if (root) rmSync(root, { recursive: true, force: true });
+  });
+
+  it('CB-001: splits a 70-node clique into batches ≤ 60', () => {
+    root = mkdtempSync(join(tmpdir(), 'ua-cb-cb001-'));
+    mkdirSync(join(root, '.understand-anything-trae', 'intermediate'), { recursive: true });
+
+    const files = [];
+    const importMap = {};
+    for (let i = 0; i < 70; i++) {
+      const p = `src/big/f${i}.ts`;
+      files.push({ path: p, language: 'typescript', sizeLines: 50, fileCategory: 'code' });
+      importMap[p] = [];
+      for (let j = 0; j < 70; j++) {
+        if (j !== i) importMap[p].push(`src/big/f${j}.ts`);
+      }
+    }
+    const scan = {
+      name: 'cb001-test', description: '',
+      languages: ['typescript'], frameworks: [],
+      files, totalFiles: 70, filteredByIgnore: 0,
+      estimatedComplexity: 'moderate', importMap,
+    };
+    writeFileSync(
+      join(root, '.understand-anything-trae', 'intermediate', 'scan-result.json'),
+      JSON.stringify(scan));
+
+    const result = runScript(root);
+    expect(result.status).toBe(0);
+
+    const batches = readBatches(root);
+    expect(batches.algorithm).toBe('louvain');
+    expect(batches.totalFiles).toBe(70);
+    // 70 > MAX_COMMUNITY_SIZE=60 → split into 2 batches
+    expect(batches.batches.length).toBe(2);
+    // Each batch ≤ 60
+    for (const b of batches.batches) {
+      expect(b.files.length).toBeLessThanOrEqual(60);
+    }
+    // Sum equals total
+    const sum = batches.batches.reduce((acc, b) => acc + b.files.length, 0);
+    expect(sum).toBe(70);
+    // Warning was emitted
+    expect(result.stderr).toMatch(/Warning: compute-batches: community size 70 > max 60/);
+  });
+});
+
+describe('compute-batches.mjs — CB-002: small batch merging (new threshold 5)', () => {
+  let root;
+
+  afterEach(() => {
+    if (root) rmSync(root, { recursive: true, force: true });
+  });
+
+  it('CB-002: merges 4-file batch into misc (below MIN_BATCH_SIZE=5)', () => {
+    root = mkdtempSync(join(tmpdir(), 'ua-cb-cb002-'));
+    mkdirSync(join(root, '.understand-anything-trae', 'intermediate'), { recursive: true });
+
+    // Two isolated 4-file cliques — each below MIN_BATCH_SIZE=5
+    const files = [];
+    const importMap = {};
+    for (let g = 0; g < 2; g++) {
+      for (let i = 0; i < 4; i++) {
+        const p = `src/g${g}/f${i}.ts`;
+        files.push({ path: p, language: 'typescript', sizeLines: 10, fileCategory: 'code' });
+        importMap[p] = [];
+        for (let j = 0; j < 4; j++) {
+          if (j !== i) importMap[p].push(`src/g${g}/f${j}.ts`);
+        }
+      }
+    }
+    const scan = {
+      name: 'cb002-test', description: '',
+      languages: ['typescript'], frameworks: [],
+      files, totalFiles: 8, filteredByIgnore: 0,
+      estimatedComplexity: 'small', importMap,
+    };
+    writeFileSync(
+      join(root, '.understand-anything-trae', 'intermediate', 'scan-result.json'),
+      JSON.stringify(scan));
+
+    const result = runScript(root);
+    expect(result.status).toBe(0);
+
+    const batches = readBatches(root);
+    // Both 4-file cliques are below MIN_BATCH_SIZE=5, merged into 1 misc batch
+    expect(batches.batches.length).toBe(1);
+    expect(batches.batches[0].files.length).toBe(8);
+    expect(result.stderr).toMatch(/Info: compute-batches: merged 2 small batches/);
+  });
+});
+
+describe('compute-batches.mjs — CB-003: fallback batch size (new value 25)', () => {
+  let root;
+
+  afterEach(() => {
+    if (root) rmSync(root, { recursive: true, force: true });
+  });
+
+  it('CB-003: count-fallback uses batchSize=25', () => {
+    root = mkdtempSync(join(tmpdir(), 'ua-cb-cb003-'));
+    mkdirSync(join(root, '.understand-anything-trae', 'intermediate'), { recursive: true });
+
+    // 60 isolated files → count-fallback with batchSize=25 → 3 batches
+    const files = [];
+    const importMap = {};
+    for (let i = 0; i < 60; i++) {
+      const p = `src/leaf${String(i).padStart(3, '0')}.ts`;
+      files.push({ path: p, language: 'typescript', sizeLines: 10, fileCategory: 'code' });
+      importMap[p] = [];
+    }
+    const scan = {
+      name: 'cb003-test', description: '',
+      languages: ['typescript'], frameworks: [],
+      files, totalFiles: 60, filteredByIgnore: 0,
+      estimatedComplexity: 'moderate', importMap,
+    };
+    writeFileSync(
+      join(root, '.understand-anything-trae', 'intermediate', 'scan-result.json'),
+      JSON.stringify(scan));
+
+    const result = spawnSync('node',
+      [SCRIPT, root],
+      { encoding: 'utf-8', env: { ...process.env, UA_COMPUTE_BATCHES_FORCE_LOUVAIN_THROW: '1' } },
+    );
+    expect(result.status).toBe(0);
+
+    const out = readBatches(root);
+    expect(out.algorithm).toBe('count-fallback');
+    // 60 files / 25 per batch = ceil(60/25) = 3 batches
+    const codeBatches = out.batches.filter(b =>
+      b.files.every(f => f.fileCategory === 'code'));
+    expect(codeBatches.length).toBe(3);
+    const sizes = codeBatches.map(b => b.files.length).sort((a, b) => b - a);
+    expect(sizes).toEqual([25, 25, 10]);
+  });
+});
+
+describe('compute-batches.mjs — CB-004: non-code Group E batch size (new value 35)', () => {
+  let root;
+
+  afterEach(() => {
+    if (root) rmSync(root, { recursive: true, force: true });
+  });
+
+  it('CB-004: splits 40 config files under config/ into [35, 5]', () => {
+    root = mkdtempSync(join(tmpdir(), 'ua-cb-cb004-'));
+    mkdirSync(join(root, '.understand-anything-trae', 'intermediate'), { recursive: true });
+
+    const files = [];
+    const importMap = {};
+    for (let i = 0; i < 40; i++) {
+      const p = `config/app${String(i).padStart(2, '0')}.json`;
+      files.push({ path: p, language: 'json', sizeLines: 10, fileCategory: 'config' });
+      importMap[p] = [];
+    }
+    const scan = {
+      name: 'cb004-test', description: '',
+      languages: ['json'], frameworks: [],
+      files, totalFiles: 40, filteredByIgnore: 0,
+      estimatedComplexity: 'small', importMap,
+    };
+    writeFileSync(
+      join(root, '.understand-anything-trae', 'intermediate', 'scan-result.json'),
+      JSON.stringify(scan));
+
+    const result = runScript(root);
+    expect(result.status).toBe(0);
+
+    const batches = readBatches(root);
+    // 40 config files under config/ → Group E with MAX_E=35 → [35, 5]
+    const configBatches = batches.batches.filter(b =>
+      b.files.every(f => f.path.startsWith('config/')));
+    expect(configBatches.length).toBe(2);
+    const sizes = configBatches.map(b => b.files.length).sort((a, b) => b - a);
+    expect(sizes).toEqual([35, 5]);
+  });
+});
+
+describe('compute-batches.mjs — CB-005: reads exports-map.json when available', () => {
+  let root;
+
+  afterEach(() => {
+    if (root) rmSync(root, { recursive: true, force: true });
+  });
+
+  it('CB-005: loads exports from exports-map.json (no tree-sitter init needed)', () => {
+    root = mkdtempSync(join(tmpdir(), 'ua-cb-cb005-'));
+    mkdirSync(join(root, '.understand-anything-trae', 'intermediate'), { recursive: true });
+    mkdirSync(join(root, 'src'), { recursive: true });
+
+    writeFileSync(join(root, 'src', 'a.ts'),
+      'export function greet(name: string) { return "hi " + name; }\n');
+
+    const scan = {
+      name: 'cb005-test',
+      description: '',
+      languages: ['typescript'],
+      frameworks: [],
+      files: [
+        { path: 'src/a.ts', language: 'typescript', sizeLines: 1, fileCategory: 'code' },
+      ],
+      totalFiles: 1, filteredByIgnore: 0, estimatedComplexity: 'small',
+      importMap: { 'src/a.ts': [] },
+    };
+    writeFileSync(
+      join(root, '.understand-anything-trae', 'intermediate', 'scan-result.json'),
+      JSON.stringify(scan));
+
+    // Write pre-extracted exports-map.json
+    const exportsMap = {
+      scriptCompleted: true,
+      stats: { filesScanned: 1, filesWithExports: 1, totalSymbols: 1 },
+      exportsMap: { 'src/a.ts': ['greet'] },
+    };
+    writeFileSync(
+      join(root, '.understand-anything-trae', 'intermediate', 'exports-map.json'),
+      JSON.stringify(exportsMap));
+
+    const result = runScript(root);
+    expect(result.status).toBe(0);
+
+    const batches = readBatches(root);
+    expect(batches.exportsByPath['src/a.ts']).toEqual(['greet']);
+
+    // Should have loaded from exports-map.json (Info message, not Warning fallback)
+    expect(result.stderr).toMatch(/Info: compute-batches: loaded exports from exports-map.json/);
+    // Should NOT have the fallback warning
+    expect(result.stderr).not.toMatch(/Warning: compute-batches: exports-map.json not found/);
+  });
+});
+
+describe('compute-batches.mjs — CB-006: falls back to tree-sitter when exports-map.json missing', () => {
+  let root;
+
+  afterEach(() => {
+    if (root) rmSync(root, { recursive: true, force: true });
+  });
+
+  it('CB-006: falls back to tree-sitter when exports-map.json is missing', () => {
+    root = mkdtempSync(join(tmpdir(), 'ua-cb-cb006-'));
+    mkdirSync(join(root, '.understand-anything-trae', 'intermediate'), { recursive: true });
+    mkdirSync(join(root, 'src'), { recursive: true });
+
+    writeFileSync(join(root, 'src', 'a.ts'),
+      'export function greet(name: string) { return "hi " + name; }\n');
+
+    const scan = {
+      name: 'cb006-test',
+      description: '',
+      languages: ['typescript'],
+      frameworks: [],
+      files: [
+        { path: 'src/a.ts', language: 'typescript', sizeLines: 1, fileCategory: 'code' },
+      ],
+      totalFiles: 1, filteredByIgnore: 0, estimatedComplexity: 'small',
+      importMap: { 'src/a.ts': [] },
+    };
+    writeFileSync(
+      join(root, '.understand-anything-trae', 'intermediate', 'scan-result.json'),
+      JSON.stringify(scan));
+
+    // No exports-map.json written — should fall back to tree-sitter
+
+    const result = runScript(root);
+    expect(result.status).toBe(0);
+
+    const batches = readBatches(root);
+    // Should still have exports (from tree-sitter fallback)
+    expect(batches.exportsByPath['src/a.ts']).toEqual(
+      expect.arrayContaining(['greet']));
+
+    // Should have the fallback warning
+    expect(result.stderr).toMatch(
+      /Warning: compute-batches: exports-map.json not found/);
   });
 });

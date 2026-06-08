@@ -1036,5 +1036,254 @@ class TestUnrecognizedBatchFilename(unittest.TestCase):
         self.assertNotIn("file:src/y.ts", node_ids)
 
 
+# ── Deterministic imports-edge generation ──────────────────────────────────
+
+
+class TestGenerateImportsFromScan(unittest.TestCase):
+    """Tests for generate_imports_from_scan — deterministic imports edge
+    generation from the project-scanner's importMap."""
+
+    def setUp(self) -> None:
+        import tempfile
+        self.tmp = Path(tempfile.mkdtemp(prefix="ua-mbg-imports-"))
+        self.scan_result_path = self.tmp / "scan-result.json"
+
+    def tearDown(self) -> None:
+        import shutil
+        shutil.rmtree(self.tmp, ignore_errors=True)
+
+    def _write_scan_result(self, import_map: dict[str, list[str]]) -> None:
+        import json as _j
+        self.scan_result_path.write_text(
+            _j.dumps({"importMap": import_map}),
+            encoding="utf-8",
+        )
+
+    def _assembled(
+        self,
+        nodes: list[dict[str, Any]] | None = None,
+        edges: list[dict[str, Any]] | None = None,
+    ) -> dict[str, Any]:
+        return {
+            "nodes": nodes or [],
+            "edges": edges or [],
+        }
+
+    # MBG-001: Deterministic imports generation from importMap
+    def test_mbg001_deterministic_imports_from_import_map(self) -> None:
+        """importMap has A→B, A→C → generates 2 imports edges."""
+        self._write_scan_result({
+            "src/a.ts": ["src/b.ts", "src/c.ts"],
+        })
+        assembled = self._assembled(nodes=[
+            _file_node("src/a.ts"),
+            _file_node("src/b.ts"),
+            _file_node("src/c.ts"),
+        ])
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 2)
+        edge_pairs = {(e["source"], e["target"]) for e in new_edges}
+        self.assertEqual(edge_pairs, {
+            ("file:src/a.ts", "file:src/b.ts"),
+            ("file:src/a.ts", "file:src/c.ts"),
+        })
+        for edge in new_edges:
+            self.assertEqual(edge["type"], "imports")
+            self.assertEqual(edge["direction"], "forward")
+            self.assertEqual(edge["weight"], 0.7)
+
+    # MBG-002: Deduplication with LLM-generated imports
+    def test_mbg002_dedup_with_llm_imports(self) -> None:
+        """LLM generated A→B, importMap has A→B, A→C → keeps LLM's A→B, adds A→C."""
+        self._write_scan_result({
+            "src/a.ts": ["src/b.ts", "src/c.ts"],
+        })
+        llm_edge: dict[str, Any] = {
+            "source": "file:src/a.ts",
+            "target": "file:src/b.ts",
+            "type": "imports",
+            "direction": "forward",
+            "weight": 0.7,
+        }
+        assembled = self._assembled(
+            nodes=[
+                _file_node("src/a.ts"),
+                _file_node("src/b.ts"),
+                _file_node("src/c.ts"),
+            ],
+            edges=[llm_edge],
+        )
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 1)
+        self.assertEqual(new_edges[0]["source"], "file:src/a.ts")
+        self.assertEqual(new_edges[0]["target"], "file:src/c.ts")
+        # LLM edge is NOT in new_edges (it's already in assembled)
+        self.assertNotIn(
+            ("file:src/a.ts", "file:src/b.ts"),
+            {(e["source"], e["target"]) for e in new_edges},
+        )
+
+    # MBG-003: No LLM imports edges
+    def test_mbg003_no_llm_imports_edges(self) -> None:
+        """Batch output has no imports edges → all generated from importMap."""
+        self._write_scan_result({
+            "src/a.ts": ["src/b.ts"],
+        })
+        assembled = self._assembled(
+            nodes=[_file_node("src/a.ts"), _file_node("src/b.ts")],
+            edges=[],
+        )
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 1)
+        self.assertEqual(new_edges[0]["source"], "file:src/a.ts")
+        self.assertEqual(new_edges[0]["target"], "file:src/b.ts")
+
+    # MBG-004: importMap path not in nodes
+    def test_mbg004_import_map_path_not_in_nodes(self) -> None:
+        """importMap references file not in node set → skip, no dangling edge."""
+        self._write_scan_result({
+            "src/a.ts": ["src/b.ts", "src/missing.ts"],
+            "src/ghost.ts": ["src/b.ts"],
+        })
+        assembled = self._assembled(
+            nodes=[_file_node("src/a.ts"), _file_node("src/b.ts")],
+            edges=[],
+        )
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 1)
+        self.assertEqual(new_edges[0]["source"], "file:src/a.ts")
+        self.assertEqual(new_edges[0]["target"], "file:src/b.ts")
+
+    # MBG-009: filePath collision — file node + function/class sub-node
+    def test_mbg009_file_path_collision_only_file_node_mapped(self) -> None:
+        """file node + function node + class node share same filePath →
+        imports edge points to file node only."""
+        self._write_scan_result({
+            "src/a.ts": ["src/b.ts"],
+        })
+        nodes = [
+            _file_node("src/a.ts"),
+            {
+                "id": "function:src/a.ts:myFunc",
+                "type": "function",
+                "name": "myFunc",
+                "filePath": "src/a.ts",
+                "summary": "",
+                "tags": [],
+                "complexity": "simple",
+            },
+            {
+                "id": "class:src/a.ts:MyClass",
+                "type": "class",
+                "name": "MyClass",
+                "filePath": "src/a.ts",
+                "summary": "",
+                "tags": [],
+                "complexity": "simple",
+            },
+            _file_node("src/b.ts"),
+        ]
+        assembled = self._assembled(nodes=nodes, edges=[])
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 1)
+        self.assertEqual(new_edges[0]["source"], "file:src/a.ts")
+        self.assertEqual(new_edges[0]["target"], "file:src/b.ts")
+        # Verify the edge does NOT point to function or class nodes
+        self.assertNotEqual(new_edges[0]["source"], "function:src/a.ts:myFunc")
+        self.assertNotEqual(new_edges[0]["source"], "class:src/a.ts:MyClass")
+
+    # Additional edge cases from the spec
+
+    def test_self_reference_skipped(self) -> None:
+        """importMap where source_path == target_path → no self-loop edge."""
+        self._write_scan_result({
+            "src/a.ts": ["src/a.ts"],
+        })
+        assembled = self._assembled(nodes=[_file_node("src/a.ts")], edges=[])
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 0)
+
+    def test_empty_import_map(self) -> None:
+        """importMap is empty → no edges generated."""
+        self._write_scan_result({})
+        assembled = self._assembled(
+            nodes=[_file_node("src/a.ts"), _file_node("src/b.ts")],
+            edges=[],
+        )
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 0)
+
+    def test_import_map_value_not_list(self) -> None:
+        """importMap value is not a list → skip that entry."""
+        self._write_scan_result({"src/a.ts": "not-a-list"})
+        assembled = self._assembled(
+            nodes=[_file_node("src/a.ts"), _file_node("src/b.ts")],
+            edges=[],
+        )
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 0)
+
+    def test_no_scan_result_file(self) -> None:
+        """scan-result.json does not exist → returns empty list."""
+        assembled = self._assembled(
+            nodes=[_file_node("src/a.ts"), _file_node("src/b.ts")],
+            edges=[],
+        )
+
+        new_edges = mbg.generate_imports_from_scan(
+            assembled, self.tmp / "nonexistent.json"
+        )
+
+        self.assertEqual(len(new_edges), 0)
+
+    def test_scan_result_without_import_map(self) -> None:
+        """scan-result.json exists but has no importMap field → returns empty."""
+        import json as _j
+        self.scan_result_path.write_text(
+            _j.dumps({"files": []}), encoding="utf-8"
+        )
+        assembled = self._assembled(
+            nodes=[_file_node("src/a.ts"), _file_node("src/b.ts")],
+            edges=[],
+        )
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        self.assertEqual(len(new_edges), 0)
+
+    def test_node_without_file_path_excluded_from_mapping(self) -> None:
+        """Nodes without filePath are not included in file_path_to_id mapping."""
+        self._write_scan_result({
+            "src/a.ts": ["src/b.ts"],
+        })
+        nodes = [
+            {"id": "concept:main-concept", "type": "concept", "name": "main",
+             "summary": "", "tags": [], "complexity": "simple"},
+            _file_node("src/a.ts"),
+        ]
+        assembled = self._assembled(nodes=nodes, edges=[])
+
+        new_edges = mbg.generate_imports_from_scan(assembled, self.scan_result_path)
+
+        # src/b.ts is not in the node set → no edge generated
+        self.assertEqual(len(new_edges), 0)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -40,6 +40,42 @@ import louvain from 'graphology-communities-louvain';
  * Returns Map<path, string[]>.
  */
 async function extractExports(projectRoot, codeFiles) {
+  // Priority: read pre-extracted exports from analyze-project.mjs output
+  const exportsMapPath = join(
+    projectRoot, '.understand-anything-trae', 'intermediate', 'exports-map.json',
+  );
+  if (existsSync(exportsMapPath)) {
+    try {
+      const data = JSON.parse(readFileSync(exportsMapPath, 'utf-8'));
+      if (data.exportsMap && typeof data.exportsMap === 'object') {
+        // Only keep entries for codeFiles
+        const codeFileSet = new Set(codeFiles.map(f => f.path));
+        const filtered = new Map();
+        for (const [path, symbols] of Object.entries(data.exportsMap)) {
+          if (codeFileSet.has(path)) {
+            filtered.set(path, symbols);
+          }
+        }
+        process.stderr.write(
+          `Info: compute-batches: loaded exports from exports-map.json ` +
+          `(${filtered.size} files)\n`,
+        );
+        return filtered;
+      }
+    } catch (err) {
+      process.stderr.write(
+        `Warning: compute-batches: exports-map.json read failed (${err.message}) ` +
+        `— falling back to tree-sitter initialization\n`,
+      );
+    }
+  }
+
+  // Fallback: original tree-sitter initialization (incremental update / standalone)
+  process.stderr.write(
+    `Warning: compute-batches: exports-map.json not found ` +
+    `— falling back to tree-sitter initialization\n`,
+  );
+
   let registry;
   try {
     const tsConfigs = builtinLanguageConfigs.filter(c => c.treeSitter);
@@ -169,8 +205,10 @@ function buildNonCodeBatches(nonCodeFiles) {
     if (!remainingByDir.has(dir)) remainingByDir.set(dir, []);
     remainingByDir.get(dir).push(p);
   }
-  // Per design spec: max files per parent-dir batch for Group E.
-  const MAX_E = 20;
+  // Per design spec: max files per parent-dir batch for Group E. Non-code
+  // files have smaller metadata (no functions/classes/callGraph), so 35 is
+  // safe within 128k+ context windows.
+  const MAX_E = 35;
   for (const [, paths] of remainingByDir) {
     for (let i = 0; i < paths.length; i += MAX_E) {
       const slice = paths.slice(i, i + MAX_E);
@@ -219,7 +257,7 @@ function runLouvain(codeFiles, importMap) {
  * Returns Map<path, communityId> via alphabetical chunking of `batchSize`
  * files per batch. Deterministic, used as fallback when Louvain fails.
  */
-function countBasedAssignment(codeFiles, batchSize = 12) {
+function countBasedAssignment(codeFiles, batchSize = 25) {
   const out = new Map();
   const sorted = [...codeFiles].map(f => f.path).sort();
   for (let i = 0; i < sorted.length; i++) {
@@ -243,13 +281,13 @@ function countBasedAssignment(codeFiles, batchSize = 12) {
  * keepers first preserving their relative order, misc batches appended).
  */
 function mergeSmallBatches(bareBatches) {
-  // MIN_BATCH_SIZE=3: below this, file-analyzer dispatch overhead (subagent
+  // MIN_BATCH_SIZE=5: below this, file-analyzer dispatch overhead (subagent
   // spin-up, prompt setup) dwarfs the per-file analysis cost — not worth a
   // standalone batch.
-  const MIN_BATCH_SIZE = 3;
-  // MAX_MERGE_TARGET=25: stays below MAX_COMMUNITY_SIZE=35 so the misc-batch
+  const MIN_BATCH_SIZE = 5;
+  // MAX_MERGE_TARGET=40: stays below MAX_COMMUNITY_SIZE=60 so the misc-batch
   // agent retains headroom for neighborMap context without overflowing.
-  const MAX_MERGE_TARGET = 25;
+  const MAX_MERGE_TARGET = 40;
 
   const keepers = [];
   const smallMergeable = [];
@@ -351,10 +389,10 @@ async function main() {
   } catch (err) {
     process.stderr.write(
       `Warning: compute-batches: Louvain failed (${err.message}) ` +
-      `— falling back to count-based grouping (12 files/batch) ` +
+      `— falling back to count-based grouping (25 files/batch) ` +
       `— module semantic boundaries lost\n`,
     );
-    perFileCommunity = countBasedAssignment(codeFiles, 12);
+    perFileCommunity = countBasedAssignment(codeFiles, 25);
     algorithm = 'count-fallback';
   }
 
@@ -366,7 +404,7 @@ async function main() {
   }
 
   // Size enforcement only on louvain output. count-fallback already chunked.
-  const MAX_COMMUNITY_SIZE = 35;
+  const MAX_COMMUNITY_SIZE = 60;
   const splitCommunities = new Map();
   let nextSyntheticId = 0;
   if (algorithm === 'louvain') {

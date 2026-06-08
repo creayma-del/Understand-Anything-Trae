@@ -57,8 +57,8 @@ afterEach(() => {
   rmSync(projectRoot, { recursive: true, force: true });
 });
 
-describe("merge-batch-graphs.py imports recovery", () => {
-  it("recovers imports edges that batches dropped despite importMap having them", () => {
+describe("merge-batch-graphs.py deterministic imports generation", () => {
+  it("generates imports edges from importMap that batches did not emit", () => {
     // Batch contains all the file nodes but only emits ONE of three imports edges.
     writeFileSync(
       join(intermediateDir, "batch-0.json"),
@@ -83,10 +83,10 @@ describe("merge-batch-graphs.py imports recovery", () => {
     expect(importsEdges).toHaveLength(3);
     const targets = new Set(importsEdges.map((e) => e.target));
     expect(targets).toEqual(new Set(["file:src/b.ts", "file:src/c.ts", "file:src/d.ts"]));
-    // Recovered edges are tagged so downstream consumers can audit.
-    const recovered = importsEdges.filter((e) => e.recoveredFromImportMap);
-    expect(recovered).toHaveLength(2);
-    expect(stderr).toContain("Recovered 2 `imports` edges");
+    // Generated edges do NOT carry the legacy recoveredFromImportMap tag.
+    const tagged = importsEdges.filter((e) => e.recoveredFromImportMap);
+    expect(tagged).toHaveLength(0);
+    expect(stderr).toContain("Generated 2 `imports` edges from importMap");
   });
 
   it("does not duplicate edges the batch already emitted", () => {
@@ -107,7 +107,7 @@ describe("merge-batch-graphs.py imports recovery", () => {
     const { assembled, stderr } = runMerge();
     const importsEdges = assembled.edges.filter((e) => e.type === "imports");
     expect(importsEdges).toHaveLength(1);
-    expect(stderr).toContain("Recovered 0 `imports` edges");
+    expect(stderr).toContain("Imports edge generation: no new edges generated");
   });
 
   it("skips importMap entries whose source file is missing from the graph", () => {
@@ -128,7 +128,9 @@ describe("merge-batch-graphs.py imports recovery", () => {
 
     const { assembled, stderr } = runMerge();
     expect(assembled.edges.filter((e) => e.type === "imports")).toHaveLength(0);
-    expect(stderr).toContain("Skipped 1 importMap source files with no `file:` node");
+    // Deterministic generation silently skips paths not in the node set —
+    // no "Skipped" report (this is normal behavior, not a recovery event).
+    expect(stderr).toContain("Imports edge generation: no new edges generated");
   });
 
   it("skips importMap targets that don't have a file: node", () => {
@@ -148,7 +150,8 @@ describe("merge-batch-graphs.py imports recovery", () => {
 
     const { assembled, stderr } = runMerge();
     expect(assembled.edges.filter((e) => e.type === "imports")).toHaveLength(0);
-    expect(stderr).toContain("Skipped 2 importMap target paths with no `file:` node");
+    // Deterministic generation silently skips targets not in the node set.
+    expect(stderr).toContain("Imports edge generation: no new edges generated");
   });
 
   it("works when scan-result.json is missing (incremental update path)", () => {
@@ -163,7 +166,9 @@ describe("merge-batch-graphs.py imports recovery", () => {
 
     const { assembled, stderr } = runMerge();
     expect(assembled.edges.filter((e) => e.type === "imports")).toHaveLength(1);
-    expect(stderr).toContain("importMap recovery skipped — scan-result.json not found");
+    // When scan-result.json is absent, importMap is empty and no new edges
+    // are generated — existing LLM edges are preserved.
+    expect(stderr).toContain("Imports edge generation: no new edges generated");
   });
 
   it("never produces self-import edges", () => {
