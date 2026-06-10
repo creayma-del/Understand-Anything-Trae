@@ -1,0 +1,2966 @@
+{
+  "schemaVersion": 1,
+  "algorithm": "louvain",
+  "totalFiles": 305,
+  "totalBatches": 14,
+  "exportsByPath": {
+    ".npmrc": [],
+    ".understand-anything-trae/.understandignore": [],
+    "eslint.config.mjs": [],
+    "scripts/generate-large-graph.mjs": [],
+    "tests/skill/understand/test_analyze_project.test.mjs": [],
+    "tests/skill/understand/test_compute_batches.test.mjs": [],
+    "tests/skill/understand/test_extract_import_map.test.mjs": [],
+    "tests/skill/understand/test_extract_metadata.test.mjs": [],
+    "tests/skill/understand/test_merge_batch_graphs.py": [],
+    "tests/skill/understand/test_scan_project.test.mjs": [],
+    "tests/skill/understand/test_validate_assembly.test.mjs": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/change-classifier.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/domain-normalize.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/domain-persistence.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/domain-types.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/embedding-search.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/fingerprint.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/framework-registry.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/ignore-filter.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/ignore-generator.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/language-lesson.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/language-registry.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/layer-detector.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/normalize-graph.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/parsers.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-discovery.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-registry.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/schema.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/search.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/staleness.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/__tests__/tour-generator.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.ts": [
+      "GraphBuilder"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/analyzer/language-lesson.ts": [
+      "detectLanguageConcepts",
+      "getLanguageDisplayName",
+      "buildLanguageLessonPrompt",
+      "parseLanguageLessonResponse"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/analyzer/layer-detector.ts": [
+      "detectLayers",
+      "buildLayerDetectionPrompt",
+      "parseLayerDetectionResponse",
+      "applyLLMLayers"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/analyzer/llm-analyzer.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/analyzer/llm-analyzer.ts": [
+      "buildFileAnalysisPrompt",
+      "buildProjectSummaryPrompt",
+      "parseFileAnalysisResponse",
+      "parseProjectSummaryResponse"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/analyzer/normalize-graph.ts": [
+      "normalizeNodeId",
+      "normalizeComplexity",
+      "normalizeBatchOutput"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/analyzer/tour-generator.ts": [
+      "buildTourGenerationPrompt",
+      "parseTourGenerationResponse",
+      "generateHeuristicTour"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/change-classifier.ts": [
+      "classifyUpdate"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/embedding-search.ts": [
+      "cosineSimilarity",
+      "SemanticSearchEngine"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/fingerprint.ts": [
+      "contentHash",
+      "extractFileFingerprint",
+      "compareFingerprints",
+      "buildFingerprintStore",
+      "analyzeChanges"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/ignore-filter.ts": [
+      "DEFAULT_IGNORE_PATTERNS",
+      "createIgnoreFilter"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/ignore-generator.ts": [
+      "generateStarterIgnoreFile"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/index.ts": [
+      "KnowledgeGraphSchema",
+      "validateGraph",
+      "sanitizeGraph",
+      "autoFixGraph",
+      "COMPLEXITY_ALIASES",
+      "DIRECTION_ALIASES",
+      "ValidationResult",
+      "GraphIssue",
+      "TreeSitterPlugin",
+      "LanguageExtractor",
+      "builtinExtractors",
+      "GraphBuilder",
+      "buildFileAnalysisPrompt",
+      "buildProjectSummaryPrompt",
+      "parseFileAnalysisResponse",
+      "parseProjectSummaryResponse",
+      "LLMFileAnalysis",
+      "LLMProjectSummary",
+      "normalizeNodeId",
+      "normalizeComplexity",
+      "normalizeBatchOutput",
+      "DroppedEdge",
+      "NormalizationStats",
+      "NormalizeBatchResult",
+      "SearchEngine",
+      "SearchResult",
+      "SearchOptions",
+      "getChangedFiles",
+      "isStale",
+      "mergeGraphUpdate",
+      "StalenessResult",
+      "detectLayers",
+      "buildLayerDetectionPrompt",
+      "parseLayerDetectionResponse",
+      "applyLLMLayers",
+      "LLMLayerResponse",
+      "buildTourGenerationPrompt",
+      "parseTourGenerationResponse",
+      "generateHeuristicTour",
+      "buildLanguageLessonPrompt",
+      "parseLanguageLessonResponse",
+      "detectLanguageConcepts",
+      "LanguageLessonResult",
+      "PluginRegistry",
+      "LanguageRegistry",
+      "FrameworkRegistry",
+      "builtinLanguageConfigs",
+      "builtinFrameworkConfigs",
+      "LanguageConfigSchema",
+      "FrameworkConfigSchema",
+      "LanguageConfig",
+      "FrameworkConfig",
+      "TreeSitterConfig",
+      "FilePatternConfig",
+      "parsePluginConfig",
+      "serializePluginConfig",
+      "DEFAULT_PLUGIN_CONFIG",
+      "PluginConfig",
+      "PluginEntry",
+      "SemanticSearchEngine",
+      "cosineSimilarity",
+      "SemanticSearchOptions",
+      "extractFileFingerprint",
+      "compareFingerprints",
+      "analyzeChanges",
+      "buildFingerprintStore",
+      "contentHash",
+      "FunctionFingerprint",
+      "ClassFingerprint",
+      "ImportFingerprint",
+      "FileFingerprint",
+      "FingerprintStore",
+      "ChangeLevel",
+      "FileChangeResult",
+      "ChangeAnalysis",
+      "classifyUpdate",
+      "UpdateDecision",
+      "MarkdownParser",
+      "YAMLConfigParser",
+      "JSONConfigParser",
+      "TOMLParser",
+      "EnvParser",
+      "DockerfileParser",
+      "SQLParser",
+      "GraphQLParser",
+      "MakefileParser",
+      "ShellParser",
+      "VueSfcPlugin",
+      "SveltePlugin",
+      "CssPlugin",
+      "HtmlPlugin",
+      "registerAllParsers",
+      "createIgnoreFilter",
+      "DEFAULT_IGNORE_PATTERNS",
+      "IgnoreFilter",
+      "generateStarterIgnoreFile"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/css.ts": [
+      "cssConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/dockerfile.ts": [
+      "dockerfileConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/env.ts": [
+      "envConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/graphql.ts": [
+      "graphqlConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/html.ts": [
+      "htmlConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/index.ts": [
+      "builtinLanguageConfigs",
+      "typescriptConfig",
+      "javascriptConfig",
+      "vueSfcConfig",
+      "svelteConfig",
+      "markdownConfig",
+      "yamlConfig",
+      "jsonConfigConfig",
+      "tomlConfig",
+      "envConfig",
+      "dockerfileConfig",
+      "sqlConfig",
+      "graphqlConfig",
+      "makefileConfig",
+      "shellConfig",
+      "htmlConfig",
+      "cssConfig",
+      "restructuredtextConfig",
+      "plaintextConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/javascript.ts": [
+      "javascriptConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/json-config.ts": [
+      "jsonConfigConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/makefile.ts": [
+      "makefileConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/markdown.ts": [
+      "markdownConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/plaintext.ts": [
+      "plaintextConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/restructuredtext.ts": [
+      "restructuredtextConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/shell.ts": [
+      "shellConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/sql.ts": [
+      "sqlConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/svelte.ts": [
+      "svelteConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/toml.ts": [
+      "tomlConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/typescript.ts": [
+      "typescriptConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/vue-sfc.ts": [
+      "vueSfcConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/configs/yaml.ts": [
+      "yamlConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/framework-registry.ts": [
+      "FrameworkRegistry"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/express.ts": [
+      "expressConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/index.ts": [
+      "builtinFrameworkConfigs",
+      "reactConfig",
+      "nextjsConfig",
+      "nuxtConfig",
+      "expressConfig",
+      "vueConfig",
+      "sveltekitConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nextjs.ts": [
+      "nextjsConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nuxt.ts": [
+      "nuxtConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/react.ts": [
+      "reactConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/sveltekit.ts": [
+      "sveltekitConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/frameworks/vue.ts": [
+      "vueConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/index.ts": [
+      "LanguageConfig",
+      "TreeSitterConfig",
+      "FilePatternConfig",
+      "FrameworkConfig",
+      "LanguageConfigSchema",
+      "TreeSitterConfigSchema",
+      "FilePatternConfigSchema",
+      "FrameworkConfigSchema",
+      "LanguageRegistry",
+      "FrameworkRegistry",
+      "builtinLanguageConfigs",
+      "builtinFrameworkConfigs"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/language-registry.ts": [
+      "LanguageRegistry"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/languages/types.ts": [
+      "TreeSitterConfigSchema",
+      "FilePatternConfigSchema",
+      "LanguageConfigSchema",
+      "StrictLanguageConfigSchema",
+      "FrameworkConfigSchema"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/persistence/index.ts": [
+      "saveGraph",
+      "loadGraph",
+      "saveMeta",
+      "loadMeta",
+      "saveFingerprints",
+      "loadFingerprints",
+      "saveConfig",
+      "loadConfig",
+      "saveDomainGraph",
+      "loadDomainGraph"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/persistence/persistence.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/plugins/discovery.ts": [
+      "DEFAULT_PLUGIN_CONFIG",
+      "parsePluginConfig",
+      "serializePluginConfig"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/extractors/__tests__/react-extractor.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/plugins/extractors/base-extractor.ts": [
+      "traverse",
+      "getStringValue",
+      "findChild",
+      "findChildren",
+      "hasChildOfType"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/extractors/index.ts": [
+      "LanguageExtractor",
+      "TreeSitterNode",
+      "traverse",
+      "getStringValue",
+      "findChild",
+      "findChildren",
+      "hasChildOfType",
+      "TypeScriptExtractor",
+      "ReactExtractor",
+      "builtinExtractors"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/extractors/react-extractor.ts": [
+      "ReactExtractor"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/extractors/types.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/plugins/extractors/typescript-extractor.ts": [
+      "TypeScriptExtractor"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/css-parser.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/html-parser.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/svelte-parser.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/vue-sfc-parser.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/css-parser.ts": [
+      "CssPlugin"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/dockerfile-parser.ts": [
+      "DockerfileParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/env-parser.ts": [
+      "EnvParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/graphql-parser.ts": [
+      "GraphQLParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/html-parser.ts": [
+      "HtmlPlugin"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/index.ts": [
+      "MarkdownParser",
+      "YAMLConfigParser",
+      "JSONConfigParser",
+      "TOMLParser",
+      "EnvParser",
+      "DockerfileParser",
+      "SQLParser",
+      "GraphQLParser",
+      "MakefileParser",
+      "ShellParser",
+      "VueSfcPlugin",
+      "SveltePlugin",
+      "CssPlugin",
+      "HtmlPlugin",
+      "mergeStyleAnalysis",
+      "StyleBlockMeta",
+      "registerAllParsers"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/json-parser.ts": [
+      "stripJsoncSyntax",
+      "JSONConfigParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/makefile-parser.ts": [
+      "MakefileParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/markdown-parser.ts": [
+      "MarkdownParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/sfc-utils.ts": [
+      "mergeStyleAnalysis"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/shell-parser.ts": [
+      "ShellParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/sql-parser.ts": [
+      "SQLParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/svelte-parser.ts": [
+      "SveltePlugin"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/toml-parser.ts": [
+      "TOMLParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/vue-sfc-parser.ts": [
+      "VueSfcPlugin"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/parsers/yaml-parser.ts": [
+      "YAMLConfigParser"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/registry.ts": [
+      "PluginRegistry"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/plugins/tree-sitter-plugin.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/plugins/tree-sitter-plugin.ts": [
+      "TreeSitterPlugin"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/schema.ts": [
+      "EdgeTypeSchema",
+      "NODE_TYPE_ALIASES",
+      "EDGE_TYPE_ALIASES",
+      "COMPLEXITY_ALIASES",
+      "DIRECTION_ALIASES",
+      "sanitizeGraph",
+      "autoFixGraph",
+      "GraphNodeSchema",
+      "GraphEdgeSchema",
+      "LayerSchema",
+      "TourStepSchema",
+      "ProjectMetaSchema",
+      "KnowledgeGraphSchema",
+      "normalizeGraph",
+      "validateGraph"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/search.ts": [
+      "SearchEngine"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/staleness.ts": [
+      "getChangedFiles",
+      "isStale",
+      "mergeGraphUpdate"
+    ],
+    "understand-anything-trae-plugin/packages/core/src/types.test.ts": [],
+    "understand-anything-trae-plugin/packages/core/src/types.ts": [],
+    "understand-anything-trae-plugin/packages/core/vitest.config.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/scripts/benchmark-aggregations.mjs": [],
+    "understand-anything-trae-plugin/packages/dashboard/scripts/benchmark-layout.mjs": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/App.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/Breadcrumb.tsx": [
+      "Breadcrumb"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/CodeViewer.tsx": [
+      "CodeViewer"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/ContainerNode.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/CustomNode.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/DiffToggle.tsx": [
+      "DiffToggle"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/DomainClusterNode.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/DomainGraphView.tsx": [
+      "DomainGraphView"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/ExportMenu.tsx": [
+      "ExportMenu"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/FileExplorer.tsx": [
+      "FileExplorer"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/FilterPanel.tsx": [
+      "FilterPanel"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/FlowNode.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/GraphView.tsx": [
+      "GraphView"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/KeyboardShortcutsHelp.tsx": [
+      "KeyboardShortcutsHelp"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/KnowledgeGraphView.tsx": [
+      "KnowledgeGraphView"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/LayerClusterNode.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/LayerLegend.tsx": [
+      "LAYER_PALETTE",
+      "getLayerColor",
+      "LayerLegend"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/MobileBottomNav.tsx": [
+      "MobileBottomNav"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/MobileDrawer.tsx": [
+      "MobileDrawer"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/MobileLayout.tsx": [
+      "MobileLayout"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/NodeInfo.tsx": [
+      "NodeInfo"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/NodeTooltip.tsx": [
+      "NodeTooltip"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/PathFinderModal.tsx": [
+      "PathFinderModal"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/PersonaSelector.tsx": [
+      "PersonaSelector"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/PortalNode.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/ProjectOverview.tsx": [
+      "ProjectOverview"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/SearchBar.tsx": [
+      "SearchBar"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/StepNode.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/ThemePicker.tsx": [
+      "ThemePicker"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/TokenGate.tsx": [
+      "TokenGate"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/components/WarningBanner.tsx": [
+      "WarningBanner"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/contexts/I18nContext.tsx": [
+      "useI18n",
+      "I18nProvider"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/hooks/useIsMobile.ts": [
+      "useIsMobile"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/hooks/useKeyboardShortcuts.ts": [
+      "useKeyboardShortcuts",
+      "formatShortcutKey"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/index.css": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/locales/en.ts": [
+      "en"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/locales/index.ts": [
+      "locales",
+      "getLocale",
+      "resolveLocaleKey",
+      "en",
+      "zh"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/locales/zh.ts": [
+      "zh"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/main.tsx": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/store.ts": [
+      "ALL_NODE_TYPES",
+      "ALL_COMPLEXITIES",
+      "ALL_EDGE_CATEGORIES",
+      "EDGE_CATEGORY_MAP",
+      "DOMAIN_EDGE_TYPES",
+      "useDashboardStore"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/themes/index.ts": [
+      "ThemeProvider",
+      "useTheme",
+      "PRESETS",
+      "getPreset",
+      "getAccent",
+      "applyTheme",
+      "HeadingFont",
+      "PresetId",
+      "ThemeConfig",
+      "ThemePreset",
+      "AccentSwatch",
+      "DEFAULT_THEME_CONFIG"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/themes/presets.ts": [
+      "PRESETS",
+      "getPreset",
+      "getAccent"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/themes/theme-engine.ts": [
+      "hexToRgb",
+      "applyTheme"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/themes/ThemeContext.tsx": [
+      "ThemeProvider",
+      "useTheme"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/themes/types.ts": [
+      "DEFAULT_THEME_CONFIG"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/containers.test.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/edgeAggregation.test.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/elk-layout.test.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/filters.test.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/layerStats.test.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/smoke.test.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/containers.ts": [
+      "deriveContainers"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/edgeAggregation.ts": [
+      "aggregateLayerEdges",
+      "computePortals",
+      "findCrossLayerFileNodes",
+      "aggregateContainerEdges"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/elk-layout.ts": [
+      "repairElkInput",
+      "applyElkLayout"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/filters.ts": [
+      "filterNodes",
+      "filterEdges"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/layerStats.ts": [
+      "computeLayerStats"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/layout.ts": [
+      "NODE_WIDTH",
+      "NODE_HEIGHT",
+      "LAYER_CLUSTER_WIDTH",
+      "LAYER_CLUSTER_HEIGHT",
+      "PORTAL_NODE_WIDTH",
+      "PORTAL_NODE_HEIGHT",
+      "applyDagreLayout",
+      "applyForceLayout",
+      "ELK_DEFAULT_LAYOUT_OPTIONS",
+      "nodesToElkInput",
+      "mergeElkPositions"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/layout.worker.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/src/utils/louvain.ts": [
+      "detectCommunities"
+    ],
+    "understand-anything-trae-plugin/packages/dashboard/src/vite-env.d.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/vite.config.demo.ts": [],
+    "understand-anything-trae-plugin/packages/dashboard/vite.config.ts": [],
+    "understand-anything-trae-plugin/skills/understand-domain/extract-domain-context.py": [],
+    "understand-anything-trae-plugin/skills/understand/analyze-project.mjs": [],
+    "understand-anything-trae-plugin/skills/understand/build-fingerprints.mjs": [],
+    "understand-anything-trae-plugin/skills/understand/compute-batches.mjs": [],
+    "understand-anything-trae-plugin/skills/understand/extract-import-map.mjs": [],
+    "understand-anything-trae-plugin/skills/understand/extract-metadata.mjs": [],
+    "understand-anything-trae-plugin/skills/understand/extract-structure.mjs": [
+      "buildResult"
+    ],
+    "understand-anything-trae-plugin/skills/understand/merge-batch-graphs.py": [],
+    "understand-anything-trae-plugin/skills/understand/merge-subdomain-graphs.py": [],
+    "understand-anything-trae-plugin/skills/understand/scan-project.mjs": [
+      "detectLanguage",
+      "detectCategory",
+      "estimateComplexity"
+    ],
+    "understand-anything-trae-plugin/skills/understand/shared/import-resolution.mjs": [
+      "toPosix",
+      "resolveRelative",
+      "dirOf",
+      "parseTsConfigText",
+      "loadTsConfigs",
+      "findNearestConfigDir",
+      "buildResolutionContext",
+      "probeWithExtensions",
+      "resolveTsJsImport",
+      "matchTsAlias",
+      "applyTsAlias",
+      "stripJsLikeComments",
+      "extractRequireSources",
+      "resolveCssImport",
+      "isExternalUrl",
+      "resolveHtmlImport",
+      "TS_JS_LANGS",
+      "CSS_LANGS",
+      "HTML_LANGS",
+      "resolveImport",
+      "extractExtraImportSources",
+      "resolveImports"
+    ],
+    "understand-anything-trae-plugin/skills/understand/validate-assembly.mjs": [],
+    "understand-anything-trae-plugin/src/__tests__/diff-analyzer.test.ts": [],
+    "understand-anything-trae-plugin/src/__tests__/extract-structure.test.mjs": [],
+    "understand-anything-trae-plugin/src/__tests__/merge-recover-imports.test.mjs": [],
+    "understand-anything-trae-plugin/src/__tests__/validate-assembly.test.mjs": [],
+    "understand-anything-trae-plugin/src/__tests__/worktree-redirect.test.mjs": [],
+    "understand-anything-trae-plugin/src/diff-analyzer.ts": [
+      "buildDiffContext",
+      "formatDiffAnalysis"
+    ],
+    "understand-anything-trae-plugin/src/index.ts": [
+      "buildDiffContext",
+      "formatDiffAnalysis",
+      "DiffContext"
+    ],
+    "understand-anything-trae-plugin/vitest.config.ts": [],
+    "vitest.config.ts": []
+  },
+  "batches": [
+    {
+      "batchIndex": 1,
+      "files": [
+        {
+          "path": ".github/workflows/ci.yml",
+          "language": "yaml",
+          "sizeLines": 50,
+          "fileCategory": "infra"
+        }
+      ],
+      "batchImportData": {
+        ".github/workflows/ci.yml": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 2,
+      "files": [
+        {
+          "path": ".understand-anything-trae/config.json",
+          "language": "json",
+          "sizeLines": 4,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".understand-anything-trae/diff-overlay.json",
+          "language": "json",
+          "sizeLines": 98,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".understand-anything-trae/domain-graph.json",
+          "language": "json",
+          "sizeLines": 1447,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".understand-anything-trae/fingerprints.json",
+          "language": "json",
+          "sizeLines": 10107,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".understand-anything-trae/knowledge-graph.json",
+          "language": "json",
+          "sizeLines": 14460,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".understand-anything-trae/meta.json",
+          "language": "json",
+          "sizeLines": 6,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        ".understand-anything-trae/config.json": [],
+        ".understand-anything-trae/diff-overlay.json": [],
+        ".understand-anything-trae/domain-graph.json": [],
+        ".understand-anything-trae/fingerprints.json": [],
+        ".understand-anything-trae/knowledge-graph.json": [],
+        ".understand-anything-trae/meta.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 3,
+      "files": [
+        {
+          "path": "CLAUDE.md",
+          "language": "markdown",
+          "sizeLines": 91,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "CODE_OF_CONDUCT.md",
+          "language": "markdown",
+          "sizeLines": 39,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "CONTRIBUTING.md",
+          "language": "markdown",
+          "sizeLines": 274,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "README.md",
+          "language": "markdown",
+          "sizeLines": 254,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "SECURITY.md",
+          "language": "markdown",
+          "sizeLines": 51,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "install.ps1",
+          "language": "powershell",
+          "sizeLines": 224,
+          "fileCategory": "script"
+        },
+        {
+          "path": "install.sh",
+          "language": "shell",
+          "sizeLines": 267,
+          "fileCategory": "script"
+        },
+        {
+          "path": "package.json",
+          "language": "json",
+          "sizeLines": 50,
+          "fileCategory": "config"
+        },
+        {
+          "path": "pnpm-workspace.yaml",
+          "language": "yaml",
+          "sizeLines": 3,
+          "fileCategory": "config"
+        },
+        {
+          "path": "tsconfig.json",
+          "language": "json",
+          "sizeLines": 16,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "CLAUDE.md": [],
+        "CODE_OF_CONDUCT.md": [],
+        "CONTRIBUTING.md": [],
+        "README.md": [],
+        "SECURITY.md": [],
+        "install.ps1": [],
+        "install.sh": [],
+        "package.json": [],
+        "pnpm-workspace.yaml": [],
+        "tsconfig.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 4,
+      "files": [
+        {
+          "path": "docs/specs/p0-frontend-language-support.md",
+          "language": "markdown",
+          "sizeLines": 235,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p0-implementation-plan.md",
+          "language": "markdown",
+          "sizeLines": 236,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p0.1-vue-sfc.md",
+          "language": "markdown",
+          "sizeLines": 661,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p0.2-svelte.md",
+          "language": "markdown",
+          "sizeLines": 772,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p0.3-scss-enhancement.md",
+          "language": "markdown",
+          "sizeLines": 370,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p0.4-remove-python-support.md",
+          "language": "markdown",
+          "sizeLines": 470,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1-frontend-ecosystem-deepening.md",
+          "language": "markdown",
+          "sizeLines": 749,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1-implementation-plan.md",
+          "language": "markdown",
+          "sizeLines": 619,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1.1-css-scss-parser.md",
+          "language": "markdown",
+          "sizeLines": 792,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1.2-html-parser.md",
+          "language": "markdown",
+          "sizeLines": 764,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1.3-vue-svelte-test-coverage.md",
+          "language": "markdown",
+          "sizeLines": 440,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1.4-react-jsx-extractor.md",
+          "language": "markdown",
+          "sizeLines": 1072,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1.5-nuxt-framework.md",
+          "language": "markdown",
+          "sizeLines": 502,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1.6-sveltekit-framework.md",
+          "language": "markdown",
+          "sizeLines": 412,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1.7-vue-svelte-style-block.md",
+          "language": "markdown",
+          "sizeLines": 817,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p1.8-css-in-js-support.md",
+          "language": "markdown",
+          "sizeLines": 1035,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p2-implementation-plan.md",
+          "language": "markdown",
+          "sizeLines": 432,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p2-performance-optimization.md",
+          "language": "markdown",
+          "sizeLines": 672,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p2.1-batch-parameter-tuning.md",
+          "language": "markdown",
+          "sizeLines": 670,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p2.2-deterministic-imports-edges.md",
+          "language": "markdown",
+          "sizeLines": 599,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p2.3-structure-pre-extraction.md",
+          "language": "markdown",
+          "sizeLines": 813,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p2.4-unified-analysis-pipeline.md",
+          "language": "markdown",
+          "sizeLines": 975,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p2.5-deterministic-metadata-extraction.md",
+          "language": "markdown",
+          "sizeLines": 659,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "docs/specs/p2.6-deterministic-assembly-validation.md",
+          "language": "markdown",
+          "sizeLines": 913,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "docs/specs/p0-frontend-language-support.md": [],
+        "docs/specs/p0-implementation-plan.md": [],
+        "docs/specs/p0.1-vue-sfc.md": [],
+        "docs/specs/p0.2-svelte.md": [],
+        "docs/specs/p0.3-scss-enhancement.md": [],
+        "docs/specs/p0.4-remove-python-support.md": [],
+        "docs/specs/p1-frontend-ecosystem-deepening.md": [],
+        "docs/specs/p1-implementation-plan.md": [],
+        "docs/specs/p1.1-css-scss-parser.md": [],
+        "docs/specs/p1.2-html-parser.md": [],
+        "docs/specs/p1.3-vue-svelte-test-coverage.md": [],
+        "docs/specs/p1.4-react-jsx-extractor.md": [],
+        "docs/specs/p1.5-nuxt-framework.md": [],
+        "docs/specs/p1.6-sveltekit-framework.md": [],
+        "docs/specs/p1.7-vue-svelte-style-block.md": [],
+        "docs/specs/p1.8-css-in-js-support.md": [],
+        "docs/specs/p2-implementation-plan.md": [],
+        "docs/specs/p2-performance-optimization.md": [],
+        "docs/specs/p2.1-batch-parameter-tuning.md": [],
+        "docs/specs/p2.2-deterministic-imports-edges.md": [],
+        "docs/specs/p2.3-structure-pre-extraction.md": [],
+        "docs/specs/p2.4-unified-analysis-pipeline.md": [],
+        "docs/specs/p2.5-deterministic-metadata-extraction.md": [],
+        "docs/specs/p2.6-deterministic-assembly-validation.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 5,
+      "files": [
+        {
+          "path": "tests/skill/understand/fixtures/scan-result-3-cliques.json",
+          "language": "json",
+          "sizeLines": 31,
+          "fileCategory": "config"
+        },
+        {
+          "path": "tests/skill/understand/fixtures/scan-result-large-community.json",
+          "language": "json",
+          "sizeLines": 1895,
+          "fileCategory": "config"
+        },
+        {
+          "path": "tests/skill/understand/fixtures/scan-result-merge-respects-non-mergeable.json",
+          "language": "json",
+          "sizeLines": 232,
+          "fileCategory": "config"
+        },
+        {
+          "path": "tests/skill/understand/fixtures/scan-result-non-code.json",
+          "language": "json",
+          "sizeLines": 40,
+          "fileCategory": "config"
+        },
+        {
+          "path": "tests/skill/understand/fixtures/scan-result-singletons.json",
+          "language": "json",
+          "sizeLines": 715,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "tests/skill/understand/fixtures/scan-result-3-cliques.json": [],
+        "tests/skill/understand/fixtures/scan-result-large-community.json": [],
+        "tests/skill/understand/fixtures/scan-result-merge-respects-non-mergeable.json": [],
+        "tests/skill/understand/fixtures/scan-result-non-code.json": [],
+        "tests/skill/understand/fixtures/scan-result-singletons.json": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 6,
+      "files": [
+        {
+          "path": "understand-anything-trae-plugin/agents/architecture-analyzer.md",
+          "language": "markdown",
+          "sizeLines": 468,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/agents/assemble-reviewer.md",
+          "language": "markdown",
+          "sizeLines": 96,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/agents/domain-analyzer.md",
+          "language": "markdown",
+          "sizeLines": 124,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/agents/file-analyzer.md",
+          "language": "markdown",
+          "sizeLines": 466,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/agents/graph-reviewer.md",
+          "language": "markdown",
+          "sizeLines": 239,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/agents/knowledge-graph-guide.md",
+          "language": "markdown",
+          "sizeLines": 98,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/agents/project-scanner.md",
+          "language": "markdown",
+          "sizeLines": 235,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/agents/tour-builder.md",
+          "language": "markdown",
+          "sizeLines": 371,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "understand-anything-trae-plugin/agents/architecture-analyzer.md": [],
+        "understand-anything-trae-plugin/agents/assemble-reviewer.md": [],
+        "understand-anything-trae-plugin/agents/domain-analyzer.md": [],
+        "understand-anything-trae-plugin/agents/file-analyzer.md": [],
+        "understand-anything-trae-plugin/agents/graph-reviewer.md": [],
+        "understand-anything-trae-plugin/agents/knowledge-graph-guide.md": [],
+        "understand-anything-trae-plugin/agents/project-scanner.md": [],
+        "understand-anything-trae-plugin/agents/tour-builder.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 7,
+      "files": [
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/express.md",
+          "language": "markdown",
+          "sizeLines": 57,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/gin.md",
+          "language": "markdown",
+          "sizeLines": 59,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/nextjs.md",
+          "language": "markdown",
+          "sizeLines": 59,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/nuxt.md",
+          "language": "markdown",
+          "sizeLines": 69,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/rails.md",
+          "language": "markdown",
+          "sizeLines": 65,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/react.md",
+          "language": "markdown",
+          "sizeLines": 55,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/spring.md",
+          "language": "markdown",
+          "sizeLines": 59,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/sveltekit.md",
+          "language": "markdown",
+          "sizeLines": 83,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/frameworks/vue.md",
+          "language": "markdown",
+          "sizeLines": 59,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "understand-anything-trae-plugin/skills/understand/frameworks/express.md": [],
+        "understand-anything-trae-plugin/skills/understand/frameworks/gin.md": [],
+        "understand-anything-trae-plugin/skills/understand/frameworks/nextjs.md": [],
+        "understand-anything-trae-plugin/skills/understand/frameworks/nuxt.md": [],
+        "understand-anything-trae-plugin/skills/understand/frameworks/rails.md": [],
+        "understand-anything-trae-plugin/skills/understand/frameworks/react.md": [],
+        "understand-anything-trae-plugin/skills/understand/frameworks/spring.md": [],
+        "understand-anything-trae-plugin/skills/understand/frameworks/sveltekit.md": [],
+        "understand-anything-trae-plugin/skills/understand/frameworks/vue.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 8,
+      "files": [
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/css-in-js.md",
+          "language": "markdown",
+          "sizeLines": 41,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/css.md",
+          "language": "markdown",
+          "sizeLines": 91,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/dockerfile.md",
+          "language": "markdown",
+          "sizeLines": 34,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/graphql.md",
+          "language": "markdown",
+          "sizeLines": 35,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/html.md",
+          "language": "markdown",
+          "sizeLines": 34,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/javascript.md",
+          "language": "markdown",
+          "sizeLines": 46,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/json.md",
+          "language": "markdown",
+          "sizeLines": 34,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/markdown.md",
+          "language": "markdown",
+          "sizeLines": 34,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/shell.md",
+          "language": "markdown",
+          "sizeLines": 35,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/sql.md",
+          "language": "markdown",
+          "sizeLines": 36,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/svelte.md",
+          "language": "markdown",
+          "sizeLines": 53,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/typescript.md",
+          "language": "markdown",
+          "sizeLines": 46,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/vue-sfc.md",
+          "language": "markdown",
+          "sizeLines": 40,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/languages/yaml.md",
+          "language": "markdown",
+          "sizeLines": 35,
+          "fileCategory": "docs"
+        }
+      ],
+      "batchImportData": {
+        "understand-anything-trae-plugin/skills/understand/languages/css-in-js.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/css.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/dockerfile.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/graphql.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/html.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/javascript.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/json.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/markdown.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/shell.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/sql.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/svelte.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/typescript.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/vue-sfc.md": [],
+        "understand-anything-trae-plugin/skills/understand/languages/yaml.md": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 9,
+      "files": [
+        {
+          "path": ".github/FUNDING.yml",
+          "language": "yaml",
+          "sizeLines": 1,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/bug_report.yml",
+          "language": "yaml",
+          "sizeLines": 81,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/config.yml",
+          "language": "yaml",
+          "sizeLines": 8,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/feature_request.yml",
+          "language": "yaml",
+          "sizeLines": 34,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/ISSUE_TEMPLATE/question.yml",
+          "language": "yaml",
+          "sizeLines": 24,
+          "fileCategory": "config"
+        },
+        {
+          "path": ".github/PULL_REQUEST_TEMPLATE.md",
+          "language": "markdown",
+          "sizeLines": 26,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".npmrc",
+          "language": "unknown",
+          "sizeLines": 2,
+          "fileCategory": "code"
+        },
+        {
+          "path": ".trae/skills/understand-dashboard/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 87,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".trae/skills/understand-diff/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 71,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".trae/skills/understand-domain/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 128,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".trae/skills/understand/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 838,
+          "fileCategory": "docs"
+        },
+        {
+          "path": ".understand-anything-trae/.understandignore",
+          "language": "unknown",
+          "sizeLines": 34,
+          "fileCategory": "code"
+        },
+        {
+          "path": ".understand-anything-trae/intermediate/scan-result.json",
+          "language": "json",
+          "sizeLines": 2090,
+          "fileCategory": "config"
+        },
+        {
+          "path": "eslint.config.mjs",
+          "language": "javascript",
+          "sizeLines": 53,
+          "fileCategory": "code"
+        },
+        {
+          "path": "READMEs/README.zh-CN.md",
+          "language": "markdown",
+          "sizeLines": 254,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "scripts/generate-large-graph.mjs",
+          "language": "javascript",
+          "sizeLines": 297,
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/skill/understand/test_analyze_project.test.mjs",
+          "language": "javascript",
+          "sizeLines": 261,
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/skill/understand/test_compute_batches.test.mjs",
+          "language": "javascript",
+          "sizeLines": 911,
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/skill/understand/test_extract_import_map.test.mjs",
+          "language": "javascript",
+          "sizeLines": 672,
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/skill/understand/test_extract_metadata.test.mjs",
+          "language": "javascript",
+          "sizeLines": 468,
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/skill/understand/test_merge_batch_graphs.py",
+          "language": "py",
+          "sizeLines": 1289,
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/skill/understand/test_scan_project.test.mjs",
+          "language": "javascript",
+          "sizeLines": 708,
+          "fileCategory": "code"
+        },
+        {
+          "path": "tests/skill/understand/test_validate_assembly.test.mjs",
+          "language": "javascript",
+          "sizeLines": 281,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/hooks/auto-update-prompt.md",
+          "language": "markdown",
+          "sizeLines": 320,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/hooks/hooks.json",
+          "language": "json",
+          "sizeLines": 25,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/package.json",
+          "language": "json",
+          "sizeLines": 21,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/package.json",
+          "language": "json",
+          "sizeLines": 53,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/change-classifier.test.ts",
+          "language": "typescript",
+          "sizeLines": 183,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/domain-normalize.test.ts",
+          "language": "typescript",
+          "sizeLines": 46,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/domain-persistence.test.ts",
+          "language": "typescript",
+          "sizeLines": 64,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/domain-types.test.ts",
+          "language": "typescript",
+          "sizeLines": 141,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/embedding-search.test.ts",
+          "language": "typescript",
+          "sizeLines": 92,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/fingerprint.test.ts",
+          "language": "typescript",
+          "sizeLines": 427,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/framework-registry.test.ts",
+          "language": "typescript",
+          "sizeLines": 241,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/ignore-filter.test.ts",
+          "language": "typescript",
+          "sizeLines": 155,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/ignore-generator.test.ts",
+          "language": "typescript",
+          "sizeLines": 162,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/language-lesson.test.ts",
+          "language": "typescript",
+          "sizeLines": 157,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/language-registry.test.ts",
+          "language": "typescript",
+          "sizeLines": 183,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/layer-detector.test.ts",
+          "language": "typescript",
+          "sizeLines": 188,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/normalize-graph.test.ts",
+          "language": "typescript",
+          "sizeLines": 498,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        ".github/FUNDING.yml": [],
+        ".github/ISSUE_TEMPLATE/bug_report.yml": [],
+        ".github/ISSUE_TEMPLATE/config.yml": [],
+        ".github/ISSUE_TEMPLATE/feature_request.yml": [],
+        ".github/ISSUE_TEMPLATE/question.yml": [],
+        ".github/PULL_REQUEST_TEMPLATE.md": [],
+        ".npmrc": [],
+        ".trae/skills/understand-dashboard/SKILL.md": [],
+        ".trae/skills/understand-diff/SKILL.md": [],
+        ".trae/skills/understand-domain/SKILL.md": [],
+        ".trae/skills/understand/SKILL.md": [],
+        ".understand-anything-trae/.understandignore": [],
+        ".understand-anything-trae/intermediate/scan-result.json": [],
+        "eslint.config.mjs": [],
+        "READMEs/README.zh-CN.md": [],
+        "scripts/generate-large-graph.mjs": [],
+        "tests/skill/understand/test_analyze_project.test.mjs": [],
+        "tests/skill/understand/test_compute_batches.test.mjs": [],
+        "tests/skill/understand/test_extract_import_map.test.mjs": [],
+        "tests/skill/understand/test_extract_metadata.test.mjs": [],
+        "tests/skill/understand/test_merge_batch_graphs.py": [],
+        "tests/skill/understand/test_scan_project.test.mjs": [],
+        "tests/skill/understand/test_validate_assembly.test.mjs": [],
+        "understand-anything-trae-plugin/hooks/auto-update-prompt.md": [],
+        "understand-anything-trae-plugin/hooks/hooks.json": [],
+        "understand-anything-trae-plugin/package.json": [],
+        "understand-anything-trae-plugin/packages/core/package.json": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/change-classifier.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/domain-normalize.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/domain-persistence.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/domain-types.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/embedding-search.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/fingerprint.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/framework-registry.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/ignore-filter.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/ignore-generator.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/language-lesson.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/language-registry.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/layer-detector.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/normalize-graph.test.ts": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 10,
+      "files": [
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/parsers.test.ts",
+          "language": "typescript",
+          "sizeLines": 541,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-discovery.test.ts",
+          "language": "typescript",
+          "sizeLines": 115,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-registry.test.ts",
+          "language": "typescript",
+          "sizeLines": 225,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/schema.test.ts",
+          "language": "typescript",
+          "sizeLines": 729,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/search.test.ts",
+          "language": "typescript",
+          "sizeLines": 158,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/staleness.test.ts",
+          "language": "typescript",
+          "sizeLines": 253,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/__tests__/tour-generator.test.ts",
+          "language": "typescript",
+          "sizeLines": 269,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.test.ts",
+          "language": "typescript",
+          "sizeLines": 400,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.ts",
+          "language": "typescript",
+          "sizeLines": 337,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/analyzer/language-lesson.ts",
+          "language": "typescript",
+          "sizeLines": 210,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/analyzer/layer-detector.ts",
+          "language": "typescript",
+          "sizeLines": 284,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/analyzer/llm-analyzer.test.ts",
+          "language": "typescript",
+          "sizeLines": 248,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/analyzer/llm-analyzer.ts",
+          "language": "typescript",
+          "sizeLines": 186,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/analyzer/normalize-graph.ts",
+          "language": "typescript",
+          "sizeLines": 329,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/analyzer/tour-generator.ts",
+          "language": "typescript",
+          "sizeLines": 293,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/change-classifier.ts",
+          "language": "typescript",
+          "sizeLines": 143,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/embedding-search.ts",
+          "language": "typescript",
+          "sizeLines": 83,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/fingerprint.ts",
+          "language": "typescript",
+          "sizeLines": 385,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/ignore-filter.ts",
+          "language": "typescript",
+          "sizeLines": 111,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/ignore-generator.ts",
+          "language": "typescript",
+          "sizeLines": 102,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/index.ts",
+          "language": "typescript",
+          "sizeLines": 126,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/css.ts",
+          "language": "typescript",
+          "sizeLines": 77,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/dockerfile.ts",
+          "language": "typescript",
+          "sizeLines": 15,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/env.ts",
+          "language": "typescript",
+          "sizeLines": 15,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/graphql.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/html.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/index.ts",
+          "language": "typescript",
+          "sizeLines": 66,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/javascript.ts",
+          "language": "typescript",
+          "sizeLines": 29,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/json-config.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/makefile.ts",
+          "language": "typescript",
+          "sizeLines": 15,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/markdown.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/plaintext.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/restructuredtext.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/shell.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/sql.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/svelte.ts",
+          "language": "typescript",
+          "sizeLines": 62,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/toml.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/typescript.ts",
+          "language": "typescript",
+          "sizeLines": 30,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/vue-sfc.ts",
+          "language": "typescript",
+          "sizeLines": 55,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/configs/yaml.ts",
+          "language": "typescript",
+          "sizeLines": 14,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "understand-anything-trae-plugin/packages/core/src/__tests__/parsers.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-discovery.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/plugin-registry.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/schema.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/search.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/staleness.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/__tests__/tour-generator.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/analyzer/graph-builder.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/analyzer/language-lesson.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/analyzer/layer-detector.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/analyzer/llm-analyzer.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/analyzer/llm-analyzer.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/analyzer/normalize-graph.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/analyzer/tour-generator.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/change-classifier.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/embedding-search.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/fingerprint.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/ignore-filter.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/ignore-generator.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/index.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/css.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/dockerfile.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/env.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/graphql.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/html.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/index.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/javascript.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/json-config.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/makefile.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/markdown.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/plaintext.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/restructuredtext.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/shell.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/sql.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/svelte.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/toml.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/typescript.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/vue-sfc.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/configs/yaml.ts": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 11,
+      "files": [
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/framework-registry.ts",
+          "language": "typescript",
+          "sizeLines": 86,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/express.ts",
+          "language": "typescript",
+          "sizeLines": 26,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/index.ts",
+          "language": "typescript",
+          "sizeLines": 29,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nextjs.ts",
+          "language": "typescript",
+          "sizeLines": 23,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nuxt.ts",
+          "language": "typescript",
+          "sizeLines": 33,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/react.ts",
+          "language": "typescript",
+          "sizeLines": 19,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/sveltekit.ts",
+          "language": "typescript",
+          "sizeLines": 24,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/frameworks/vue.ts",
+          "language": "typescript",
+          "sizeLines": 19,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/index.ts",
+          "language": "typescript",
+          "sizeLines": 22,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/language-registry.ts",
+          "language": "typescript",
+          "sizeLines": 64,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/languages/types.ts",
+          "language": "typescript",
+          "sizeLines": 62,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/persistence/index.ts",
+          "language": "typescript",
+          "sizeLines": 182,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/persistence/persistence.test.ts",
+          "language": "typescript",
+          "sizeLines": 204,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/discovery.ts",
+          "language": "typescript",
+          "sizeLines": 68,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/__tests__/react-extractor.test.ts",
+          "language": "typescript",
+          "sizeLines": 490,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/base-extractor.ts",
+          "language": "typescript",
+          "sizeLines": 52,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/index.ts",
+          "language": "typescript",
+          "sizeLines": 11,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/react-extractor.ts",
+          "language": "typescript",
+          "sizeLines": 1121,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/types.ts",
+          "language": "typescript",
+          "sizeLines": 19,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/extractors/typescript-extractor.ts",
+          "language": "typescript",
+          "sizeLines": 494,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/css-parser.test.ts",
+          "language": "typescript",
+          "sizeLines": 261,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/html-parser.test.ts",
+          "language": "typescript",
+          "sizeLines": 455,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/svelte-parser.test.ts",
+          "language": "typescript",
+          "sizeLines": 443,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/vue-sfc-parser.test.ts",
+          "language": "typescript",
+          "sizeLines": 554,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/css-parser.ts",
+          "language": "typescript",
+          "sizeLines": 287,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/dockerfile-parser.ts",
+          "language": "typescript",
+          "sizeLines": 86,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/env-parser.ts",
+          "language": "typescript",
+          "sizeLines": 41,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/graphql-parser.ts",
+          "language": "typescript",
+          "sizeLines": 122,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/html-parser.ts",
+          "language": "typescript",
+          "sizeLines": 297,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/index.ts",
+          "language": "typescript",
+          "sizeLines": 71,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/json-parser.ts",
+          "language": "typescript",
+          "sizeLines": 134,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/makefile-parser.ts",
+          "language": "typescript",
+          "sizeLines": 51,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/markdown-parser.ts",
+          "language": "typescript",
+          "sizeLines": 78,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/sfc-utils.ts",
+          "language": "typescript",
+          "sizeLines": 66,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/shell-parser.ts",
+          "language": "typescript",
+          "sizeLines": 84,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/sql-parser.ts",
+          "language": "typescript",
+          "sizeLines": 102,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/svelte-parser.ts",
+          "language": "typescript",
+          "sizeLines": 330,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/toml-parser.ts",
+          "language": "typescript",
+          "sizeLines": 46,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/vue-sfc-parser.ts",
+          "language": "typescript",
+          "sizeLines": 276,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/parsers/yaml-parser.ts",
+          "language": "typescript",
+          "sizeLines": 98,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "understand-anything-trae-plugin/packages/core/src/languages/framework-registry.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/frameworks/express.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/frameworks/index.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nextjs.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/frameworks/nuxt.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/frameworks/react.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/frameworks/sveltekit.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/frameworks/vue.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/index.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/language-registry.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/languages/types.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/persistence/index.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/persistence/persistence.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/discovery.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/extractors/__tests__/react-extractor.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/extractors/base-extractor.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/extractors/index.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/extractors/react-extractor.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/extractors/types.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/extractors/typescript-extractor.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/css-parser.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/html-parser.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/svelte-parser.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/__tests__/vue-sfc-parser.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/css-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/dockerfile-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/env-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/graphql-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/html-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/index.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/json-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/makefile-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/markdown-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/sfc-utils.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/shell-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/sql-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/svelte-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/toml-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/vue-sfc-parser.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/parsers/yaml-parser.ts": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 12,
+      "files": [
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/registry.ts",
+          "language": "typescript",
+          "sizeLines": 81,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/tree-sitter-plugin.test.ts",
+          "language": "typescript",
+          "sizeLines": 307,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/plugins/tree-sitter-plugin.ts",
+          "language": "typescript",
+          "sizeLines": 298,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/schema.ts",
+          "language": "typescript",
+          "sizeLines": 663,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/search.ts",
+          "language": "typescript",
+          "sizeLines": 65,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/staleness.ts",
+          "language": "typescript",
+          "sizeLines": 90,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/types.test.ts",
+          "language": "typescript",
+          "sizeLines": 203,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/src/types.ts",
+          "language": "typescript",
+          "sizeLines": 240,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/tsconfig.json",
+          "language": "json",
+          "sizeLines": 19,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/core/vitest.config.ts",
+          "language": "typescript",
+          "sizeLines": 7,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/index.html",
+          "language": "html",
+          "sizeLines": 19,
+          "fileCategory": "markup"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/package.json",
+          "language": "json",
+          "sizeLines": 43,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/public/knowledge-graph.json",
+          "language": "json",
+          "sizeLines": 3012,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/scripts/benchmark-aggregations.mjs",
+          "language": "javascript",
+          "sizeLines": 99,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/scripts/benchmark-layout.mjs",
+          "language": "javascript",
+          "sizeLines": 80,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/App.tsx",
+          "language": "typescript",
+          "sizeLines": 670,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/Breadcrumb.tsx",
+          "language": "typescript",
+          "sizeLines": 40,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/CodeViewer.tsx",
+          "language": "typescript",
+          "sizeLines": 259,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/ContainerNode.tsx",
+          "language": "typescript",
+          "sizeLines": 101,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/CustomNode.tsx",
+          "language": "typescript",
+          "sizeLines": 190,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/DiffToggle.tsx",
+          "language": "typescript",
+          "sizeLines": 66,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/DomainClusterNode.tsx",
+          "language": "typescript",
+          "sizeLines": 66,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/DomainGraphView.tsx",
+          "language": "typescript",
+          "sizeLines": 279,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/ExportMenu.tsx",
+          "language": "typescript",
+          "sizeLines": 279,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/FileExplorer.tsx",
+          "language": "typescript",
+          "sizeLines": 214,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/FilterPanel.tsx",
+          "language": "typescript",
+          "sizeLines": 219,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/FlowNode.tsx",
+          "language": "typescript",
+          "sizeLines": 52,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/GraphView.tsx",
+          "language": "typescript",
+          "sizeLines": 1581,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/KeyboardShortcutsHelp.tsx",
+          "language": "typescript",
+          "sizeLines": 105,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/KnowledgeGraphView.tsx",
+          "language": "typescript",
+          "sizeLines": 292,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/LayerClusterNode.tsx",
+          "language": "typescript",
+          "sizeLines": 104,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/LayerLegend.tsx",
+          "language": "typescript",
+          "sizeLines": 72,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/MobileBottomNav.tsx",
+          "language": "typescript",
+          "sizeLines": 71,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/MobileDrawer.tsx",
+          "language": "typescript",
+          "sizeLines": 261,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/MobileLayout.tsx",
+          "language": "typescript",
+          "sizeLines": 221,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/NodeInfo.tsx",
+          "language": "typescript",
+          "sizeLines": 539,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/NodeTooltip.tsx",
+          "language": "typescript",
+          "sizeLines": 124,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/PathFinderModal.tsx",
+          "language": "typescript",
+          "sizeLines": 311,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/PersonaSelector.tsx",
+          "language": "typescript",
+          "sizeLines": 46,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/PortalNode.tsx",
+          "language": "typescript",
+          "sizeLines": 64,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "understand-anything-trae-plugin/packages/core/src/plugins/registry.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/tree-sitter-plugin.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/plugins/tree-sitter-plugin.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/schema.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/search.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/staleness.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/types.test.ts": [],
+        "understand-anything-trae-plugin/packages/core/src/types.ts": [],
+        "understand-anything-trae-plugin/packages/core/tsconfig.json": [],
+        "understand-anything-trae-plugin/packages/core/vitest.config.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/index.html": [],
+        "understand-anything-trae-plugin/packages/dashboard/package.json": [],
+        "understand-anything-trae-plugin/packages/dashboard/public/knowledge-graph.json": [],
+        "understand-anything-trae-plugin/packages/dashboard/scripts/benchmark-aggregations.mjs": [],
+        "understand-anything-trae-plugin/packages/dashboard/scripts/benchmark-layout.mjs": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/App.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/Breadcrumb.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/CodeViewer.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/ContainerNode.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/CustomNode.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/DiffToggle.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/DomainClusterNode.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/DomainGraphView.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/ExportMenu.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/FileExplorer.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/FilterPanel.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/FlowNode.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/GraphView.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/KeyboardShortcutsHelp.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/KnowledgeGraphView.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/LayerClusterNode.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/LayerLegend.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/MobileBottomNav.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/MobileDrawer.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/MobileLayout.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/NodeInfo.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/NodeTooltip.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/PathFinderModal.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/PersonaSelector.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/PortalNode.tsx": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 13,
+      "files": [
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/ProjectOverview.tsx",
+          "language": "typescript",
+          "sizeLines": 222,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/SearchBar.tsx",
+          "language": "typescript",
+          "sizeLines": 191,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/StepNode.tsx",
+          "language": "typescript",
+          "sizeLines": 53,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/ThemePicker.tsx",
+          "language": "typescript",
+          "sizeLines": 180,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/TokenGate.tsx",
+          "language": "typescript",
+          "sizeLines": 79,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/components/WarningBanner.tsx",
+          "language": "typescript",
+          "sizeLines": 253,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/contexts/I18nContext.tsx",
+          "language": "typescript",
+          "sizeLines": 43,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/hooks/useIsMobile.ts",
+          "language": "typescript",
+          "sizeLines": 21,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/hooks/useKeyboardShortcuts.ts",
+          "language": "typescript",
+          "sizeLines": 71,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/index.css",
+          "language": "css",
+          "sizeLines": 265,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/locales/en.ts",
+          "language": "typescript",
+          "sizeLines": 305,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/locales/index.ts",
+          "language": "typescript",
+          "sizeLines": 23,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/locales/zh.ts",
+          "language": "typescript",
+          "sizeLines": 305,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/main.tsx",
+          "language": "typescript",
+          "sizeLines": 10,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/store.ts",
+          "language": "typescript",
+          "sizeLines": 777,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/themes/index.ts",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/themes/presets.ts",
+          "language": "typescript",
+          "sizeLines": 183,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/themes/theme-engine.ts",
+          "language": "typescript",
+          "sizeLines": 65,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/themes/ThemeContext.tsx",
+          "language": "typescript",
+          "sizeLines": 106,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/themes/types.ts",
+          "language": "typescript",
+          "sizeLines": 36,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/containers.test.ts",
+          "language": "typescript",
+          "sizeLines": 131,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/edgeAggregation.test.ts",
+          "language": "typescript",
+          "sizeLines": 79,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/elk-layout.test.ts",
+          "language": "typescript",
+          "sizeLines": 106,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/filters.test.ts",
+          "language": "typescript",
+          "sizeLines": 196,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/layerStats.test.ts",
+          "language": "typescript",
+          "sizeLines": 118,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/smoke.test.ts",
+          "language": "typescript",
+          "sizeLines": 20,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/containers.ts",
+          "language": "typescript",
+          "sizeLines": 156,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/edgeAggregation.ts",
+          "language": "typescript",
+          "sizeLines": 208,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/elk-layout.ts",
+          "language": "typescript",
+          "sizeLines": 244,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/filters.ts",
+          "language": "typescript",
+          "sizeLines": 88,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/layerStats.ts",
+          "language": "typescript",
+          "sizeLines": 39,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/layout.ts",
+          "language": "typescript",
+          "sizeLines": 266,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/layout.worker.ts",
+          "language": "typescript",
+          "sizeLines": 47,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/utils/louvain.ts",
+          "language": "typescript",
+          "sizeLines": 47,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/src/vite-env.d.ts",
+          "language": "typescript",
+          "sizeLines": 1,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/tsconfig.app.json",
+          "language": "json",
+          "sizeLines": 24,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/tsconfig.json",
+          "language": "json",
+          "sizeLines": 4,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/vite.config.demo.ts",
+          "language": "typescript",
+          "sizeLines": 49,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/packages/dashboard/vite.config.ts",
+          "language": "typescript",
+          "sizeLines": 351,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/pnpm-workspace.yaml",
+          "language": "yaml",
+          "sizeLines": 2,
+          "fileCategory": "config"
+        }
+      ],
+      "batchImportData": {
+        "understand-anything-trae-plugin/packages/dashboard/src/components/ProjectOverview.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/SearchBar.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/StepNode.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/ThemePicker.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/TokenGate.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/components/WarningBanner.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/contexts/I18nContext.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/hooks/useIsMobile.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/hooks/useKeyboardShortcuts.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/index.css": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/locales/en.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/locales/index.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/locales/zh.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/main.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/store.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/themes/index.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/themes/presets.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/themes/theme-engine.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/themes/ThemeContext.tsx": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/themes/types.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/containers.test.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/edgeAggregation.test.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/elk-layout.test.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/filters.test.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/layerStats.test.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/__tests__/smoke.test.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/containers.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/edgeAggregation.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/elk-layout.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/filters.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/layerStats.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/layout.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/layout.worker.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/utils/louvain.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/src/vite-env.d.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/tsconfig.app.json": [],
+        "understand-anything-trae-plugin/packages/dashboard/tsconfig.json": [],
+        "understand-anything-trae-plugin/packages/dashboard/vite.config.demo.ts": [],
+        "understand-anything-trae-plugin/packages/dashboard/vite.config.ts": [],
+        "understand-anything-trae-plugin/pnpm-workspace.yaml": []
+      },
+      "neighborMap": {}
+    },
+    {
+      "batchIndex": 14,
+      "files": [
+        {
+          "path": "understand-anything-trae-plugin/skills/understand-dashboard/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 89,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand-diff/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 72,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand-domain/extract-domain-context.py",
+          "language": "py",
+          "sizeLines": 425,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand-domain/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 130,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/analyze-project.mjs",
+          "language": "javascript",
+          "sizeLines": 287,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/build-fingerprints.mjs",
+          "language": "javascript",
+          "sizeLines": 92,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/compute-batches.mjs",
+          "language": "javascript",
+          "sizeLines": 593,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/extract-import-map.mjs",
+          "language": "javascript",
+          "sizeLines": 210,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/extract-metadata.mjs",
+          "language": "javascript",
+          "sizeLines": 288,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/extract-structure.mjs",
+          "language": "javascript",
+          "sizeLines": 335,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/locales/en.md",
+          "language": "markdown",
+          "sizeLines": 43,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/locales/zh.md",
+          "language": "markdown",
+          "sizeLines": 48,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/merge-batch-graphs.py",
+          "language": "py",
+          "sizeLines": 1029,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/merge-subdomain-graphs.py",
+          "language": "py",
+          "sizeLines": 308,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/scan-project.mjs",
+          "language": "javascript",
+          "sizeLines": 742,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/shared/import-resolution.mjs",
+          "language": "javascript",
+          "sizeLines": 478,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/SKILL.md",
+          "language": "markdown",
+          "sizeLines": 885,
+          "fileCategory": "docs"
+        },
+        {
+          "path": "understand-anything-trae-plugin/skills/understand/validate-assembly.mjs",
+          "language": "javascript",
+          "sizeLines": 251,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/src/__tests__/diff-analyzer.test.ts",
+          "language": "typescript",
+          "sizeLines": 106,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/src/__tests__/extract-structure.test.mjs",
+          "language": "javascript",
+          "sizeLines": 112,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/src/__tests__/merge-recover-imports.test.mjs",
+          "language": "javascript",
+          "sizeLines": 192,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/src/__tests__/validate-assembly.test.mjs",
+          "language": "javascript",
+          "sizeLines": 287,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/src/__tests__/worktree-redirect.test.mjs",
+          "language": "javascript",
+          "sizeLines": 89,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/src/diff-analyzer.ts",
+          "language": "typescript",
+          "sizeLines": 198,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/src/index.ts",
+          "language": "typescript",
+          "sizeLines": 5,
+          "fileCategory": "code"
+        },
+        {
+          "path": "understand-anything-trae-plugin/tsconfig.json",
+          "language": "json",
+          "sizeLines": 19,
+          "fileCategory": "config"
+        },
+        {
+          "path": "understand-anything-trae-plugin/vitest.config.ts",
+          "language": "typescript",
+          "sizeLines": 12,
+          "fileCategory": "code"
+        },
+        {
+          "path": "vitest.config.ts",
+          "language": "typescript",
+          "sizeLines": 25,
+          "fileCategory": "code"
+        }
+      ],
+      "batchImportData": {
+        "understand-anything-trae-plugin/skills/understand-dashboard/SKILL.md": [],
+        "understand-anything-trae-plugin/skills/understand-diff/SKILL.md": [],
+        "understand-anything-trae-plugin/skills/understand-domain/extract-domain-context.py": [],
+        "understand-anything-trae-plugin/skills/understand-domain/SKILL.md": [],
+        "understand-anything-trae-plugin/skills/understand/analyze-project.mjs": [],
+        "understand-anything-trae-plugin/skills/understand/build-fingerprints.mjs": [],
+        "understand-anything-trae-plugin/skills/understand/compute-batches.mjs": [],
+        "understand-anything-trae-plugin/skills/understand/extract-import-map.mjs": [],
+        "understand-anything-trae-plugin/skills/understand/extract-metadata.mjs": [],
+        "understand-anything-trae-plugin/skills/understand/extract-structure.mjs": [],
+        "understand-anything-trae-plugin/skills/understand/locales/en.md": [],
+        "understand-anything-trae-plugin/skills/understand/locales/zh.md": [],
+        "understand-anything-trae-plugin/skills/understand/merge-batch-graphs.py": [],
+        "understand-anything-trae-plugin/skills/understand/merge-subdomain-graphs.py": [],
+        "understand-anything-trae-plugin/skills/understand/scan-project.mjs": [],
+        "understand-anything-trae-plugin/skills/understand/shared/import-resolution.mjs": [],
+        "understand-anything-trae-plugin/skills/understand/SKILL.md": [],
+        "understand-anything-trae-plugin/skills/understand/validate-assembly.mjs": [],
+        "understand-anything-trae-plugin/src/__tests__/diff-analyzer.test.ts": [],
+        "understand-anything-trae-plugin/src/__tests__/extract-structure.test.mjs": [],
+        "understand-anything-trae-plugin/src/__tests__/merge-recover-imports.test.mjs": [],
+        "understand-anything-trae-plugin/src/__tests__/validate-assembly.test.mjs": [],
+        "understand-anything-trae-plugin/src/__tests__/worktree-redirect.test.mjs": [],
+        "understand-anything-trae-plugin/src/diff-analyzer.ts": [],
+        "understand-anything-trae-plugin/src/index.ts": [],
+        "understand-anything-trae-plugin/tsconfig.json": [],
+        "understand-anything-trae-plugin/vitest.config.ts": [],
+        "vitest.config.ts": []
+      },
+      "neighborMap": {}
+    }
+  ]
+}

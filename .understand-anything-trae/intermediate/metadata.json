@@ -1,0 +1,23 @@
+{
+  "name": "understand-anything-trae",
+  "description": "An open-source tool combining LLM intelligence + static analysis to produce interactive dashboards for understanding codebases.",
+  "rawDescription": "An open-source tool combining LLM intelligence + static analysis to produce interactive dashboards for understanding codebases.",
+  "readmeHead": "<h1 align=\"center\">Understand Anything Trae</h1>\n\n<p align=\"center\">\n  <strong>Turn any codebase, knowledge base, or docs into an interactive knowledge graph you can explore, search, and ask questions about.</strong>\n  <br />\n  <em>Works with Trae and Trae CN.</em>\n</p>\n\n<p align=\"center\">\n  <a href=\"README.md\">English</a> | <a href=\"READMEs/README.zh-CN.md\">简体中文</a>",
+  "frameworks": [
+    "Vitest",
+    "GitHub Actions"
+  ],
+  "languages": [
+    "css",
+    "html",
+    "javascript",
+    "json",
+    "markdown",
+    "powershell",
+    "py",
+    "shell",
+    "typescript",
+    "unknown",
+    "yaml"
+  ]
+}

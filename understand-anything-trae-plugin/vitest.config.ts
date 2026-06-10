@@ -7,6 +7,7 @@ export default defineConfig({
   test: {
     include: [
       'src/**/*.test.{ts,tsx,mjs}',
+      'packages/core/src/**/*.test.{ts,tsx,mjs}',
     ],
   },
 });

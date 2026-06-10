@@ -26,6 +26,10 @@ Phase 1 has three orchestrated steps. Steps **B** and **C** run bundled scripts;
 
 ### Step A (LLM) -- Read manifests and README for narrative fields
 
+**Skip this step if the dispatch prompt includes pre-extracted metadata.** When the orchestrator provides `name`, `description`, `frameworks`, and `languages` from `extract-metadata.mjs`, use those values directly and proceed to Step B. Do NOT re-read README or manifests.
+
+If no pre-extracted metadata is provided, proceed with the original LLM-based extraction below:
+
 Read the top-level project files to gather narrative metadata. Do NOT walk the file tree or count files yourself — that is Step B's job.
 
 Read whichever of these exist at the project root:

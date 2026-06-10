@@ -223,21 +223,26 @@ Set up and verify the `.understandignore` file before scanning.
 
 Report to the user: `[Phase 1/7] Scanning project files...`
 
+**Step 1 — Pre-extract metadata deterministically (<1 second):**
+
+Run the bundled metadata extraction script before dispatching the project-scanner agent. This replaces the agent's LLM-based Step A:
+
+```bash
+node <SKILL_DIR>/extract-metadata.mjs $PROJECT_ROOT $PROJECT_ROOT/.understand-anything-trae/intermediate/metadata.json
+```
+
+Read the output at `$PROJECT_ROOT/.understand-anything-trae/intermediate/metadata.json` to get `name`, `description`, `frameworks`, `languages`. Store as `$PRE_EXTRACTED_METADATA`.
+
+**Step 2 — Dispatch project-scanner with pre-extracted metadata:**
+
 Dispatch a subagent using the `project-scanner` agent definition (at `agents/project-scanner.md`). Append the following additional context:
 
-> **Additional context from main session:**
->
-> Project README (first 3000 chars):
-> ```
-> $README_CONTENT
+> **Pre-extracted metadata (SKIP Step A — use these values directly):**
+> ```json
+> $PRE_EXTRACTED_METADATA
 > ```
 >
-> Package manifest:
-> ```
-> $MANIFEST_CONTENT
-> ```
->
-> Use this context to produce more accurate project name, description, and framework detection. The README and manifest are authoritative — prefer their information over heuristics.
+> The metadata above was extracted deterministically. Do NOT re-read README or manifests. Use `name`, `description`, `frameworks`, and `languages` from this pre-extracted data as-is. Proceed directly to Step B (scan-project.mjs) and Step C (extract-import-map.mjs).
 >
 > $LANGUAGE_DIRECTIVE
 
@@ -254,14 +259,6 @@ After the subagent completes, read `$PROJECT_ROOT/.understand-anything-trae/inte
 - Complexity estimate
 - Import map (`importMap`): pre-resolved project-internal imports per file (non-code files have empty arrays)
 
-**Deterministic metadata extraction (alternative to LLM Step A):** The metadata extraction in the subagent's Step A can alternatively be performed deterministically by running:
-
-```bash
-node <SKILL_DIR>/extract-metadata.mjs $PROJECT_ROOT $PROJECT_ROOT/.understand-anything-trae/intermediate/metadata.json
-```
-
-This produces equivalent results without an LLM call and takes <1 second. When the full Phase 1 restructuring (removing the project-scanner subagent) is complete, this script will replace the LLM Step A entirely. For now, it can be used alongside the existing flow to validate and cross-check the subagent's output.
-
 Store `importMap` in memory as `$IMPORT_MAP` for use in Phase 2 batch construction.
 Store the file list as `$FILE_LIST` with `fileCategory` metadata for use in Phase 2 batch construction.
 
@@ -272,26 +269,9 @@ If the scan result includes `filteredByIgnore > 0`, report:
 
 ---
 
-## Phase 1.5 — BATCH
+## Phase 1.5 — STRUCTURE PRE-EXTRACT
 
-Report: `[Phase 1.5/7] Computing semantic batches...`
-
-Run the bundled batching script:
-```bash
-node <SKILL_DIR>/compute-batches.mjs $PROJECT_ROOT
-```
-
-Reads `.understand-anything-trae/intermediate/scan-result.json`, writes `.understand-anything-trae/intermediate/batches.json`.
-
-Capture stderr. Append any line starting with `Warning:` to `$PHASE_WARNINGS` for the final report.
-
-If the script exits non-zero, the failure is hard — relay the full stderr to the user as a Phase 1.5 failure. Do not attempt to recover; the script's internal fallback (count-based) already handles recoverable issues. A non-zero exit means a fundamental problem (missing input file, malformed JSON, etc.).
-
----
-
-## Phase 1.7 — STRUCTURE PRE-EXTRACT
-
-Report: `[Phase 1.7/7] Pre-extracting file structures...`
+Report: `[Phase 1.5/7] Pre-extracting file structures...`
 
 Run the unified analysis script:
 ```bash
@@ -302,9 +282,28 @@ Reads `scan-result.json`, writes `import-map.json` + `structure-results.json` + 
 
 Capture stderr. Append any line starting with `Warning:` to `$PHASE_WARNINGS`.
 
-If the script exits non-zero, the failure is hard — relay the full stderr to the user as a Phase 1.7 failure. Do not attempt to recover; the script's internal error handling already degrades gracefully for individual file failures. A non-zero exit means a fundamental problem (missing scan-result.json, tree-sitter initialization failure, etc.).
+If the script exits non-zero, the failure is hard — relay the full stderr to the user as a Phase 1.5 failure. Do not attempt to recover; the script's internal error handling already degrades gracefully for individual file failures. A non-zero exit means a fundamental problem (missing scan-result.json, tree-sitter initialization failure, etc.).
 
 After the script completes, store `import-map.json`'s `importMap` field as `$IMPORT_MAP` for use in Phase 2 batch construction.
+
+**Note:** This phase runs **before** Phase 1.7 (BATCH) so that `exports-map.json` is available when `compute-batches.mjs` runs, avoiding a redundant tree-sitter initialization fallback.
+
+---
+
+## Phase 1.7 — BATCH
+
+Report: `[Phase 1.7/7] Computing semantic batches...`
+
+Run the bundled batching script:
+```bash
+node <SKILL_DIR>/compute-batches.mjs $PROJECT_ROOT
+```
+
+Reads `.understand-anything-trae/intermediate/scan-result.json` and `.understand-anything-trae/intermediate/exports-map.json` (from Phase 1.5), writes `.understand-anything-trae/intermediate/batches.json`.
+
+Capture stderr. Append any line starting with `Warning:` to `$PHASE_WARNINGS` for the final report.
+
+If the script exits non-zero, the failure is hard — relay the full stderr to the user as a Phase 1.7 failure. Do not attempt to recover; the script's internal fallback (count-based) already handles recoverable issues. A non-zero exit means a fundamental problem (missing input file, malformed JSON, etc.).
 
 ---
 
@@ -312,7 +311,7 @@ After the script completes, store `import-map.json`'s `importMap` field as `$IMP
 
 ### Full analysis path
 
-Load `.understand-anything-trae/intermediate/batches.json` (produced by Phase 1.5). Iterate the `batches[]` array.
+Load `.understand-anything-trae/intermediate/batches.json` (produced by Phase 1.7). Iterate the `batches[]` array.
 
 Report: `[Phase 2/7] Analyzing files — <totalFiles> files in <totalBatches> batches (up to 8 concurrent)...`
 
@@ -413,9 +412,28 @@ After batches complete:
 
 Report to the user: `[Phase 3/7] Reviewing assembled graph...`
 
-Dispatch a subagent using the `assemble-reviewer` agent definition (at `agents/assemble-reviewer.md`).
+### Step 1: Deterministic validation (always runs)
 
-Pass these parameters in the dispatch prompt:
+Run the deterministic validation script — it checks node ID uniqueness, required field completeness, edge reference integrity, imports edge coverage, complexity normalization, duplicate detection, and orphan nodes in <1 second:
+
+```bash
+node <SKILL_DIR>/validate-assembly.mjs \
+  $PROJECT_ROOT/.understand-anything-trae/intermediate/assembled-graph.json \
+  $PROJECT_ROOT/.understand-anything-trae/intermediate/import-map.json \
+  $PROJECT_ROOT/.understand-anything-trae/intermediate/assemble-review.json
+```
+
+Read the validation output at `$PROJECT_ROOT/.understand-anything-trae/intermediate/assemble-review.json`. Add any `issues[]` and `warnings[]` entries to `$PHASE_WARNINGS`.
+
+### Step 2: LLM assemble-reviewer (conditional)
+
+Dispatch the LLM assemble-reviewer if **either** condition is true:
+- `--review` IS in `$ARGUMENTS` (explicit user request), OR
+- The deterministic validation found `issues.length > 0` (structural problems that need semantic judgment to fix)
+
+If neither condition is met, skip this step — the deterministic validation found no issues requiring LLM review.
+
+When dispatching, use the `assemble-reviewer` agent definition (at `agents/assemble-reviewer.md`) and pass these parameters:
 
 > Review the assembled graph at `$PROJECT_ROOT/.understand-anything-trae/intermediate/assembled-graph.json`.
 > Project root: `$PROJECT_ROOT`
@@ -433,17 +451,6 @@ Pass these parameters in the dispatch prompt:
 > ```
 
 After the subagent completes, read `$PROJECT_ROOT/.understand-anything-trae/intermediate/assemble-review.json` and add any notes to `$PHASE_WARNINGS`.
-
-Alternatively, run the deterministic validation script:
-
-```bash
-node <SKILL_DIR>/validate-assembly.mjs \
-  $PROJECT_ROOT/.understand-anything-trae/intermediate/assembled-graph.json \
-  $PROJECT_ROOT/.understand-anything-trae/intermediate/import-map.json \
-  $PROJECT_ROOT/.understand-anything-trae/intermediate/assemble-review.json
-```
-
-Read the validation output at `$PROJECT_ROOT/.understand-anything-trae/intermediate/assemble-review.json`. Add any `issues[]` and `warnings[]` entries to `$PHASE_WARNINGS`.
 
 ---
 
@@ -494,39 +501,7 @@ Pass these parameters in the dispatch prompt:
 > [list of ALL edges — include all edge types]
 > ```
 
-After the subagent completes, read `$PROJECT_ROOT/.understand-anything-trae/intermediate/layers.json` and normalize it into a final `layers` array. Apply these steps **in order**:
-
-1. **Unwrap envelope:** If the file contains `{ "layers": [...] }` instead of a plain array, extract the inner array. (The prompt requests a plain array, but LLMs may still produce an envelope.)
-2. **Rename legacy fields:** If any layer object has a `nodes` field instead of `nodeIds`, rename `nodes` → `nodeIds`. If `nodes` entries are objects with an `id` field rather than plain strings, extract just the `id` values into `nodeIds`.
-3. **Synthesize missing IDs:** If any layer is missing an `id`, generate one as `layer:<kebab-case-name>`.
-4. **Convert file paths:** If `nodeIds` entries are raw file paths without a known prefix (`file:`, `config:`, `document:`, `service:`, `pipeline:`, `table:`, `schema:`, `resource:`, `endpoint:`), convert them to `file:<relative-path>`.
-5. **Drop dangling refs:** Remove any `nodeIds` entries that do not exist in the merged node set.
-
-Each element of the final `layers` array MUST have this shape:
-
-```json
-[
-  {
-    "id": "layer:<kebab-case-name>",
-    "name": "<layer name>",
-    "description": "<what belongs in this layer>",
-    "nodeIds": ["file:src/App.tsx", "config:tsconfig.json", "document:README.md"]
-  }
-]
-```
-
-All four fields (`id`, `name`, `description`, `nodeIds`) are required.
-
-**For incremental updates:** Always re-run architecture analysis on the full merged node set, since layer assignments may shift when files change.
-
-**Context for incremental updates:** When re-running architecture analysis, also inject the previous layer definitions:
-
-> Previous layer definitions (for naming consistency):
-> ```json
-> [previous layers from existing graph]
-> ```
->
-> Maintain the same layer names and IDs where possible. Only add/remove layers if the file structure has materially changed.
+Normalization of layers happens in the **Normalize layers** section below.
 
 ---
 
@@ -564,7 +539,7 @@ Pass these parameters in the dispatch prompt:
 >
 > Layers:
 > ```json
-> [list of {id, name, description} for each layer — omit nodeIds]
+> [list of {id, name, description} for each normalized layer — omit nodeIds]
 > ```
 >
 > Edges (all types — includes imports, calls, configures, documents, deploys, triggers, etc.):
@@ -572,9 +547,47 @@ Pass these parameters in the dispatch prompt:
 > [list of ALL edges — include all edge types for complete graph topology analysis]
 > ```
 
-After the subagent completes, read `$PROJECT_ROOT/.understand-anything-trae/intermediate/tour.json` and normalize it into a final `tour` array. Apply these steps **in order**:
+### Normalize layers
 
-1. **Unwrap envelope:** If the file contains `{ "steps": [...] }` instead of a plain array, extract the inner array. (The prompt requests a plain array, but LLMs may still produce an envelope.)
+After the architecture subagent completes, read `$PROJECT_ROOT/.understand-anything-trae/intermediate/layers.json` and normalize it into a final `layers` array. Apply these steps **in order**:
+
+1. **Unwrap envelope:** If the file contains `{ "layers": [...] }` instead of a plain array, extract the inner array.
+2. **Rename legacy fields:** If any layer object has a `nodes` field instead of `nodeIds`, rename `nodes` → `nodeIds`. If `nodes` entries are objects with an `id` field rather than plain strings, extract just the `id` values into `nodeIds`.
+3. **Synthesize missing IDs:** If any layer is missing an `id`, generate one as `layer:<kebab-case-name>`.
+4. **Convert file paths:** If `nodeIds` entries are raw file paths without a known prefix (`file:`, `config:`, `document:`, `service:`, `pipeline:`, `table:`, `schema:`, `resource:`, `endpoint:`), convert them to `file:<relative-path>`.
+5. **Drop dangling refs:** Remove any `nodeIds` entries that do not exist in the merged node set.
+
+Each element of the final `layers` array MUST have this shape:
+
+```json
+[
+  {
+    "id": "layer:<kebab-case-name>",
+    "name": "<layer name>",
+    "description": "<what belongs on this layer>",
+    "nodeIds": ["file:src/App.tsx", "config:tsconfig.json", "document:README.md"]
+  }
+]
+```
+
+All four fields (`id`, `name`, `description`, `nodeIds`) are required.
+
+**For incremental updates:** Always re-run architecture analysis on the full merged node set, since layer assignments may shift when files change.
+
+**Context for incremental updates:** When re-running architecture analysis, also inject the previous layer definitions:
+
+> Previous layer definitions (for naming consistency):
+> ```json
+> [previous layers from existing graph]
+> ```
+>
+> Maintain the same layer names and IDs where possible. Only add/remove layers if the file structure has materially changed.
+
+### Normalize tour
+
+After the tour subagent completes, read `$PROJECT_ROOT/.understand-anything-trae/intermediate/tour.json` and apply these steps **in order**:
+
+1. **Unwrap envelope:** If the file contains `{ "steps": [...] }` instead of a plain array, extract the inner array.
 2. **Rename legacy fields:** If any step has `nodesToInspect` instead of `nodeIds`, rename it → `nodeIds`. If any step has `whyItMatters` instead of `description`, rename it → `description`.
 3. **Convert file paths:** If `nodeIds` entries are raw file paths without a known prefix (`file:`, `config:`, `document:`, `service:`, `pipeline:`, `table:`, `schema:`, `resource:`, `endpoint:`), convert them to `file:<relative-path>`.
 4. **Drop dangling refs:** Remove any `nodeIds` entries that do not exist in the merged node set.
@@ -622,8 +635,8 @@ Assemble the full KnowledgeGraph JSON object:
   },
   "nodes": [<all nodes from assembled-graph.json after Phase 3 review>],
   "edges": [<all edges from assembled-graph.json after Phase 3 review>],
-  "layers": [<layers from Phase 4>],
-  "tour": [<steps from Phase 5>]
+  "layers": [<layers from Phase 4 normalization>],
+  "tour": [<steps from Phase 5 tour normalization>]
 }
 ```
 
